@@ -1,8 +1,8 @@
-import React from "react";
 import { useFind, useSubscribe } from "meteor/react-meteor-data";
-import { LinksCollection, Link } from "../api/links";
+import React from "react";
+import { Link, LinksCollection } from "../api/links";
 
-export const Info = () => {
+export const Info: React.FC = () => {
   const isLoading = useSubscribe("links");
   const links = useFind(() => LinksCollection.find());
 
@@ -12,16 +12,18 @@ export const Info = () => {
 
   const makeLink = (link: Link) => {
     return (
-      <li key={ link._id }>
-        <a href={ link.url } target="_blank">{ link.title }</a>
+      <li key={link._id}>
+        <a href={link.url} target="_blank">
+          {link.title}
+        </a>
       </li>
     );
-  }
+  };
 
   return (
     <div>
       <h2>Learn Meteor!</h2>
-      <ul>{ links.map(makeLink) }</ul>
+      <ul>{links.map(makeLink)}</ul>
     </div>
   );
 };
