@@ -1,65 +1,24 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import UserProfileDropDown from './drop-down-user-profile';
+import useUserList from '/imports/ui/shared/hooks/user/user-user-list';
 
-interface User {
-    id: string;
-    name: string;
-    avatar?: string;
-    status: 'online' | 'offline' | 'away';
-    lastMessage?: string;
-    lastMessageTime?: string;
-    unreadCount?: number;
-}
 
-// Mock data - replace with actual data from your backend
-const mockUsers: User[] = [
-    {
-        id: '1',
-        name: 'Alice Johnson',
-        status: 'online',
-        lastMessage: 'Hey, how are you?',
-        lastMessageTime: '2m ago',
-        unreadCount: 2,
-    },
-    {
-        id: '2',
-        name: 'Bob Smith',
-        status: 'offline',
-        lastMessage: 'See you tomorrow!',
-        lastMessageTime: '1h ago',
-    },
-    {
-        id: '3',
-        name: 'Carol Williams',
-        status: 'away',
-        lastMessage: 'Thanks for the help',
-        lastMessageTime: '3h ago',
-        unreadCount: 1,
-    },
-    {
-        id: '4',
-        name: 'David Brown',
-        status: 'online',
-        lastMessage: 'Let me know when you\'re free',
-        lastMessageTime: '5h ago',
-    },
-    {
-        id: '5',
-        name: 'Emma Davis',
-        status: 'offline',
-        lastMessage: 'Great work on the project!',
-        lastMessageTime: '1d ago',
-    },
-];
+
 
 export const Sidebar: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [activeUserId, setActiveUserId] = useState<string | null>(null);
 
-    const filteredUsers = mockUsers.filter(user =>
-        user.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const { data, isLoading } = useUserList({
+        searchString: searchQuery,
+        limit: 10,
+
+    });
+
+    console.log({ data })
+
+
 
     const getInitials = (name: string) => {
         return name
@@ -69,6 +28,10 @@ export const Sidebar: React.FC = () => {
             .toUpperCase()
             .slice(0, 2);
     };
+
+    if (isLoading) {
+        return <div>Loading ..</div>
+    }
 
     return (
         <aside className="sidebar">
@@ -124,37 +87,37 @@ export const Sidebar: React.FC = () => {
 
             {/* User List */}
             <div className="sidebar-content">
-                <div className="user-list">
-                    {filteredUsers.length > 0 ? (
-                        filteredUsers.map(user => (
-                            <Link key={user.id} to="/chat/1234546">
+                {data && <div className="user-list">
+                    {data?.users?.length > 0 ? (
+                        data.users.map(user => (
+                            <Link key={user._id} to="/chat/1234546">
                                 <div
 
-                                    className={`user-item ${activeUserId === user.id ? 'active' : ''}`}
-                                    onClick={() => setActiveUserId(user.id)}
+                                    className={`user-item ${activeUserId === user._id ? 'active' : ''}`}
+                                    onClick={() => setActiveUserId(user._id)}
                                 >
                                     <div className="user-avatar">
-                                        {user.avatar ? (
-                                            <img src={user.avatar} alt={user.name} />
+                                        {user.avatarUrl ? (
+                                            <img src={user.avatarUrl} alt={user.fname} />
                                         ) : (
-                                            <div className="avatar-placeholder">{getInitials(user.name)}</div>
+                                            <div className="avatar-placeholder">{getInitials(user.username)}</div>
                                         )}
                                         <span className={`status-indicator ${user.status}`} />
                                     </div>
                                     <div className="user-info">
                                         <div className="user-header">
-                                            <h4 className="user-name">{user.name}</h4>
-                                            {user.lastMessageTime && (
-                                                <span className="message-time">{user.lastMessageTime}</span>
+                                            <h4 className="user-name">{user.fname}</h4>
+                                            {user.createdAt && (
+                                                <span className="message-time">{user.createdAt.toDateString()}</span>
                                             )}
                                         </div>
-                                        {user.lastMessage && (
-                                            <p className="last-message">{user.lastMessage}</p>
+                                        {user.createdAt && (
+                                            <p className="last-message">{user.createdAt.toDateString()}</p>
                                         )}
                                     </div>
-                                    {user.unreadCount && user.unreadCount > 0 && (
+                                    {/* {user.unreadCount && user.unreadCount > 0 && (
                                         <div className="unread-badge">{user.unreadCount}</div>
-                                    )}
+                                    )} */}
                                 </div>
                             </Link>
                         ))
@@ -163,7 +126,7 @@ export const Sidebar: React.FC = () => {
                             <p>No users found</p>
                         </div>
                     )}
-                </div>
+                </div>}
             </div>
 
             {/* Current User Profile */}

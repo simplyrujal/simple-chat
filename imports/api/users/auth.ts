@@ -1,21 +1,7 @@
 import { Accounts } from "meteor/accounts-base";
 import { check } from "meteor/check";
 import { Meteor } from "meteor/meteor";
-import { Mongo } from "meteor/mongo";
-
-type Role = "admin" | "user";
-type Status = "online" | "offline" | "busy" | "away";
-
-export interface User extends Meteor.User {
-  name: string;
-  avatarUrl?: string;
-  role: Role[];
-  status: Status;
-  lastSeenAt: Date;
-}
-
-export const UsersCollection =
-  Meteor.users as unknown as Mongo.Collection<User>;
+import { Role, Status, UsersCollection } from "./query";
 
 Meteor.methods({
   /**

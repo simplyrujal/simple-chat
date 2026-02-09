@@ -6,6 +6,7 @@ import { AdminRoutes } from './modules/admin/routes';
 import { AuthRoutes } from './modules/auth/routes';
 import { ChatRoutes } from './modules/chat/routes';
 import { RequireAuth } from './shared/components/require-auth';
+import registerCollection from './shared/utils/registerCollection';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -15,6 +16,8 @@ const queryClient = new QueryClient({
     },
   },
 });
+
+registerCollection('UsersCollection')
 
 export const App: React.FC = () => {
   return (
