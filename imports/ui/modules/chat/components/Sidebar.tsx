@@ -77,7 +77,7 @@ export const Sidebar: React.FC = () => {
                     <h2>SimpleChat</h2>
                 </div>
                 <div className="sidebar-actions">
-                    <Link to="/chat/dashboard" className="icon-btn" title="Home">
+                    <Link to="/dashboard" className="icon-btn" title="Home">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                             <polyline points="9 22 9 12 15 12 15 22" />
