@@ -6,7 +6,7 @@ import { DashboardPage } from './pages/dashboard';
 import ChatProvider from './provider/chat-provider';
 
 export const ChatRoutes: React.FC = () => (
-    <div className="chat-layout">
+    <div className="vh-100 d-flex overflow-hidden">
         <Sidebar />
         <ChatProvider>
             <Routes>
