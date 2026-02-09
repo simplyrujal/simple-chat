@@ -1,10 +1,10 @@
-import { LinksCollection } from "/imports/api/links";
+import { UsersCollection } from "/imports/api/users";
 
 /**
  * Central registry for debug collections
  */
 const collections = {
-  LinksCollection,
+  UsersCollection,
 };
 
 type Key = keyof typeof collections;

@@ -1,10 +1,26 @@
-import React from 'react';
+import { Meteor } from 'meteor/meteor';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const LoginPage: React.FC = () => {
-  const handleSubmit = (e: React.FormEvent) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login Attempt");
-    // Handle login logic here
+    setError('');
+    setLoading(true);
+
+    Meteor.callAsync("user.login", { email, password }).then(() => {
+      setLoading(false);
+      navigate("/");
+    }).catch((error) => {
+      setError(error.reason);
+      setLoading(false);
+    });
   };
 
   return (
@@ -15,6 +31,8 @@ export const LoginPage: React.FC = () => {
           <p>Sign in to your account to continue</p>
         </div>
         <form className="login-form" onSubmit={handleSubmit}>
+          {error && <div className="error-message">{error}</div>}
+
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input
@@ -22,7 +40,10 @@ export const LoginPage: React.FC = () => {
               id="email"
               name="email"
               placeholder="name@company.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
+              disabled={loading}
             />
           </div>
           <div className="form-group">
@@ -32,10 +53,15 @@ export const LoginPage: React.FC = () => {
               id="password"
               name="password"
               placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
+              disabled={loading}
             />
           </div>
-          <button type="submit">Sign In</button>
+          <button type="submit" disabled={loading}>
+            {loading ? 'Signing In...' : 'Sign In'}
+          </button>
         </form>
         <div className="forgot-password">
           <a href="#">Forgot password?</a>

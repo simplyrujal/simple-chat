@@ -5,7 +5,11 @@ import { useIsAuth } from '../hooks/use-is-auth';
 export const RequireAuth: React.FC = () => {
     const isAuth = useIsAuth();
 
-    if (!isAuth) {
+    if (isAuth.isLoading) {
+        return <div>Loading...</div>;
+    }
+
+    if (!isAuth.isAuthenticated) {
         return <Navigate to="/auth/login" replace />;
     }
 
