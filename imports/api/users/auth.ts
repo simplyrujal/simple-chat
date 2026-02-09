@@ -1,7 +1,7 @@
 import { Accounts } from "meteor/accounts-base";
 import { check } from "meteor/check";
 import { Meteor } from "meteor/meteor";
-import { Role, Status, UsersCollection } from "./query";
+import { Role, Status, UsersCollection } from "/imports/collections/user";
 
 Meteor.methods({
   /**

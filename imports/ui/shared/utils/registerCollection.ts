@@ -1,10 +1,12 @@
-import { UsersCollection } from "/imports/api/users";
+import { RoomCollection } from "/imports/collections/room";
+import { UsersCollection } from "/imports/collections/user";
 
 /**
  * Central registry for debug collections
  */
 const collections = {
   UsersCollection,
+  RoomCollection,
 };
 
 type Key = keyof typeof collections;

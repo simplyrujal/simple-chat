@@ -17,8 +17,6 @@ const sortIdsAndJoin = (ids: string[]) => {
     return ids.sort((a, b) => a.localeCompare(b)).join('-');
 }
 
-
-
 export const Sidebar: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [activeUserId, setActiveUserId] = useState<string | null>(null);
