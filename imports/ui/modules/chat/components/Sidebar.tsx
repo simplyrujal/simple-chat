@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import UserProfileDropDown from './drop-down-user-profile';
 
 interface User {
     id: string;
@@ -166,25 +167,7 @@ export const Sidebar: React.FC = () => {
             </div>
 
             {/* Current User Profile */}
-            <div className="sidebar-footer">
-                <div className="current-user">
-                    <div className="user-avatar small">
-                        <div className="avatar-placeholder">JD</div>
-                        <span className="status-indicator online" />
-                    </div>
-                    <div className="user-info">
-                        <h4 className="user-name">John Doe</h4>
-                        <span className="user-status">Online</span>
-                    </div>
-                    <button className="icon-btn logout-btn" title="Logout">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                            <polyline points="16 17 21 12 16 7" />
-                            <line x1="21" y1="12" x2="9" y2="12" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
+            <UserProfileDropDown />
         </aside>
     );
 };

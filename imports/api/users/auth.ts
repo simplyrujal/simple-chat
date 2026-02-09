@@ -25,17 +25,17 @@ Meteor.methods({
     email,
     password,
     username,
-    name,
+    country,
   }: {
     email: string;
     password: string;
     username: string;
-    name: string;
+    country: string;
   }) {
     check(email, String);
     check(password, String);
     check(username, String);
-    check(name, String);
+    check(country, String);
 
     // Check if user already exists
     const existingUser = await Accounts.findUserByEmail(email);
@@ -57,11 +57,63 @@ Meteor.methods({
       password,
       username,
       profile: {
-        name,
+        name: username, // Use username as display name initially
+        country,
       },
     });
 
+    // Add default chat-related data
+    await UsersCollection.updateAsync(
+      { _id: userId },
+      {
+        $set: {
+          name: username,
+          role: ["user"] as Role[],
+          status: "online" as Status,
+          lastSeenAt: new Date(),
+          avatarUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(username)}&background=3b82f6&color=fff&size=128`,
+          createdAt: new Date(),
+          profile: {
+            name: username,
+            country,
+          },
+        },
+      },
+    );
+
     return { userId, success: true };
+  },
+
+  async "user.login"({ email, password }: { email: string; password: string }) {
+    check(email, String);
+    check(password, String);
+
+    // 1️⃣ Find user
+    const user = await Accounts.findUserByEmail(email);
+    if (!user) {
+      throw new Meteor.Error("user-not-found", "User not found");
+    }
+
+    // 2️⃣ Check password
+    const result = await Accounts._checkPasswordAsync(user, password);
+    if (result.error) {
+      throw new Meteor.Error("invalid-password", "Invalid password");
+    }
+
+    // 3️⃣ CREATE LOGIN TOKEN (THIS IS LOGIN)
+    const stampedToken = Accounts._generateStampedLoginToken();
+    Accounts._insertHashedLoginToken(user._id, {
+      hashedToken: Accounts._hashLoginToken(stampedToken.token),
+      when: stampedToken.when,
+    });
+
+    // 4️⃣ Return token to client
+    return {
+      userId: user._id,
+      token: stampedToken.token,
+      tokenExpires: stampedToken.when,
+      success: true,
+    };
   },
 
   /**
@@ -83,13 +135,5 @@ Meteor.methods({
           }
         : null,
     };
-  },
-
-  /**
-   * Logout the current user
-   */
-  async "user.logout"() {
-    Meteor.logout();
-    return { success: true };
   },
 });
