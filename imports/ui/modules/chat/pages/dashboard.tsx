@@ -1,4 +1,6 @@
-export const DashboardPage = () => {
+import React from "react";
+
+export const DashboardPage: React.FC = () => {
   return (
     <div className="dashboard-page">
       <aside className="sidebar">
@@ -26,7 +28,7 @@ export const DashboardPage = () => {
           </div>
         </div>
       </aside>
-      
+
       <main className="main-content">
         <header className="top-bar">
           <h1>Chats</h1>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const LoginPage = () => {
+export const LoginPage: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Login Attempt");
@@ -17,29 +17,29 @@ export const LoginPage = () => {
         <form className="login-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="email">Email</label>
-            <input 
-              type="email" 
-              id="email" 
-              name="email" 
-              placeholder="name@company.com" 
-              required 
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="name@company.com"
+              required
             />
           </div>
           <div className="form-group">
             <label htmlFor="password">Password</label>
-            <input 
-              type="password" 
-              id="password" 
-              name="password" 
-              placeholder="••••••••" 
-              required 
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="••••••••"
+              required
             />
           </div>
           <button type="submit">Sign In</button>
         </form>
-          <div className="forgot-password">
-              <a href="#">Forgot password?</a>
-          </div>
+        <div className="forgot-password">
+          <a href="#">Forgot password?</a>
+        </div>
       </div>
     </div>
   );
