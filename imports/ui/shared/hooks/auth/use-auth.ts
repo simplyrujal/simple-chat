@@ -12,11 +12,15 @@ type TCheckAuth = {
   } | null;
 };
 
-export const useIsAuth = () => {
+export const useAuth = () => {
   const { data, isLoading } = useQuery<TCheckAuth>({
     queryKey: ["auth.check"],
     queryFn: () => Meteor.callAsync("auth.check"),
   });
 
-  return { isLoading, isAuthenticated: data?.isAuthenticated };
+  return {
+    isLoading,
+    isAuthenticated: data?.isAuthenticated,
+    user: data?.user,
+  };
 };
