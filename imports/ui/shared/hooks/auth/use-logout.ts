@@ -7,19 +7,19 @@ const useLogout = () => {
   const queryClient = useQueryClient();
 
   const logout = async () => {
-    await new Promise((resolve, reject) => {
-      Meteor.logout((err) => {
-        if (err) {
-          console.error("Logout failed:", err);
-          reject(err);
-        } else {
-          resolve(true);
-        }
-      });
-    }).then(() => {
+    try {
+      // 1. Update status on server first
+      await Meteor.callAsync("user.logout");
+
+      // 2. Clear client session
+      Meteor.logout();
+
+      // 3. Clear cache and redirect
       queryClient.clear();
       navigate("/auth/login");
-    });
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
   return { logout };

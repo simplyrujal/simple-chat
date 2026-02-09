@@ -84,6 +84,33 @@ const Register: React.FC = () => {
                             minLength={3}
                         />
                     </div>
+                    <div className="form-group">
+                        <label htmlFor="username">Username</label>
+                        <input
+                            type="text"
+                            id="fname"
+                            name="fname"
+                            placeholder="johndoe"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                            disabled={loading}
+                            minLength={3}
+                        />
+                    </div> <div className="form-group">
+                        <label htmlFor="lname">Username</label>
+                        <input
+                            type="text"
+                            id="lname"
+                            name="lname"
+                            placeholder="johndoe"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                            disabled={loading}
+                            minLength={3}
+                        />
+                    </div>
 
                     <div className="form-group">
                         <label htmlFor="email">Email</label>

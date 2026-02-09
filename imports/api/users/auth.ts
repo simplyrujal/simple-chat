@@ -122,4 +122,26 @@ Meteor.methods({
         : null,
     };
   },
+
+  /**
+   * Logout the current user and update their status
+   */
+  async "user.logout"() {
+    const userId = Meteor.userId();
+    if (!userId) {
+      throw new Meteor.Error("not-authorized", "You must be logged in");
+    }
+
+    await UsersCollection.updateAsync(
+      { _id: userId },
+      {
+        $set: {
+          status: "offline" as Status,
+          lastSeenAt: new Date(),
+        },
+      },
+    );
+
+    return { success: true };
+  },
 });
