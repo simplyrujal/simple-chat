@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { useIsAuth } from '../hooks/use-is-auth';
+import { useIsAuth } from '../hooks/auth/use-is-auth';
 
 export const RequireAuth: React.FC = () => {
     const isAuth = useIsAuth();
