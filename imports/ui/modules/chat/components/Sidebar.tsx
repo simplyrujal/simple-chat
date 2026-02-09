@@ -1,8 +1,21 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import UserProfileDropDown from './drop-down-user-profile';
+import { useAuth } from '/imports/ui/shared/hooks/auth/use-auth';
 import useUserList from '/imports/ui/shared/hooks/user/user-user-list';
 
+const getInitials = (name: string) => {
+    return name
+        .split(' ')
+        .map(n => n[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2);
+};
+
+const sortIdsAndJoin = (ids: string[]) => {
+    return ids.sort((a, b) => a.localeCompare(b)).join('-');
+}
 
 
 
@@ -10,20 +23,12 @@ export const Sidebar: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [activeUserId, setActiveUserId] = useState<string | null>(null);
 
+    const usr = useAuth()
+
     const { data, isLoading } = useUserList({
         searchString: searchQuery,
         limit: 10,
-
     });
-
-    const getInitials = (name: string) => {
-        return name
-            .split(' ')
-            .map(n => n[0])
-            .join('')
-            .toUpperCase()
-            .slice(0, 2);
-    };
 
     if (isLoading) {
         return <div>Loading ..</div>
@@ -86,7 +91,7 @@ export const Sidebar: React.FC = () => {
                 {data && <div className="user-list">
                     {data?.users?.length > 0 ? (
                         data.users.map(user => (
-                            <Link key={user._id} to="/chat/1234546">
+                            <Link key={user._id} to={`/chat/${sortIdsAndJoin([usr?.user?._id || '', user._id])}`}>
                                 <div
 
                                     className={`user-item ${activeUserId === user._id ? 'active' : ''}`}
