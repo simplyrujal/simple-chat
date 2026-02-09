@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface IProps {
     children: React.ReactNode;
@@ -13,7 +13,7 @@ const ChatProvider: React.FC<IProps> = ({ children }) => {
                     <button>New Chat</button>
                 </div>
             </header>
-            {children}
+            <div className="content-area">{children}</div>
         </main>
     );
 };
