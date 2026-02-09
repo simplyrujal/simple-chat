@@ -3,13 +3,13 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../hooks/auth/use-auth';
 
 export const RequireAuth: React.FC = () => {
-    const isAuth = useAuth();
+    const { isLoading, isAuthenticated } = useAuth();
 
-    if (isAuth.isLoading) {
+    if (isLoading) {
         return <div>Loading...</div>;
     }
 
-    if (!isAuth.isAuthenticated) {
+    if (!isAuthenticated) {
         return <Navigate to="/auth/login" replace />;
     }
 
