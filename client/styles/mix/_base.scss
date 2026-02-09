@@ -1,0 +1,10 @@
+// @use "variables" as *; // Variables are now global
+
+body {
+  padding: 10px;
+  font-family: sans-serif;
+
+  h1 {
+    background: var(--bg-color);
+  }
+}
