@@ -1,4 +1,4 @@
-import { LinksCollection } from "../api/links";
+import { LinksCollection } from "/imports/api/links";
 
 /**
  * Central registry for debug collections
