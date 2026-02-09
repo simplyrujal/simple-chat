@@ -126,34 +126,36 @@ export const Sidebar: React.FC = () => {
                 <div className="user-list">
                     {filteredUsers.length > 0 ? (
                         filteredUsers.map(user => (
-                            <div
-                                key={user.id}
-                                className={`user-item ${activeUserId === user.id ? 'active' : ''}`}
-                                onClick={() => setActiveUserId(user.id)}
-                            >
-                                <div className="user-avatar">
-                                    {user.avatar ? (
-                                        <img src={user.avatar} alt={user.name} />
-                                    ) : (
-                                        <div className="avatar-placeholder">{getInitials(user.name)}</div>
-                                    )}
-                                    <span className={`status-indicator ${user.status}`} />
-                                </div>
-                                <div className="user-info">
-                                    <div className="user-header">
-                                        <h4 className="user-name">{user.name}</h4>
-                                        {user.lastMessageTime && (
-                                            <span className="message-time">{user.lastMessageTime}</span>
+                            <Link key={user.id} to="/chat/1234546">
+                                <div
+
+                                    className={`user-item ${activeUserId === user.id ? 'active' : ''}`}
+                                    onClick={() => setActiveUserId(user.id)}
+                                >
+                                    <div className="user-avatar">
+                                        {user.avatar ? (
+                                            <img src={user.avatar} alt={user.name} />
+                                        ) : (
+                                            <div className="avatar-placeholder">{getInitials(user.name)}</div>
+                                        )}
+                                        <span className={`status-indicator ${user.status}`} />
+                                    </div>
+                                    <div className="user-info">
+                                        <div className="user-header">
+                                            <h4 className="user-name">{user.name}</h4>
+                                            {user.lastMessageTime && (
+                                                <span className="message-time">{user.lastMessageTime}</span>
+                                            )}
+                                        </div>
+                                        {user.lastMessage && (
+                                            <p className="last-message">{user.lastMessage}</p>
                                         )}
                                     </div>
-                                    {user.lastMessage && (
-                                        <p className="last-message">{user.lastMessage}</p>
+                                    {user.unreadCount && user.unreadCount > 0 && (
+                                        <div className="unread-badge">{user.unreadCount}</div>
                                     )}
                                 </div>
-                                {user.unreadCount && user.unreadCount > 0 && (
-                                    <div className="unread-badge">{user.unreadCount}</div>
-                                )}
-                            </div>
+                            </Link>
                         ))
                     ) : (
                         <div className="empty-state">
