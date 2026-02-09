@@ -16,10 +16,6 @@ export const Sidebar: React.FC = () => {
 
     });
 
-    console.log({ data })
-
-
-
     const getInitials = (name: string) => {
         return name
             .split(' ')
@@ -106,7 +102,7 @@ export const Sidebar: React.FC = () => {
                                     </div>
                                     <div className="user-info">
                                         <div className="user-header">
-                                            <h4 className="user-name">{user.fname}</h4>
+                                            <h4 className="user-name">{user.profile.name}</h4>
                                             {user.createdAt && (
                                                 <span className="message-time">{user.createdAt.toDateString()}</span>
                                             )}

@@ -13,6 +13,12 @@ export interface User extends Meteor.User {
   role: Role[];
   status: Status;
   lastSeenAt: Date;
+  profile: {
+    name: string;
+    country: string;
+    fname: string;
+    lname: string;
+  };
 }
 
 export const UsersCollection =
@@ -68,6 +74,8 @@ Meteor.methods({
         avatarUrl: 1,
         lastSeenAt: 1,
         role: 1,
+        emails: 1,
+        profile: 1,
       },
     };
 

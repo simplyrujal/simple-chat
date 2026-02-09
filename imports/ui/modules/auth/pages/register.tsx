@@ -13,6 +13,8 @@ const COUNTRIES = [
 
 const Register: React.FC = () => {
     const [username, setUsername] = useState('');
+    const [fname, setFname] = useState('');
+    const [lname, setLname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -46,6 +48,8 @@ const Register: React.FC = () => {
         try {
             await Meteor.callAsync('user.register', {
                 username,
+                fname,
+                lname,
                 email,
                 password,
                 country,
@@ -70,39 +74,39 @@ const Register: React.FC = () => {
                 <form className="register-form" onSubmit={handleSubmit}>
                     {error && <div className="error-message">{error}</div>}
 
+
                     <div className="form-group">
-                        <label htmlFor="username">Username</label>
+                        <label htmlFor="fname">First Name</label>
                         <input
                             type="text"
-                            id="username"
-                            name="username"
-                            placeholder="johndoe"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            id="fname"
+                            name="fname"
+                            placeholder="John"
+                            value={fname}
+                            onChange={(e) => setFname(e.target.value)}
                             required
                             disabled={loading}
-                            minLength={3}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="lname">Last Name</label>
+                        <input
+                            type="text"
+                            id="lname"
+                            name="lname"
+                            placeholder="Doe"
+                            value={lname}
+                            onChange={(e) => setLname(e.target.value)}
+                            required
+                            disabled={loading}
                         />
                     </div>
                     <div className="form-group">
                         <label htmlFor="username">Username</label>
                         <input
                             type="text"
-                            id="fname"
-                            name="fname"
-                            placeholder="johndoe"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            required
-                            disabled={loading}
-                            minLength={3}
-                        />
-                    </div> <div className="form-group">
-                        <label htmlFor="lname">Username</label>
-                        <input
-                            type="text"
-                            id="lname"
-                            name="lname"
+                            id="username"
+                            name="username"
                             placeholder="johndoe"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}

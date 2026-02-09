@@ -12,16 +12,22 @@ Meteor.methods({
     password,
     username,
     country,
+    fname,
+    lname,
   }: {
     email: string;
     password: string;
     username: string;
     country: string;
+    fname: string;
+    lname: string;
   }) {
     check(email, String);
     check(password, String);
     check(username, String);
     check(country, String);
+    check(fname, String);
+    check(lname, String);
 
     // Check if user already exists
     const existingUser = await Accounts.findUserByEmail(email);
@@ -37,14 +43,19 @@ Meteor.methods({
       throw new Meteor.Error("username-exists", "Username already taken");
     }
 
+    const fullName = `${fname} ${lname}`;
+
     // Create the user
     const userId = Accounts.createUser({
       email,
       password,
       username,
       profile: {
-        name: username, // Use username as display name initially
+        name: fullName,
         country,
+        fname,
+        lname,
+        roles: ["user"],
       },
     });
 
@@ -53,15 +64,17 @@ Meteor.methods({
       { _id: userId },
       {
         $set: {
-          name: username,
+          name: fullName,
           role: ["user"] as Role[],
           status: "online" as Status,
           lastSeenAt: new Date(),
-          avatarUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(username)}&background=3b82f6&color=fff&size=128`,
+          avatarUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=3b82f6&color=fff&size=128`,
           createdAt: new Date(),
           profile: {
-            name: username,
+            name: fullName,
             country,
+            fname,
+            lname,
           },
         },
       },
