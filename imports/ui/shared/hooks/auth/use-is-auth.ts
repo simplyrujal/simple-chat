@@ -18,7 +18,5 @@ export const useIsAuth = () => {
     queryFn: () => Meteor.callAsync("auth.check"),
   });
 
-  console.log({ data });
-
   return { isLoading, isAuthenticated: data?.isAuthenticated };
 };

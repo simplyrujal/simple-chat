@@ -84,4 +84,12 @@ Meteor.methods({
         : null,
     };
   },
+
+  /**
+   * Logout the current user
+   */
+  async "user.logout"() {
+    Meteor.logout();
+    return { success: true };
+  },
 });
