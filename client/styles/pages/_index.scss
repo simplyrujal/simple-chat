@@ -1,1 +1,9 @@
-@use 'login';
+@use "login";
+@use "dashboard";
+
+.chat-layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--bg-color);
+}
