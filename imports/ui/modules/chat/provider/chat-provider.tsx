@@ -10,7 +10,9 @@ const ChatProvider: React.FC<IProps> = ({ children }) => {
             <header className="top-bar">
                 <h1>Chats</h1>
                 <div className="actions">
-                    <button>New Chat</button>
+                    <button>Video Call</button>
+                    <button>Audio Call</button>
+
                 </div>
             </header>
             <div className="content-area">{children}</div>
