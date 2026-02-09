@@ -1,10 +1,1 @@
-@use "login";
-@use "register";
-@use "dashboard";
-
-.chat-layout {
-  display: flex;
-  height: 100vh;
-  overflow: hidden;
-  background-color: var(--bg-color);
-}
+// This file is empty because all page styles have been migrated to React Bootstrap

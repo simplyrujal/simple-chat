@@ -131,6 +131,8 @@ Meteor.methods({
             username: user.username,
             emails: user.emails,
             profile: user.profile,
+            avatarUrl: (user as any).avatarUrl,
+            status: (user as any).status,
           }
         : null,
     };

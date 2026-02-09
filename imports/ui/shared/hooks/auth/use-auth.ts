@@ -9,6 +9,8 @@ type TCheckAuth = {
     username: string | undefined;
     emails: Meteor.UserEmail[] | undefined;
     profile: Meteor.UserProfile | undefined;
+    avatarUrl?: string;
+    status?: string;
   } | null;
 };
 
