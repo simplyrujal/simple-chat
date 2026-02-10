@@ -13,7 +13,7 @@ const ChatMessages: React.FC<{ roomId: string }> = ({ roomId }) => {
         <Container fluid className="flex-grow-1 overflow-auto p-3 bg-light d-flex flex-column">
             {currentUserId && messages && messages.length > 0 ? (
                 messages.map((msg) => {
-                    return <Message key={msg._id} msg={msg} currentUserId={currentUserId} otherUserId={roomId} />
+                    return <Message key={msg._id} msg={msg} currentUserId={currentUserId} />
                 })
             ) : (
                 <div className="h-100 d-flex flex-column align-items-center justify-content-center text-muted">
