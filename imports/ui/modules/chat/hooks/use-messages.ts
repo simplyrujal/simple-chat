@@ -1,3 +1,4 @@
+import { useMutation } from "@tanstack/react-query";
 import { Meteor } from "meteor/meteor";
 import { useTracker } from "meteor/react-meteor-data";
 import { MessageCollection } from "/imports/collections/message";
@@ -15,13 +16,19 @@ export const useSubscribeMessages = (roomId: string, query?: TQuery) => {
       Meteor.subscribe("room.messages", roomId);
       return MessageCollection.find(
         { roomId },
-        {
-          ...(query || {}),
-          sort: { createdAt: 1 },
-        },
+        // {
+        //   ...(query || {}),
+        //   sort: { createdAt: 1 },
+        // },
       ).fetch();
     }
   }, [roomId]);
 
   return res;
 };
+
+export const useSendMessage = () =>
+  useMutation({
+    mutationFn: (data: { to: string; content: string; roomId: string }) =>
+      Meteor.callAsync("set.message", data),
+  });

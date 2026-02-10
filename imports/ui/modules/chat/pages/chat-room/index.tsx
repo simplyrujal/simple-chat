@@ -45,10 +45,10 @@ export const ChatRoomPage: React.FC = () => {
             <ChatHeader room={room} />
 
             {/* Chat Messages */}
-            <ChatMessages />
+            <ChatMessages roomId={room._id} />
 
             {/* Chat Input Placeholder */}
-            <ChatInput />
+            <ChatInput room={room} />
         </div>
     );
 };

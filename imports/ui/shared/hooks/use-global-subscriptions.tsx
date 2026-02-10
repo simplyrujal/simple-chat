@@ -8,7 +8,7 @@ const useGlobalSubscriptions = () => {
             Meteor.subscribe('room.list');
             Meteor.subscribe('roomMember.list');
             Meteor.subscribe('user.list');
-            Meteor.subscribe('user.self');
+            Meteor.subscribe('all.messages');
         }
     }, []);
 

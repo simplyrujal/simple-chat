@@ -1,14 +1,12 @@
 import { Meteor } from "meteor/meteor";
 import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import { useParams } from "react-router-dom";
 import { useSubscribeMessages } from "../../hooks/use-messages";
 
-const ChatMessages: React.FC = () => {
-    const { chatRoomId } = useParams<{ chatRoomId: string }>();
-    const messages = useSubscribeMessages(chatRoomId || '');
-    const currentUserId = Meteor.userId();
+const ChatMessages: React.FC<{ roomId: string }> = ({ roomId }) => {
+    const messages = useSubscribeMessages(roomId);
 
+    const currentUserId = Meteor.userId();
 
     // Get current user's profile name (adjust based on your user data structure)
     const currentUserName = "You";

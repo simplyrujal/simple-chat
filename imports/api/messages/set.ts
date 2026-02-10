@@ -4,12 +4,10 @@ import { MessageCollection } from "/imports/collections/message";
 
 Meteor.methods({
   async "set.message"({
-    from,
     to,
     content,
     roomId,
   }: {
-    from: string;
     to: string;
     content: string;
     roomId: string;
@@ -21,19 +19,20 @@ Meteor.methods({
       );
     }
     check(roomId, String);
+    check(to, String);
+    check(content, String);
 
-    const data = MessageCollection.insertAsync({
+    const data = await MessageCollection.insertAsync({
       roomId,
       content: {
         type: "text",
         text: content,
       },
       createdAt: new Date(),
-      from,
+      from: this.userId,
       to,
       deleted: false,
     });
-
     return data;
   },
 });
