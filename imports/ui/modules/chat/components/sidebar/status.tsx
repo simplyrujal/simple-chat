@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React from "react";
 import { useGetUserStatus } from "/imports/ui/shared/hooks/user/use-user";
 
 interface IProps {
@@ -16,4 +16,4 @@ const Status: React.FC<IProps> = ({ userId }) => {
   );
 };
 
-export default memo(Status);
+export default Status;
