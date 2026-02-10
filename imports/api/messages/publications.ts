@@ -19,13 +19,15 @@ Meteor.publish("room.messages", function (roomId: string, query?: TQuery) {
       check(query, Object);
     }
 
-    return MessageCollection.find(
+    const res = MessageCollection.find(
       { roomId },
       {
         ...(query || {}),
         sort: { createdAt: 1 },
       },
     );
+
+    return res;
   } catch (error) {
     console.error("Error in room.messages publication:", error);
   }

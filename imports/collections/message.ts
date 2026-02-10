@@ -1,6 +1,6 @@
 import { Mongo } from "meteor/mongo";
 
-type TMessage = {
+export type TMessage = {
   _id: string;
   roomId: string;
 
