@@ -1,6 +1,6 @@
 import { Mongo } from "meteor/mongo";
 
-type TRooms = {
+export type TRooms = {
   _id: string;
   roomId: string;
   name: string;

@@ -1,8 +1,9 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Meteor } from "meteor/meteor";
+import { TRooms } from "/imports/collections/room";
 
 export const useRoom = (roomId: string | undefined) => {
-  return useQuery({
+  return useQuery<TRooms>({
     queryKey: ["room", roomId],
     queryFn: () => Meteor.callAsync("room.get", roomId),
     enabled: !!roomId,

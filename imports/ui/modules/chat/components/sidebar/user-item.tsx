@@ -1,11 +1,11 @@
 import React, { memo } from 'react';
 import { ListGroup } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { useCreateDirectRoom } from '../../hooks/use-room';
 import LastSeen from './last-seen';
 import Status from './status';
 import { User } from '/imports/collections/user';
 import { useAuth } from '/imports/ui/shared/hooks/auth/use-auth';
-import { useCreateDirectRoom } from '/imports/ui/shared/hooks/rooms/use-room';
 
 const getInitials = (name: string) => {
     return name
