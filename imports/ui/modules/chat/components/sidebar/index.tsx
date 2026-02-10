@@ -1,19 +1,9 @@
 import React, { useState } from 'react';
 import { Button, Form, InputGroup, ListGroup } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
-import UserProfileDropDown from './drop-down-user-profile';
-import { useAuth } from '/imports/ui/shared/hooks/auth/use-auth';
-import { useCreateDirectRoom } from '/imports/ui/shared/hooks/rooms/use-room';
+import { Link } from 'react-router-dom';
+import UserProfileDropDown from '../drop-down-user-profile';
+import UserItem from './user-item';
 import useUserList from '/imports/ui/shared/hooks/user/user-user-list';
-
-const getInitials = (name: string) => {
-    return name
-        .split(' ')
-        .map(n => n[0])
-        .join('')
-        .toUpperCase()
-        .slice(0, 2);
-};
 
 interface SidebarProps {
     isMobileOpen?: boolean;
@@ -22,33 +12,13 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen, onCloseMobile }) => {
     const [searchQuery, setSearchQuery] = useState('');
-    const [activeUserId, setActiveUserId] = useState<string | null>(null);
     const [isCollapsed, setIsCollapsed] = useState(false);
-
-    const usr = useAuth()
-    const navigate = useNavigate();
-    const createDirectRoom = useCreateDirectRoom();
-
     const { data, isLoading } = useUserList({
         searchString: searchQuery,
         limit: 10,
     });
 
-    const handleUserClick = async (targetUserId: string) => {
-        const currentUserId = usr?.user?._id;
-        if (!currentUserId) return;
 
-        try {
-            const roomId = await createDirectRoom.mutateAsync([currentUserId, targetUserId]);
-            navigate(`/chat/${roomId}`);
-            setActiveUserId(targetUserId);
-            if (window.innerWidth < 768) {
-                onCloseMobile?.();
-            }
-        } catch (err) {
-            console.error("Error joining room:", err);
-        }
-    };
 
     if (isLoading) {
         return <div className="p-3 text-center text-muted small">Loading...</div>
@@ -137,40 +107,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen, onCloseMobile })
                         <ListGroup variant="flush">
                             {data.users?.length > 0 ? (
                                 data.users.map(user => (
-                                    <ListGroup.Item
+                                    <UserItem
                                         key={user._id}
-                                        action
-                                        active={activeUserId === user._id}
-                                        onClick={() => handleUserClick(user._id)}
-                                        className="user-list-item d-flex align-items-center gap-3 py-3 border-0 transition-all hover-bg-light"
-                                    >
-                                        <div className="position-relative flex-shrink-0">
-                                            {user.avatarUrl ? (
-                                                <img src={user.avatarUrl} alt={user.username} className="rounded-circle" style={{ width: '40px', height: '40px', objectFit: 'cover' }} />
-                                            ) : (
-                                                <div className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold small" style={{ width: '40px', height: '40px' }}>
-                                                    {getInitials(user.username)}
-                                                </div>
-                                            )}
-                                            <span
-                                                className={`position-absolute bottom-0 end-0 border border-white rounded-circle ${user.status === 'online' ? 'bg-success' : 'bg-secondary'}`}
-                                                style={{ width: '10px', height: '10px' }}
-                                            />
-                                        </div>
-                                        <div className="user-info flex-grow-1 min-width-0">
-                                            <div className="d-flex justify-content-between align-items-center mb-0">
-                                                <h6 className={`mb-0 text-truncate small fw-bold ${activeUserId === user._id ? 'text-white' : 'text-dark'}`}>{user.profile.name}</h6>
-                                                {user.createdAt && (
-                                                    <small className={`smaller ${activeUserId === user._id ? 'text-white-50' : 'text-muted'}`}>
-                                                        {user.createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                                    </small>
-                                                )}
-                                            </div>
-                                            <p className={`mb-0 smaller text-truncate ${activeUserId === user._id ? 'text-white-50' : 'text-muted'}`}>
-                                                {user.status === 'online' ? 'Active now' : 'Last seen ' + user.createdAt?.toLocaleDateString()}
-                                            </p>
-                                        </div>
-                                    </ListGroup.Item>
+                                        user={user}
+                                        onCloseMobile={onCloseMobile}
+                                    />
                                 ))
                             ) : (
                                 <div className="p-4 text-center text-muted small">No users found</div>
