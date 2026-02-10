@@ -2,7 +2,7 @@ import { Mongo } from "meteor/mongo";
 
 type TRooms = {
   _id: string;
-  roomId: string;
+  roomId: `${string}-${string}`;
   name: string;
   uids: string[];
   description: string;

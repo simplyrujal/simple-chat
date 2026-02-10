@@ -1,3 +1,4 @@
+import { MessageCollection } from "/imports/collections/message";
 import { RoomCollection } from "/imports/collections/room";
 import { UsersCollection } from "/imports/collections/user";
 
@@ -7,6 +8,7 @@ import { UsersCollection } from "/imports/collections/user";
 const collections = {
   UsersCollection,
   RoomCollection,
+  MessageCollection,
 };
 
 type Key = keyof typeof collections;
