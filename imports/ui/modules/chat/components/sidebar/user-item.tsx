@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { ListGroup } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import LastSeen from './last-seen';
 import Status from './status';
 import { User } from '/imports/collections/user';
 import { useAuth } from '/imports/ui/shared/hooks/auth/use-auth';
@@ -47,6 +48,7 @@ const UserItem: React.FC<UserItemProps> = ({ user, onCloseMobile }) => {
             console.error("Error joining room:", err);
         }
     };
+
     return (
         <ListGroup.Item
             action
@@ -73,9 +75,7 @@ const UserItem: React.FC<UserItemProps> = ({ user, onCloseMobile }) => {
                         </small>
                     )}
                 </div>
-                <p className={`mb-0 smaller text-truncate ${isActive ? 'text-white-50' : 'text-muted'}`}>
-                    {user.status === 'online' ? 'Active now' : 'Last seen ' + (user.lastSeenAt ? new Date(user.lastSeenAt).toLocaleDateString() : 'recently')}
-                </p>
+                <LastSeen userId={user._id} lastSeenAt={user.lastSeenAt} />
             </div>
         </ListGroup.Item>
     );

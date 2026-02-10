@@ -1,13 +1,13 @@
 import React from 'react';
 import { Button, Container, Spinner } from 'react-bootstrap';
 import { Link, useParams } from 'react-router-dom';
-import { useMessages } from '/imports/ui/shared/hooks/rooms/use-messages';
+import { useSubscribeMessages } from '/imports/ui/shared/hooks/rooms/use-messages';
 import { useRoom } from '/imports/ui/shared/hooks/rooms/use-room';
 
 export const ChatRoomPage: React.FC = () => {
     const { chatRoomId } = useParams<{ chatRoomId: string }>();
     const { data: room, isLoading: isRoomLoading, error: roomError } = useRoom(chatRoomId);
-    const { data: messages, isLoading: isMessagesLoading } = useMessages(chatRoomId);
+    const messages = useSubscribeMessages(chatRoomId || '');
 
     if (isRoomLoading) {
         return (
@@ -50,11 +50,7 @@ export const ChatRoomPage: React.FC = () => {
 
             {/* Chat Messages */}
             <div className="flex-grow-1 overflow-auto p-4 bg-light d-flex flex-column gap-3">
-                {isMessagesLoading ? (
-                    <div className="text-center py-5">
-                        <Spinner animation="border" size="sm" variant="secondary" />
-                    </div>
-                ) : (messages as any[]) && (messages as any[]).length > 0 ? (
+                {(messages as any[]) && (messages as any[]).length > 0 ? (
                     (messages as any[]).map((msg: any) => (
                         <div key={msg._id} className="p-3 bg-white rounded shadow-sm border" style={{ maxWidth: '80%' }}>
                             <div className="mb-1 fw-bold small text-primary">{msg.senderId}</div>
