@@ -14,19 +14,17 @@ Meteor.methods({
 
     const sortedIds = ids.sort().join("-");
 
-    const businessRoomId = Random.id();
-
     const checkRoom = await RoomCollection.findOneAsync({
-      roomId: businessRoomId,
+      roomId: sortedIds,
     });
 
     if (checkRoom) {
-      throw new Meteor.Error("room-already-exists");
+      return checkRoom.roomId;
     }
 
     // insertAsync returns the _id (mongoId) of the new document
-    const mongoId = await RoomCollection.insertAsync({
-      roomId: businessRoomId,
+    await RoomCollection.insertAsync({
+      roomId: sortedIds,
       name: sortedIds,
       type: "direct",
       createdAt: new Date(),
@@ -36,7 +34,7 @@ Meteor.methods({
 
     for (const id of ids) {
       await RoomMemberCollection.insertAsync({
-        roomId: mongoId,
+        roomId: sortedIds,
         userId: id,
         role: id === this.userId ? "admin" : "user",
         muted: false,
@@ -44,7 +42,7 @@ Meteor.methods({
       });
     }
 
-    return mongoId;
+    return sortedIds;
   },
 
   async "room.create.channel"({

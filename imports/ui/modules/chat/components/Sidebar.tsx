@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Button, Form, InputGroup, ListGroup } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import UserProfileDropDown from './drop-down-user-profile';
 import { useAuth } from '/imports/ui/shared/hooks/auth/use-auth';
+import { useCreateDirectRoom } from '/imports/ui/shared/hooks/rooms/use-room';
 import useUserList from '/imports/ui/shared/hooks/user/user-user-list';
 
 const getInitials = (name: string) => {
@@ -13,10 +14,6 @@ const getInitials = (name: string) => {
         .toUpperCase()
         .slice(0, 2);
 };
-
-const sortIdsAndJoin = (ids: string[]) => {
-    return ids.sort((a, b) => a.localeCompare(b)).join('-');
-}
 
 interface SidebarProps {
     isMobileOpen?: boolean;
@@ -29,11 +26,29 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen, onCloseMobile })
     const [isCollapsed, setIsCollapsed] = useState(false);
 
     const usr = useAuth()
+    const navigate = useNavigate();
+    const createDirectRoom = useCreateDirectRoom();
 
     const { data, isLoading } = useUserList({
         searchString: searchQuery,
         limit: 10,
     });
+
+    const handleUserClick = async (targetUserId: string) => {
+        const currentUserId = usr?.user?._id;
+        if (!currentUserId) return;
+
+        try {
+            const roomId = await createDirectRoom.mutateAsync([currentUserId, targetUserId]);
+            navigate(`/chat/${roomId}`);
+            setActiveUserId(targetUserId);
+            if (window.innerWidth < 768) {
+                onCloseMobile?.();
+            }
+        } catch (err) {
+            console.error("Error joining room:", err);
+        }
+    };
 
     if (isLoading) {
         return <div className="p-3 text-center text-muted small">Loading...</div>
@@ -124,16 +139,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen, onCloseMobile })
                                 data.users.map(user => (
                                     <ListGroup.Item
                                         key={user._id}
-                                        as={Link as any}
-                                        to={`/chat/${sortIdsAndJoin([usr?.user?._id || '', user._id])}`}
                                         action
                                         active={activeUserId === user._id}
-                                        onClick={() => {
-                                            setActiveUserId(user._id);
-                                            if (window.innerWidth < 768) {
-                                                onCloseMobile?.();
-                                            }
-                                        }}
+                                        onClick={() => handleUserClick(user._id)}
                                         className="user-list-item d-flex align-items-center gap-3 py-3 border-0 transition-all hover-bg-light"
                                     >
                                         <div className="position-relative flex-shrink-0">

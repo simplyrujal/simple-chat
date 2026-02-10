@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Meteor } from "meteor/meteor";
-import { User } from "/imports/api/users";
+import { User } from "/imports/collections/user";
 
 type TUsers = {
   users: User[];

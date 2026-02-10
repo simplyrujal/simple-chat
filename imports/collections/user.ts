@@ -11,16 +11,14 @@ export interface User extends Meteor.User {
   roles: Role[]; // ["admin", "user"]
 
   profile: {
+    name: string;
     fname: string;
     lname: string;
     country?: string;
   };
 
-  presence: {
-    status: Status; // online, offline
-    lastSeenAt: Date;
-  };
-
+  status: Status;
+  lastSeenAt: Date;
   createdAt: Date;
 }
 

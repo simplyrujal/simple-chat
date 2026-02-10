@@ -12,7 +12,7 @@ export const useRoom = (roomId: string | undefined) => {
 export const useCreateDirectRoom = () => {
   return useMutation({
     mutationFn: (ids: [string, string]) => {
-      return Meteor.callAsync("room.create", { ids });
+      return Meteor.callAsync("room.create.direct", { ids });
     },
   });
 };
