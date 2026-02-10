@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { memo } from 'react';
 import { ListGroup } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { User } from '/imports/collections/user';
@@ -21,11 +21,15 @@ interface UserItemProps {
 
 const UserItem: React.FC<UserItemProps> = ({ user, onCloseMobile }) => {
 
-    const [activeUserId, setActiveUserId] = useState<string | null>(null);
+    const url = window.location.href;
+    const parts = url.split("/");
+    const chatRoomId = parts[parts.length - 1];
 
     const usr = useAuth()
     const navigate = useNavigate();
     const createDirectRoom = useCreateDirectRoom();
+
+    const isActive = chatRoomId?.split('-')?.includes(user._id)
 
 
     const handleUserClick = async (targetUserId: string) => {
@@ -35,7 +39,6 @@ const UserItem: React.FC<UserItemProps> = ({ user, onCloseMobile }) => {
         try {
             const roomId = await createDirectRoom.mutateAsync([currentUserId, targetUserId]);
             navigate(`/chat/${roomId}`);
-            setActiveUserId(targetUserId);
             if (window.innerWidth < 768) {
                 onCloseMobile?.();
             }
@@ -46,7 +49,7 @@ const UserItem: React.FC<UserItemProps> = ({ user, onCloseMobile }) => {
     return (
         <ListGroup.Item
             action
-            active={activeUserId === user._id}
+            active={isActive}
             onClick={() => handleUserClick(user._id)}
             className="user-list-item d-flex align-items-center gap-3 py-3 border-0 transition-all hover-bg-light"
         >
@@ -65,14 +68,14 @@ const UserItem: React.FC<UserItemProps> = ({ user, onCloseMobile }) => {
             </div>
             <div className="user-info flex-grow-1 min-width-0">
                 <div className="d-flex justify-content-between align-items-center mb-0">
-                    <h6 className={`mb-0 text-truncate small fw-bold ${activeUserId === user._id ? 'text-white' : 'text-dark'}`}>{user.profile.name}</h6>
+                    <h6 className={`mb-0 text-truncate small fw-bold ${isActive ? 'text-white' : 'text-dark'}`}>{user.profile.name}</h6>
                     {user.createdAt && (
-                        <small className={`smaller ${activeUserId === user._id ? 'text-white-50' : 'text-muted'}`}>
+                        <small className={`smaller ${isActive ? 'text-white-50' : 'text-muted'}`}>
                             {new Date(user.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </small>
                     )}
                 </div>
-                <p className={`mb-0 smaller text-truncate ${activeUserId === user._id ? 'text-white-50' : 'text-muted'}`}>
+                <p className={`mb-0 smaller text-truncate ${isActive ? 'text-white-50' : 'text-muted'}`}>
                     {user.status === 'online' ? 'Active now' : 'Last seen ' + (user.lastSeenAt ? new Date(user.lastSeenAt).toLocaleDateString() : 'recently')}
                 </p>
             </div>

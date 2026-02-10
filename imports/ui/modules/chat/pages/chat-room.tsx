@@ -5,9 +5,9 @@ import { useMessages } from '/imports/ui/shared/hooks/rooms/use-messages';
 import { useRoom } from '/imports/ui/shared/hooks/rooms/use-room';
 
 export const ChatRoomPage: React.FC = () => {
-    const { id: chatId } = useParams<{ id: string }>();
-    const { data: room, isLoading: isRoomLoading, error: roomError } = useRoom(chatId);
-    const { data: messages, isLoading: isMessagesLoading } = useMessages(chatId);
+    const { chatRoomId } = useParams<{ chatRoomId: string }>();
+    const { data: room, isLoading: isRoomLoading, error: roomError } = useRoom(chatRoomId);
+    const { data: messages, isLoading: isMessagesLoading } = useMessages(chatRoomId);
 
     if (isRoomLoading) {
         return (

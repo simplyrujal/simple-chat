@@ -37,7 +37,7 @@ export const ChatRoutes: React.FC = () => {
                 <ChatProvider>
                     <Routes>
                         <Route path="dashboard" element={<DashboardPage />} />
-                        <Route path="chat/:id" element={<ChatRoomPage />} />
+                        <Route path="chat/:chatRoomId" element={<ChatRoomPage />} />
                     </Routes>
                 </ChatProvider>
             </div>
