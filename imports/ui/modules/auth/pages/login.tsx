@@ -1,17 +1,24 @@
-import React, { useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import React from 'react';
 import { Alert, Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
+import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
+import { LoginFormValues, loginSchema } from '../schemas';
 import useLogin from '/imports/ui/shared/hooks/auth/use-login';
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
   const { login, isLoading, error } = useLogin();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    login({ email, password })
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit = (data: LoginFormValues) => {
+    login(data);
   };
 
   return (
@@ -25,19 +32,25 @@ const Login: React.FC = () => {
                 <p className="text-muted small">Sign in to your account to continue</p>
               </div>
 
-              <Form onSubmit={handleSubmit}>
-                {error && <Alert variant="danger" className="py-2 small">{error.message}</Alert>}
+              <Form onSubmit={handleSubmit(onSubmit)}>
+                {(error || errors.root) && (
+                  <Alert variant="danger" className="py-2 small">
+                    {error?.message || errors.root?.message}
+                  </Alert>
+                )}
 
                 <Form.Group className="mb-3" controlId="email">
                   <Form.Label className="small fw-semibold">Email</Form.Label>
                   <Form.Control
                     type="email"
                     placeholder="name@company.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
+                    {...register('email')}
+                    isInvalid={!!errors.email}
                     disabled={isLoading}
                   />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.email?.message}
+                  </Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group className="mb-4" controlId="password">
@@ -45,11 +58,13 @@ const Login: React.FC = () => {
                   <Form.Control
                     type="password"
                     placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
+                    {...register('password')}
+                    isInvalid={!!errors.password}
                     disabled={isLoading}
                   />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.password?.message}
+                  </Form.Control.Feedback>
                 </Form.Group>
 
                 <Button variant="primary" type="submit" className="w-100 mb-3 py-2 fw-bold" disabled={isLoading}>
@@ -72,4 +87,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login
+export default Login;

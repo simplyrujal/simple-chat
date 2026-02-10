@@ -1,8 +1,11 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Meteor } from 'meteor/meteor';
 import React, { useState } from 'react';
 import { Alert, Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
+import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import useLogin from '../../../shared/hooks/auth/use-login';
+import { RegisterFormValues, registerSchema } from '../schemas';
 
 const COUNTRIES = [
     'United States', 'United Kingdom', 'Canada', 'Australia', 'Germany',
@@ -14,53 +17,38 @@ const COUNTRIES = [
 ];
 
 const Register: React.FC = () => {
-    const [username, setUsername] = useState('');
-    const [fname, setFname] = useState('');
-    const [lname, setLname] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [country, setCountry] = useState('');
-    const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
     const { login } = useLogin();
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError('');
+    const {
+        register,
+        handleSubmit,
+        setError,
+        formState: { errors },
+    } = useForm<RegisterFormValues>({
+        resolver: zodResolver(registerSchema),
+    });
 
-        if (password !== confirmPassword) {
-            setError('Passwords do not match');
-            return;
-        }
-
-        if (password.length < 6) {
-            setError('Password must be at least 6 characters long');
-            return;
-        }
-
-        if (!country) {
-            setError('Please select a country');
-            return;
-        }
-
-        setLoading(true);
+    const onSubmit = async (data: RegisterFormValues) => {
+        setSubmitting(true);
 
         try {
             await Meteor.callAsync('user.register', {
-                username,
-                fname,
-                lname,
-                email,
-                password,
-                country,
+                username: data.username,
+                fname: data.fname,
+                lname: data.lname,
+                email: data.email,
+                password: data.password,
+                country: data.country,
             });
 
-            login({ email, password });
-
-        } catch (error: any) {
-            setError(error.reason || error.message || 'Registration failed. Please try again.');
-            setLoading(false);
+            login({ email: data.email, password: data.password });
+        } catch (err: any) {
+            setError('root', {
+                type: 'manual',
+                message: err.reason || err.message || 'Registration failed. Please try again.'
+            });
+            setSubmitting(false);
         }
     };
 
@@ -75,8 +63,8 @@ const Register: React.FC = () => {
                                 <p className="text-muted small">Join us and start chatting with others</p>
                             </div>
 
-                            <Form onSubmit={handleSubmit}>
-                                {error && <Alert variant="danger" className="py-2 small">{error}</Alert>}
+                            <Form onSubmit={handleSubmit(onSubmit)}>
+                                {errors.root && <Alert variant="danger" className="py-2 small">{errors.root.message}</Alert>}
 
                                 <Row>
                                     <Col md={6}>
@@ -85,11 +73,13 @@ const Register: React.FC = () => {
                                             <Form.Control
                                                 type="text"
                                                 placeholder="John"
-                                                value={fname}
-                                                onChange={(e) => setFname(e.target.value)}
-                                                required
-                                                disabled={loading}
+                                                {...register('fname')}
+                                                isInvalid={!!errors.fname}
+                                                disabled={submitting}
                                             />
+                                            <Form.Control.Feedback type="invalid">
+                                                {errors.fname?.message}
+                                            </Form.Control.Feedback>
                                         </Form.Group>
                                     </Col>
                                     <Col md={6}>
@@ -98,11 +88,13 @@ const Register: React.FC = () => {
                                             <Form.Control
                                                 type="text"
                                                 placeholder="Doe"
-                                                value={lname}
-                                                onChange={(e) => setLname(e.target.value)}
-                                                required
-                                                disabled={loading}
+                                                {...register('lname')}
+                                                isInvalid={!!errors.lname}
+                                                disabled={submitting}
                                             />
+                                            <Form.Control.Feedback type="invalid">
+                                                {errors.lname?.message}
+                                            </Form.Control.Feedback>
                                         </Form.Group>
                                     </Col>
                                 </Row>
@@ -112,12 +104,13 @@ const Register: React.FC = () => {
                                     <Form.Control
                                         type="text"
                                         placeholder="johndoe"
-                                        value={username}
-                                        onChange={(e) => setUsername(e.target.value)}
-                                        required
-                                        disabled={loading}
-                                        minLength={3}
+                                        {...register('username')}
+                                        isInvalid={!!errors.username}
+                                        disabled={submitting}
                                     />
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.username?.message}
+                                    </Form.Control.Feedback>
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="email">
@@ -125,11 +118,13 @@ const Register: React.FC = () => {
                                     <Form.Control
                                         type="email"
                                         placeholder="name@company.com"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        required
-                                        disabled={loading}
+                                        {...register('email')}
+                                        isInvalid={!!errors.email}
+                                        disabled={submitting}
                                     />
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.email?.message}
+                                    </Form.Control.Feedback>
                                 </Form.Group>
 
                                 <Row>
@@ -139,12 +134,13 @@ const Register: React.FC = () => {
                                             <Form.Control
                                                 type="password"
                                                 placeholder="••••••••"
-                                                value={password}
-                                                onChange={(e) => setPassword(e.target.value)}
-                                                required
-                                                disabled={loading}
-                                                minLength={6}
+                                                {...register('password')}
+                                                isInvalid={!!errors.password}
+                                                disabled={submitting}
                                             />
+                                            <Form.Control.Feedback type="invalid">
+                                                {errors.password?.message}
+                                            </Form.Control.Feedback>
                                         </Form.Group>
                                     </Col>
                                     <Col md={6}>
@@ -153,12 +149,13 @@ const Register: React.FC = () => {
                                             <Form.Control
                                                 type="password"
                                                 placeholder="••••••••"
-                                                value={confirmPassword}
-                                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                                required
-                                                disabled={loading}
-                                                minLength={6}
+                                                {...register('confirmPassword')}
+                                                isInvalid={!!errors.confirmPassword}
+                                                disabled={submitting}
                                             />
+                                            <Form.Control.Feedback type="invalid">
+                                                {errors.confirmPassword?.message}
+                                            </Form.Control.Feedback>
                                         </Form.Group>
                                     </Col>
                                 </Row>
@@ -166,10 +163,9 @@ const Register: React.FC = () => {
                                 <Form.Group className="mb-4" controlId="country">
                                     <Form.Label className="small fw-semibold">Country</Form.Label>
                                     <Form.Select
-                                        value={country}
-                                        onChange={(e) => setCountry(e.target.value)}
-                                        required
-                                        disabled={loading}
+                                        {...register('country')}
+                                        isInvalid={!!errors.country}
+                                        disabled={submitting}
                                     >
                                         <option value="">Select your country</option>
                                         {COUNTRIES.map((c) => (
@@ -178,10 +174,13 @@ const Register: React.FC = () => {
                                             </option>
                                         ))}
                                     </Form.Select>
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.country?.message}
+                                    </Form.Control.Feedback>
                                 </Form.Group>
 
-                                <Button variant="primary" type="submit" className="w-100 mb-3 py-2 fw-bold" disabled={loading}>
-                                    {loading ? 'Creating Account...' : 'Sign Up'}
+                                <Button variant="primary" type="submit" className="w-100 mb-3 py-2 fw-bold" disabled={submitting}>
+                                    {submitting ? 'Creating Account...' : 'Sign Up'}
                                 </Button>
                             </Form>
 
