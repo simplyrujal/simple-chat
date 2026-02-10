@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Button, Form, InputGroup, ListGroup } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { useUserList } from '../../../../shared/hooks/user/use-user';
 import UserProfileDropDown from '../drop-down-user-profile';
 import UserItem from './user-item';
-import useUserList from '/imports/ui/shared/hooks/user/user-user-list';
 
 interface SidebarProps {
     isMobileOpen?: boolean;

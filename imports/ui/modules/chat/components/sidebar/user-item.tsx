@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { ListGroup } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import Status from './status';
 import { User } from '/imports/collections/user';
 import { useAuth } from '/imports/ui/shared/hooks/auth/use-auth';
 import { useCreateDirectRoom } from '/imports/ui/shared/hooks/rooms/use-room';
@@ -61,10 +62,7 @@ const UserItem: React.FC<UserItemProps> = ({ user, onCloseMobile }) => {
                         {getInitials(user.profile.name || user.username)}
                     </div>
                 )}
-                <span
-                    className={`position-absolute bottom-0 end-0 border border-white rounded-circle ${user.status === 'online' ? 'bg-success' : 'bg-secondary'}`}
-                    style={{ width: '10px', height: '10px' }}
-                />
+                <Status userId={user._id} />
             </div>
             <div className="user-info flex-grow-1 min-width-0">
                 <div className="d-flex justify-content-between align-items-center mb-0">

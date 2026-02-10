@@ -6,8 +6,14 @@ import { DashboardPage } from './pages/dashboard';
 import ChatProvider from './provider/chat-provider';
 
 import { Button } from 'react-bootstrap';
+import { useAuth } from '../../shared/hooks/auth/use-auth';
+import { userSetStatus } from '../../shared/hooks/user/use-user';
 
 export const ChatRoutes: React.FC = () => {
+    const { user } = useAuth();
+
+    userSetStatus(user?._id || '')
+
     const [isMobileOpen, setIsMobileOpen] = React.useState(false);
 
     return (
