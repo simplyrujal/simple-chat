@@ -6,6 +6,7 @@ import { AdminRoutes } from './modules/admin/routes';
 import { AuthRoutes } from './modules/auth/routes';
 import { ChatRoutes } from './modules/chat/routes';
 import { RequireAuth } from './shared/components/require-auth';
+import useGlobalSubscriptions from './shared/hooks/use-global-subscriptions';
 import registerCollection from './shared/utils/registerCollection';
 
 const queryClient = new QueryClient({
@@ -20,9 +21,11 @@ const queryClient = new QueryClient({
 registerCollection('RoomCollection')
 registerCollection('UsersCollection')
 registerCollection('RoomMemberCollection')
+registerCollection('MessageCollection')
 
 
 export const App: React.FC = () => {
+  useGlobalSubscriptions();
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>

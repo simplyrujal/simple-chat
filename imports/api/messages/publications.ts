@@ -2,7 +2,7 @@ import { check } from "meteor/check";
 import { Meteor } from "meteor/meteor";
 import { MessageCollection } from "../../collections/message";
 
-Meteor.publish("messages.list", function (roomId: string) {
+Meteor.publish("room.messages", function (roomId: string) {
   if (!this.userId) {
     return this.ready();
   }
@@ -13,6 +13,20 @@ Meteor.publish("messages.list", function (roomId: string) {
     { roomId },
     {
       sort: { createdAt: 1 },
+    },
+  );
+});
+
+Meteor.publish("messages.all", function () {
+  if (!this.userId) {
+    return this.ready();
+  }
+
+  return MessageCollection.find(
+    {},
+    {
+      sort: { createdAt: -1 },
+      limit: 100, // Limit to 100 most recent messages for performance
     },
   );
 });

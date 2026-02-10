@@ -23,7 +23,7 @@ Meteor.methods({
     }
 
     // insertAsync returns the _id (mongoId) of the new document
-    await RoomCollection.insertAsync({
+    const roomId = await RoomCollection.insertAsync({
       roomId: sortedIds,
       name: sortedIds,
       type: "direct",
@@ -34,7 +34,7 @@ Meteor.methods({
 
     for (const id of ids) {
       await RoomMemberCollection.insertAsync({
-        roomId: sortedIds,
+        roomId: roomId,
         userId: id,
         role: id === this.userId ? "admin" : "user",
         muted: false,
