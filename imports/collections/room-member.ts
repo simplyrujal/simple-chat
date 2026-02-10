@@ -1,11 +1,12 @@
 import { Mongo } from "meteor/mongo";
+import { Role } from "./user";
 
 type TRoomMember = {
   _id: string;
   roomId: string;
   userId: string;
 
-  role: "admin" | "member";
+  role: Role;
   muted: boolean;
 
   joinedAt: Date;

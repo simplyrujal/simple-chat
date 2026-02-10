@@ -24,3 +24,4 @@ zodern:types            # Pull in type declarations from other Meteor packages
 fourseven:scss
 accounts-password
 accounts-base
+random

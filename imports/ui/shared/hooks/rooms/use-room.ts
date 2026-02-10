@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Meteor } from "meteor/meteor";
 
 export const useRoom = (roomId: string | undefined) => {
@@ -6,5 +6,13 @@ export const useRoom = (roomId: string | undefined) => {
     queryKey: ["room", roomId],
     queryFn: () => Meteor.callAsync("room.get", roomId),
     enabled: !!roomId,
+  });
+};
+
+export const useCreateDirectRoom = () => {
+  return useMutation({
+    mutationFn: (ids: [string, string]) => {
+      return Meteor.callAsync("room.create", { ids });
+    },
   });
 };
