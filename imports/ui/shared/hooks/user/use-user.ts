@@ -33,8 +33,16 @@ export const useGetUserStatus = (userId: string) => {
   });
 };
 
-const IDLE_TIMEOUT = 15 * 60 * 1000; // 15 minutes
+const IDLE_TIMEOUT = 1 * 60 * 1000; // 1 minute
 const DEBOUNCE_DELAY = 1000; // 1 second
+const activityEvents = [
+  "mousemove",
+  "keydown",
+  "click",
+  "scroll",
+  "touchstart",
+  "mousedown",
+];
 
 export const userSetStatus = (userId: string) => {
   const [activity, setActivity] = useState<Status>("online");
@@ -87,15 +95,6 @@ export const userSetStatus = (userId: string) => {
   // Track user activity events
   useEffect(() => {
     if (!targetUserId) return;
-
-    const activityEvents = [
-      "mousemove",
-      "keydown",
-      "click",
-      "scroll",
-      "touchstart",
-      "mousedown",
-    ];
 
     // Add event listeners for activity detection
     const handleActivity = () => resetIdleTimer();
