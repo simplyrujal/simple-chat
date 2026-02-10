@@ -17,7 +17,10 @@ const queryClient = new QueryClient({
   },
 });
 
+registerCollection('RoomCollection')
 registerCollection('UsersCollection')
+registerCollection('RoomMemberCollection')
+
 
 export const App: React.FC = () => {
   return (
