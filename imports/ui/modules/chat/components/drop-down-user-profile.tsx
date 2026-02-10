@@ -1,9 +1,13 @@
-import React from "react"
-import { Dropdown, Image } from "react-bootstrap"
-import { useAuth } from "../../../shared/hooks/auth/use-auth"
-import useLogout from "../../../shared/hooks/auth/use-logout"
+import React from "react";
+import { Dropdown, Image } from "react-bootstrap";
+import { useAuth } from "../../../shared/hooks/auth/use-auth";
+import useLogout from "../../../shared/hooks/auth/use-logout";
 
-const UserProfileDropDown: React.FC = () => {
+interface UserProfileDropDownProps {
+    isCollapsed?: boolean;
+}
+
+const UserProfileDropDown: React.FC<UserProfileDropDownProps> = ({ isCollapsed }) => {
     const { user } = useAuth()
     const { logout } = useLogout()
 
@@ -15,7 +19,7 @@ const UserProfileDropDown: React.FC = () => {
             <Dropdown.Toggle
                 variant="light"
                 id="user-profile-dropdown"
-                className="w-100 d-flex align-items-center justify-content-between p-2 border-0 shadow-none bg-transparent"
+                className={`w-100 d-flex align-items-center ${isCollapsed ? 'justify-content-center' : 'justify-content-between'} p-2 border-0 shadow-none bg-transparent`}
             >
                 <div className="d-flex align-items-center gap-2 overflow-hidden">
                     <div className="position-relative flex-shrink-0">
@@ -31,14 +35,16 @@ const UserProfileDropDown: React.FC = () => {
                             style={{ width: '10px', height: '10px' }}
                         />
                     </div>
-                    <div className="text-start overflow-hidden">
-                        <div className="fw-bold small text-truncate text-dark">{username}</div>
-                        <div className="text-success smaller">Online</div>
-                    </div>
+                    {!isCollapsed && (
+                        <div className="text-start overflow-hidden">
+                            <div className="fw-bold small text-truncate text-dark">{username}</div>
+                            <div className="text-success smaller">Online</div>
+                        </div>
+                    )}
                 </div>
             </Dropdown.Toggle>
 
-            <Dropdown.Menu className="shadow-lg border-0 mb-2 p-2" style={{ width: '100%', minWidth: '200px' }}>
+            <Dropdown.Menu className="shadow-lg border-0 mb-2 p-2" style={{ width: isCollapsed ? 'auto' : '100%', minWidth: '180px' }}>
                 <Dropdown.Item onClick={() => console.log("Profile clicked")} className="rounded d-flex align-items-center gap-2 py-2">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
