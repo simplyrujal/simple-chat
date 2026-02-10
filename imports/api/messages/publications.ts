@@ -16,17 +16,3 @@ Meteor.publish("room.messages", function (roomId: string) {
     },
   );
 });
-
-Meteor.publish("messages.all", function () {
-  if (!this.userId) {
-    return this.ready();
-  }
-
-  return MessageCollection.find(
-    {},
-    {
-      sort: { createdAt: -1 },
-      limit: 100, // Limit to 100 most recent messages for performance
-    },
-  );
-});

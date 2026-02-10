@@ -4,17 +4,16 @@ type TMessage = {
   _id: string;
   roomId: string;
 
-  senderId: string;
+  from: string;
+  to: string;
 
   content: {
     type: "text" | "image" | "file";
     text?: string;
     fileUrl?: string;
   };
-
   createdAt: Date;
   editedAt?: Date;
-
   deleted: boolean;
 };
 

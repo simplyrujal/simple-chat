@@ -1,19 +1,27 @@
-import { useQuery } from "@tanstack/react-query";
 import { Meteor } from "meteor/meteor";
 import { useTracker } from "meteor/react-meteor-data";
+import { MessageCollection } from "/imports/collections/message";
 
-export const useMessages = (roomId: string | undefined) => {
+type TQuery = {
+  limit?: number;
+  skip?: number;
+  sort?: { [key: string]: 1 | -1 };
+};
+
+export const useSubscribeMessages = (roomId: string, query?: TQuery) => {
   // Keeping the subscription for potential background cache updates
-  const handle = useTracker(() => {
+  const res = useTracker(() => {
     if (roomId) {
-      return Meteor.subscribe("messages.list", roomId);
+      Meteor.subscribe("room.messages", roomId);
+      return MessageCollection.find(
+        { roomId },
+        {
+          ...(query || {}),
+          sort: { createdAt: 1 },
+        },
+      ).fetch();
     }
-    return null;
   }, [roomId]);
 
-  return useQuery({
-    queryKey: ["messages", roomId, handle?.ready()],
-    queryFn: () => Meteor.callAsync("get.messages", roomId),
-    enabled: !!roomId && handle?.ready(),
-  });
+  return res;
 };

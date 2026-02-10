@@ -8,11 +8,3 @@ Meteor.publish("user.list", function () {
 
   return UsersCollection.find({});
 });
-
-Meteor.publish("user.self", function () {
-  if (!this.userId) {
-    return this.ready();
-  }
-
-  return UsersCollection.find(this.userId);
-});
