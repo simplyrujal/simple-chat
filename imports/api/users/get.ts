@@ -66,4 +66,18 @@ Meteor.methods({
 
     return { users, total };
   },
+
+  async "get.user"(userId: string) {
+    if (!this.userId) {
+      throw new Meteor.Error(
+        "not-authorized",
+        "You must be logged in to view users.",
+      );
+    }
+    check(userId, String);
+
+    const data = await UsersCollection.findOneAsync({ _id: userId });
+
+    return data;
+  },
 });

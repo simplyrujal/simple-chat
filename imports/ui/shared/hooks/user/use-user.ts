@@ -16,6 +16,13 @@ interface IParams {
   skip?: number;
 }
 
+export const useGetUser = (userId: string) => {
+  return useQuery<User>({
+    queryKey: ["user", userId],
+    queryFn: () => Meteor.callAsync("get.user", userId),
+  });
+};
+
 export const useUserList = (params?: IParams) => {
   return useQuery<TUsers>({
     queryKey: ["users.list", params],
