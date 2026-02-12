@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
 import { useRoom } from "../../hooks/use-room";
+import ChatProvider from "../../provider/chat-provider";
 import ChatHeader from "./chat-header";
 import ChatInput from "./chat-input";
 import ChatMessages from "./chat-messages";
@@ -63,10 +64,12 @@ export const ChatRoomPage: React.FC = () => {
   }
 
   return (
-    <RoomLayout>
-      <ChatHeader room={room} />
-      <ChatMessages roomId={room._id} />
-      <ChatInput room={room} />
-    </RoomLayout>
+    <ChatProvider>
+      <RoomLayout>
+        <ChatHeader room={room} />
+        <ChatMessages roomId={room._id} />
+        <ChatInput room={room} />
+      </RoomLayout>
+    </ChatProvider>
   );
 };
