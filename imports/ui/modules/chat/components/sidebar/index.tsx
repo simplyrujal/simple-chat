@@ -176,9 +176,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           )}
         </div>
 
-        <div className="p-2 border-t border-gray-200 bg-gray-50">
-          <UserProfileDropDown isCollapsed={isCollapsed} />
-        </div>
+        <UserProfileDropDown isCollapsed={isCollapsed} />
       </aside>
     </>
   );
