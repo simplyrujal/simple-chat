@@ -138,10 +138,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
               {searchQuery && (
-                <button
-                  className="absolute right-3 text-gray-400 hover:text-gray-600 transition-colors"
-                  onClick={() => setSearchQuery("")}
-                >
+                <button className="absolute right-3 text-gray-400 hover:text-gray-600 transition-colors">
                   <svg
                     width="16"
                     height="16"
