@@ -4,6 +4,7 @@ import { useRoom } from "../../hooks/use-room";
 import ChatHeader from "./chat-header";
 import ChatInput from "./chat-input";
 import ChatMessages from "./chat-messages";
+import RoomLayout from "./room-layout";
 
 export const ChatRoomPage: React.FC = () => {
   const { chatRoomId } = useParams<{ chatRoomId: string }>();
@@ -46,8 +47,8 @@ export const ChatRoomPage: React.FC = () => {
           </h3>
 
           <p className="text-gray-500 mb-6">
-            The chat room you are looking for does not exist or you don&apos;t have
-            access to it.
+            The chat room you are looking for does not exist or you don&apos;t
+            have access to it.
           </p>
 
           <Link
@@ -62,10 +63,10 @@ export const ChatRoomPage: React.FC = () => {
   }
 
   return (
-    <div className="h-full flex flex-col bg-white">
+    <RoomLayout>
       <ChatHeader room={room} />
       <ChatMessages roomId={room._id} />
       <ChatInput room={room} />
-    </div>
+    </RoomLayout>
   );
 };

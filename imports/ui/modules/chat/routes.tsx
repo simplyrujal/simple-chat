@@ -3,7 +3,6 @@ import { Route, Routes } from "react-router-dom";
 import { Sidebar } from "./components/sidebar";
 import { ChatRoomPage } from "./pages/chat-room";
 import { DashboardPage } from "./pages/dashboard";
-import ChatProvider from "./provider/chat-provider";
 
 import { useAuth } from "../../shared/hooks/auth/use-auth";
 import { userSetStatus } from "../../shared/hooks/user/use-user";
@@ -22,12 +21,10 @@ export const ChatRoutes: React.FC = () => {
         onCloseMobile={() => setIsMobileOpen(false)}
       />
       <div className="flex-1 flex flex-col min-w-0">
-        <ChatProvider>
-          <Routes>
-            <Route path="dashboard" element={<DashboardPage />} />
-            <Route path="chat/:chatRoomId" element={<ChatRoomPage />} />
-          </Routes>
-        </ChatProvider>
+        <Routes>
+          <Route path="dashboard" element={<DashboardPage />} />
+          <Route path="chat/:chatRoomId" element={<ChatRoomPage />} />
+        </Routes>
       </div>
     </div>
   );
