@@ -1,13 +1,13 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { AdminRoutes } from './modules/admin/routes';
-import { AuthRoutes } from './modules/auth/routes';
-import { ChatRoutes } from './modules/chat/routes';
-import { RequireAuth } from './shared/components/require-auth';
-import useGlobalSubscriptions from './shared/hooks/use-global-subscriptions';
-import registerCollection from './shared/utils/registerCollection';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { AdminRoutes } from "./modules/admin/routes";
+import { AuthRoutes } from "./modules/auth/routes";
+import { ChatRoutes } from "./modules/chat/routes";
+import { RequireAuth } from "./shared/components/require-auth";
+import useGlobalSubscriptions from "./shared/hooks/use-global-subscriptions";
+import registerCollection from "./shared/utils/registerCollection";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,11 +18,10 @@ const queryClient = new QueryClient({
   },
 });
 
-registerCollection('RoomCollection')
-registerCollection('UsersCollection')
-registerCollection('RoomMemberCollection')
-registerCollection('MessageCollection')
-
+registerCollection("RoomCollection");
+registerCollection("UsersCollection");
+registerCollection("RoomMemberCollection");
+registerCollection("MessageCollection");
 
 export const App: React.FC = () => {
   useGlobalSubscriptions();
