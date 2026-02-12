@@ -37,7 +37,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       <aside
         className={`fixed md:relative left-0 top-0 bottom-0 flex flex-col bg-white border-r border-gray-200 shadow-sm z-50 h-screen transition-all duration-300 ease-in-out ${
-          isCollapsed ? "w-20" : "w-[300px]"
+          isCollapsed ? "w-20" : "w-sidebar-width"
         } ${
           isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         }`}
@@ -48,7 +48,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
           }`}
         >
           {!isCollapsed && (
-            <h2 className="text-xl font-bold text-primary-600 m-0">SimpleChat</h2>
+            <h2 className="text-xl font-bold text-primary-600 m-0">
+              SimpleChat
+            </h2>
           )}
           <div className="flex gap-1">
             <button
