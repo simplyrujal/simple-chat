@@ -13,7 +13,7 @@ export const useSubscribeMessages = (roomId: string, query?: TQuery) => {
   // Keeping the subscription for potential background cache updates
   const res = useTracker(() => {
     if (roomId) {
-      Meteor.subscribe("room.messages");
+      Meteor.subscribe("room.messages", roomId, query);
       return MessageCollection.find(
         { roomId },
         {

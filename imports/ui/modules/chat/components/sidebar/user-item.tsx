@@ -1,84 +1,116 @@
-import React, { memo } from 'react';
-import { ListGroup } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import { useCreateDirectRoom } from '../../hooks/use-room';
-import LastSeen from './last-seen';
-import Status from './status';
-import { User } from '/imports/collections/user';
-import { useAuth } from '/imports/ui/shared/hooks/auth/use-auth';
+import React, { memo } from "react";
+import { useNavigate } from "react-router-dom";
+import { useCreateDirectRoom } from "../../hooks/use-room";
+import LastSeen from "./last-seen";
+import Status from "./status";
+import { User } from "/imports/collections/user";
+import { useAuth } from "/imports/ui/shared/hooks/auth/use-auth";
 
 const getInitials = (name: string) => {
-    return name
-        .split(' ')
-        .map(n => n[0])
-        .join('')
-        .toUpperCase()
-        .slice(0, 2);
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
 };
 
 interface UserItemProps {
-    user: User;
-    onCloseMobile?: () => void;
+  user: User;
+  onCloseMobile?: () => void;
+  isCollapsed?: boolean;
 }
 
-const UserItem: React.FC<UserItemProps> = ({ user, onCloseMobile }) => {
+const UserItem: React.FC<UserItemProps> = ({
+  user,
+  onCloseMobile,
+  isCollapsed,
+}) => {
+  const url = window.location.href;
+  const parts = url.split("/");
+  const chatRoomId = parts[parts.length - 1];
+  const usr = useAuth();
+  const navigate = useNavigate();
+  const createDirectRoom = useCreateDirectRoom();
 
-    const url = window.location.href;
-    const parts = url.split("/");
-    const chatRoomId = parts[parts.length - 1];
+  const isActive = chatRoomId?.split("-")?.includes(user._id);
 
-    const usr = useAuth()
-    const navigate = useNavigate();
-    const createDirectRoom = useCreateDirectRoom();
+  const handleUserClick = async (targetUserId: string) => {
+    const currentUserId = usr?.user?._id;
+    if (!currentUserId) return;
 
-    const isActive = chatRoomId?.split('-')?.includes(user._id)
+    try {
+      const roomId = await createDirectRoom.mutateAsync([
+        currentUserId,
+        targetUserId,
+      ]);
+      navigate(`/chat/${roomId}`);
+      if (window.innerWidth < 768) {
+        onCloseMobile?.();
+      }
+    } catch (err) {
+      console.error("Error joining room:", err);
+    }
+  };
 
+  return (
+    <button
+      onClick={() => handleUserClick(user._id)}
+      className={`w-full flex items-center gap-3 py-3 px-4 border-0 transition-all duration-200 ${
+        isCollapsed ? "justify-center px-0" : ""
+      } ${
+        isActive ? "bg-blue-600 text-white" : "hover:bg-gray-50 text-gray-900"
+      }`}
+    >
+      {/* Avatar with Status */}
+      <div className="relative shrink-0">
+        {user.avatarUrl ? (
+          <img
+            src={user.avatarUrl}
+            alt={user.username}
+            className="w-10 h-10 rounded-full object-cover"
+          />
+        ) : (
+          <div
+            className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${
+              isActive ? "bg-blue-700 text-white" : "bg-blue-600 text-white"
+            }`}
+          >
+            {getInitials(user.profile.name || user.username)}
+          </div>
+        )}
+        <Status userId={user._id} />
+      </div>
 
-    const handleUserClick = async (targetUserId: string) => {
-        const currentUserId = usr?.user?._id;
-        if (!currentUserId) return;
-
-        try {
-            const roomId = await createDirectRoom.mutateAsync([currentUserId, targetUserId]);
-            navigate(`/chat/${roomId}`);
-            if (window.innerWidth < 768) {
-                onCloseMobile?.();
-            }
-        } catch (err) {
-            console.error("Error joining room:", err);
-        }
-    };
-
-    return (
-        <ListGroup.Item
-            action
-            active={isActive}
-            onClick={() => handleUserClick(user._id)}
-            className="user-list-item d-flex align-items-center gap-3 py-3 border-0 transition-all hover-bg-light"
-        >
-            <div className="position-relative flex-shrink-0">
-                {user.avatarUrl ? (
-                    <img src={user.avatarUrl} alt={user.username} className="rounded-circle" style={{ width: '40px', height: '40px', objectFit: 'cover' }} />
-                ) : (
-                    <div className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold small" style={{ width: '40px', height: '40px' }}>
-                        {getInitials(user.profile.name || user.username)}
-                    </div>
-                )}
-                <Status userId={user._id} />
-            </div>
-            <div className="user-info flex-grow-1 min-width-0">
-                <div className="d-flex justify-content-between align-items-center mb-0">
-                    <h6 className={`mb-0 text-truncate small fw-bold ${isActive ? 'text-white' : 'text-dark'}`}>{user.profile.name}</h6>
-                    {user.createdAt && (
-                        <small className={`smaller ${isActive ? 'text-white-50' : 'text-muted'}`}>
-                            {new Date(user.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                        </small>
-                    )}
-                </div>
-                <LastSeen userId={user._id} lastSeenAt={user.lastSeenAt} />
-            </div>
-        </ListGroup.Item>
-    );
+      {/* User Info - Hidden when collapsed */}
+      {!isCollapsed && (
+        <div className="flex-1 min-w-0">
+          <div className="flex justify-between items-center mb-0">
+            <h6
+              className={`mb-0 truncate text-sm font-bold ${
+                isActive ? "text-white" : "text-gray-900"
+              }`}
+            >
+              {user.profile.name}
+            </h6>
+            {user.createdAt && (
+              <small
+                className={`text-xs ml-2 shrink-0 ${
+                  isActive ? "text-white/70" : "text-gray-500"
+                }`}
+              >
+                {new Date(user.createdAt).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </small>
+            )}
+          </div>
+          <LastSeen userId={user._id} lastSeenAt={user.lastSeenAt} />
+        </div>
+      )}
+    </button>
+  );
 };
 
 export default memo(UserItem);
