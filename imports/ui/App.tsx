@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ThemeProvider } from "flowbite-react";
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AdminRoutes } from "./modules/admin/routes";
@@ -7,6 +8,7 @@ import { AuthRoutes } from "./modules/auth/routes";
 import { ChatRoutes } from "./modules/chat/routes";
 import { RequireAuth } from "./shared/components/require-auth";
 import useGlobalSubscriptions from "./shared/hooks/use-global-subscriptions";
+import theme from "./shared/theme";
 import registerCollection from "./shared/utils/registerCollection";
 
 const queryClient = new QueryClient({
@@ -27,19 +29,21 @@ export const App: React.FC = () => {
   useGlobalSubscriptions();
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/auth/*" element={<AuthRoutes />} />
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/auth/*" element={<AuthRoutes />} />
 
-          {/* Protected Routes */}
-          <Route element={<RequireAuth />}>
-            <Route path="/admin/*" element={<AdminRoutes />} />
-            <Route path="/*" element={<ChatRoutes />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-      <ReactQueryDevtools initialIsOpen={false} />
+            {/* Protected Routes */}
+            <Route element={<RequireAuth />}>
+              <Route path="/admin/*" element={<AdminRoutes />} />
+              <Route path="/*" element={<ChatRoutes />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </ThemeProvider>
     </QueryClientProvider>
   );
 };
