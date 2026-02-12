@@ -1,6 +1,6 @@
 import React from "react";
+import UserInfo from "./user-info";
 import { TMessage } from "/imports/collections/message";
-import { useGetUser } from "/imports/ui/shared/hooks/user/use-user";
 
 interface MessageProps {
   msg: TMessage;
@@ -12,15 +12,6 @@ const currentUserName = "You";
 const Message: React.FC<MessageProps> = ({ msg, currentUserId }) => {
   const isCurrentUser = msg.from === currentUserId;
   const otherUserId = isCurrentUser ? msg.to : msg.from;
-  const { data, isLoading, error } = useGetUser(otherUserId || "");
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
 
   return (
     <div
@@ -29,17 +20,17 @@ const Message: React.FC<MessageProps> = ({ msg, currentUserId }) => {
       <div className="w-full max-w-[85%] md:max-w-[70%] lg:max-w-[60%]">
         <div
           className={`p-3 rounded-xl shadow-sm ${
-            isCurrentUser ? "bg-primary-600 text-white" : "bg-white border border-gray-200"
+            isCurrentUser
+              ? "bg-primary-600 text-white"
+              : "bg-white border border-gray-200"
           }`}
         >
           <div className="flex justify-between items-center mb-1">
-            <span
-              className={`font-semibold text-xs ${
-                isCurrentUser ? "text-white/80" : "text-primary-600"
-              }`}
-            >
-              {isCurrentUser ? currentUserName : data?.profile?.name}
-            </span>
+            <UserInfo
+              otherUserId={otherUserId}
+              isCurrentUser={isCurrentUser}
+              currentUserName={currentUserName}
+            />
 
             {msg.createdAt && (
               <span
