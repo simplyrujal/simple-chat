@@ -1,30 +1,43 @@
 import { Meteor } from "meteor/meteor";
 import React from "react";
-import { Container } from "react-bootstrap";
 import { useSubscribeMessages } from "../../../hooks/use-messages";
 import Message from "./message";
 
 const ChatMessages: React.FC<{ roomId: string }> = ({ roomId }) => {
-    const messages = useSubscribeMessages(roomId);
+  const messages = useSubscribeMessages(roomId);
 
-    const currentUserId = Meteor.userId();
+  const currentUserId = Meteor.userId();
 
-    return (
-        <Container fluid className="flex-grow-1 overflow-auto p-3 bg-light d-flex flex-column">
-            {currentUserId && messages && messages.length > 0 ? (
-                messages.map((msg) => {
-                    return <Message key={msg._id} msg={msg} currentUserId={currentUserId} />
-                })
-            ) : (
-                <div className="h-100 d-flex flex-column align-items-center justify-content-center text-muted">
-                    <div className="mb-3">
-                        <i className="bi bi-chat-dots fs-1"></i>
-                    </div>
-                    <p className="text-center">No messages yet.<br />Start the conversation!</p>
-                </div>
-            )}
-        </Container>
-    );
+  return (
+    <div className="w-full flex-1 overflow-auto p-3 bg-gray-100 flex flex-col">
+      {currentUserId && messages && messages.length > 0 ? (
+        messages.map((msg) => (
+          <Message key={msg._id} msg={msg} currentUserId={currentUserId} />
+        ))
+      ) : (
+        <div className="h-full flex flex-col items-center justify-center text-gray-500">
+          <div className="mb-3">
+            {/* Chat icon */}
+            <svg
+              className="w-12 h-12"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              viewBox="0 0 24 24"
+            >
+              <path d="M21 15a4 4 0 0 1-4 4H8l-4 4V7a4 4 0 0 1 4-4h9a4 4 0 0 1 4 4z" />
+            </svg>
+          </div>
+
+          <p className="text-center">
+            No messages yet.
+            <br />
+            Start the conversation!
+          </p>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default ChatMessages;

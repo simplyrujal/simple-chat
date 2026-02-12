@@ -1,63 +1,76 @@
-import React from "react"
-import { Col, Row } from "react-bootstrap"
-import { TMessage } from "/imports/collections/message"
-import { useGetUser } from "/imports/ui/shared/hooks/user/use-user"
+import React from "react";
+import { TMessage } from "/imports/collections/message";
+import { useGetUser } from "/imports/ui/shared/hooks/user/use-user";
 
 interface MessageProps {
-    msg: TMessage
-    currentUserId: string
+  msg: TMessage;
+  currentUserId: string;
 }
 
-const currentUserName = 'You';
+const currentUserName = "You";
 
 const Message: React.FC<MessageProps> = ({ msg, currentUserId }) => {
-    const isCurrentUser = msg.from === currentUserId;
-    const otherUserId = isCurrentUser ? msg.to : msg.from;
-    const { data, isLoading, error } = useGetUser(otherUserId || '')
+  const isCurrentUser = msg.from === currentUserId;
+  const otherUserId = isCurrentUser ? msg.to : msg.from;
+  const { data, isLoading, error } = useGetUser(otherUserId || "");
 
-    if (isLoading) {
-        return <div>Loading...</div>
-    }
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
-    if (error) {
-        return <div>Error: {error.message}</div>
-    }
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
-    return (
-        <Row
-            className={`mb-3 ${isCurrentUser ? 'justify-content-end' : 'justify-content-start'}`}
+  return (
+    <div
+      className={`flex mb-3 ${isCurrentUser ? "justify-end" : "justify-start"}`}
+    >
+      <div className="w-full max-w-[80%] md:max-w-[60%] lg:max-w-[50%]">
+        <div
+          className={`p-3 rounded-lg shadow-sm ${
+            isCurrentUser ? "bg-blue-600 text-white" : "bg-white border"
+          }`}
         >
-            <Col xs={10} md={8} lg={6}>
-                <div className={`p-3 rounded shadow-sm ${isCurrentUser ? 'bg-primary text-white' : 'bg-white border'}`}>
-                    {/* Sender Name */}
-                    <div className="d-flex justify-content-between align-items-center mb-1">
-                        <span className={`fw-bold small ${isCurrentUser ? 'text-white-50' : 'text-primary'}`}>
-                            {isCurrentUser ? currentUserName : `${data?.profile?.name}`}
-                        </span>
-                        {msg.createdAt && (
-                            <small className={`${isCurrentUser ? 'text-white-50' : 'text-muted'} smaller`}>
-                                {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                            </small>
-                        )}
-                    </div>
+          {/* Sender + Time */}
+          <div className="flex justify-between items-center mb-1">
+            <span
+              className={`font-bold text-xs ${
+                isCurrentUser ? "text-white/70" : "text-blue-600"
+              }`}
+            >
+              {isCurrentUser ? currentUserName : data?.profile?.name}
+            </span>
 
-                    {/* Message Content */}
-                    <div className={isCurrentUser ? 'text-white' : ''}>
-                        {msg.content?.text}
-                    </div>
+            {msg.createdAt && (
+              <span
+                className={`text-xs ${
+                  isCurrentUser ? "text-white/70" : "text-gray-500"
+                }`}
+              >
+                {new Date(msg.createdAt).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </span>
+            )}
+          </div>
 
-                    {/* Message status indicator (optional) */}
-                    {isCurrentUser && (
-                        <div className="text-end mt-1">
-                            <small className="text-white-50 smaller">
-                                {/* Add read/delivered status here if you track it */}
-                            </small>
-                        </div>
-                    )}
-                </div>
-            </Col>
-        </Row>
-    )
-}
+          {/* Message Text */}
+          <div>{msg.content?.text}</div>
 
-export default Message
+          {/* Status (optional) */}
+          {isCurrentUser && (
+            <div className="text-right mt-1">
+              <span className="text-xs text-white/70">
+                {/* read/delivered status */}
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Message;
