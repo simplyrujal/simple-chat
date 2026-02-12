@@ -10,8 +10,13 @@ const Status: React.FC<IProps> = ({ userId }) => {
 
   return (
     <span
-      className={`absolute bottom-0 border border-white rounded-circle ${status === "online" ? "bg-success" : status === "busy" ? "bg-danger" : "bg-secondary"}`}
-      style={{ width: "10px", height: "10px" }}
+      className={`absolute bottom-0 border border-white rounded-full w-2.5 h-2.5 ${
+        status === "online"
+          ? "bg-green-500"
+          : status === "busy"
+            ? "bg-red-500"
+            : "bg-gray-500"
+      }`}
     />
   );
 };
