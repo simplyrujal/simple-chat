@@ -1,3 +1,4 @@
+import { Button } from "flowbite-react";
 import { Meteor } from "meteor/meteor";
 import React from "react";
 import { useSendMessage } from "../../hooks/use-messages";
@@ -35,15 +36,12 @@ const ChatInput: React.FC<IProps> = ({ room }) => {
             placeholder="Type a message..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="input-field w-4/5"
           />
 
-          <button
-            type="submit"
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
-          >
+          <Button color="primary" type="submit" className="w-1/5" size="md">
             Send
-          </button>
+          </Button>
         </div>
       </form>
 

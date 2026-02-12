@@ -1,10 +1,12 @@
 const button = {
   color: {
-    primary: "bg-red-500 hover:bg-red-600",
-    secondary: "bg-blue-500 hover:bg-blue-600",
+    primary: "btn-primary",
+    secondary: "btn-secondary",
   },
   size: {
-    lg: "px-6 py-3 text-lg",
+    sm: "px-3 py-2",
+    md: "px-1 py-1",
+    lg: "px-6 py-3",
   },
 };
 
