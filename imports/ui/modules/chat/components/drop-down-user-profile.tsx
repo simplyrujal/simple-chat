@@ -22,7 +22,7 @@ const UserProfileDropDown: React.FC<UserProfileDropDownProps> = ({
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (!dropdownRef.current?.contains(e.target as Node)) {
-        // setOpen(false);
+        setOpen(false);
       }
     };
     document.addEventListener("mousedown", handler);
