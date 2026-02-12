@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCreateDirectRoom } from "../../../hooks/use-room";
+import { useCreateDirectRoom } from "../../../../hooks/use-room";
 import LastSeen from "./last-seen";
 import Status from "./status";
 import { User } from "/imports/collections/user";
