@@ -56,10 +56,12 @@ const UserItem: React.FC<UserItemProps> = ({
   return (
     <button
       onClick={() => handleUserClick(user._id)}
-      className={`w-full flex items-center gap-3 py-3 px-4 border-0 transition-all duration-200 ${
-        isCollapsed ? "justify-center px-0" : ""
+      className={`w-full flex items-center gap-3 py-2.5 px-4 border-0 transition-all duration-200 rounded-lg ${
+        isCollapsed ? "justify-center px-2" : ""
       } ${
-        isActive ? "bg-blue-600 text-white" : "hover:bg-gray-50 text-gray-900"
+        isActive
+          ? "bg-blue-600 text-white shadow-sm"
+          : "hover:bg-gray-100 text-gray-700"
       }`}
     >
       {/* Avatar with Status */}
@@ -68,11 +70,11 @@ const UserItem: React.FC<UserItemProps> = ({
           <img
             src={user.avatarUrl}
             alt={user.username}
-            className="w-10 h-10 rounded-full object-cover"
+            className="w-11 h-11 rounded-full object-cover ring-2 ring-white/10"
           />
         ) : (
           <div
-            className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${
+            className={`w-11 h-11 rounded-full flex items-center justify-center font-bold text-sm ring-2 ring-white/10 ${
               isActive ? "bg-blue-700 text-white" : "bg-blue-600 text-white"
             }`}
           >
@@ -84,26 +86,26 @@ const UserItem: React.FC<UserItemProps> = ({
 
       {/* User Info - Hidden when collapsed */}
       {!isCollapsed && (
-        <div className="flex-1 min-w-0">
-          <div className="flex justify-between items-center mb-0">
+        <div className="flex flex-col">
+          <div className="flex justify-between items-start gap-2">
             <h6
-              className={`mb-0 truncate text-sm font-bold ${
-                isActive ? "text-white" : "text-gray-900"
+              className={`truncate text-sm font-semibold ${
+                isActive ? "text-white" : "text-gray-800"
               }`}
             >
               {user.profile.name}
             </h6>
             {user.createdAt && (
-              <small
-                className={`text-xs ml-2 shrink-0 ${
-                  isActive ? "text-white/70" : "text-gray-500"
+              <span
+                className={`text-xs whitespace-nowrap ${
+                  isActive ? "text-white/60" : "text-gray-400"
                 }`}
               >
                 {new Date(user.createdAt).toLocaleTimeString([], {
                   hour: "2-digit",
                   minute: "2-digit",
                 })}
-              </small>
+              </span>
             )}
           </div>
           <LastSeen userId={user._id} lastSeenAt={user.lastSeenAt} />

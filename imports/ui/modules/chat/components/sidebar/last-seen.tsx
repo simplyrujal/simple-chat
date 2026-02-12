@@ -9,14 +9,16 @@ const LastSeen: React.FC<{ userId: string; lastSeenAt: Date }> = ({
   const isActive = status === "online";
 
   return (
-    <p
-      className={`mb-0 smaller text-truncate ${isActive ? "text-white-50" : "text-muted"}`}
+    <span
+      className={`text-xs truncate ${
+        isActive ? "text-white/70 font-medium" : "text-gray-400"
+      }`}
     >
       {isActive
         ? "Active now"
         : "Last seen " +
           (lastSeenAt ? new Date(lastSeenAt).toLocaleDateString() : "recently")}
-    </p>
+    </span>
   );
 };
 
