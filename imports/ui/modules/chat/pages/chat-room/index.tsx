@@ -1,54 +1,76 @@
-import React from 'react';
-import { Button, Container, Spinner } from 'react-bootstrap';
-import { Link, useParams } from 'react-router-dom';
-import { useRoom } from '../../hooks/use-room';
-import ChatHeader from './chat-header';
-import ChatInput from './chat-input';
-import ChatMessages from './chat-messages';
+import React from "react";
+import { Link, useParams } from "react-router-dom";
+import { useRoom } from "../../hooks/use-room";
+import ChatHeader from "./chat-header";
+import ChatInput from "./chat-input";
+import ChatMessages from "./chat-messages";
 
 export const ChatRoomPage: React.FC = () => {
-    const { chatRoomId } = useParams<{ chatRoomId: string }>();
-    const { data: room, isLoading: isRoomLoading, error: roomError } = useRoom(chatRoomId);
+  const { chatRoomId } = useParams<{ chatRoomId: string }>();
+  const {
+    data: room,
+    isLoading: isRoomLoading,
+    error: roomError,
+  } = useRoom(chatRoomId);
 
-    if (isRoomLoading) {
-        return (
-            <div className="h-100 d-flex align-items-center justify-content-center">
-                <Spinner animation="border" variant="primary" />
-            </div>
-        );
-    }
-
-    if (!room || roomError) {
-        return (
-            <div className="h-100 d-flex align-items-center justify-content-center bg-light">
-                <Container className="text-center">
-                    <div className="mb-4">
-                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-muted">
-                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-                            <line x1="12" y1="9" x2="12" y2="13" />
-                            <line x1="12" y1="17" x2="12.01" y2="17" />
-                        </svg>
-                    </div>
-                    <h3 className="fw-bold text-dark mb-2">Room Not Available</h3>
-                    <p className="text-muted mb-4">The chat room you are looking for does not exist or you don't have access to it.</p>
-                    <Button as={Link as any} to="/dashboard" variant="primary" className="px-4">
-                        Back to Dashboard
-                    </Button>
-                </Container>
-            </div>
-        );
-    }
-
+  if (isRoomLoading) {
     return (
-        <div className="h-100 d-flex flex-column bg-white">
-            {/* Chat Header */}
-            <ChatHeader room={room} />
-
-            {/* Chat Messages */}
-            <ChatMessages roomId={room._id} />
-
-            {/* Chat Input Placeholder */}
-            <ChatInput room={room} />
-        </div>
+      <div className="h-full flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
     );
+  }
+
+  if (!room || roomError) {
+    return (
+      <div className="h-full flex items-center justify-center bg-gray-100">
+        <div className="text-center max-w-md mx-auto px-4">
+          <div className="mb-4 flex justify-center">
+            <svg
+              width="64"
+              height="64"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              className="text-gray-400"
+            >
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+          </div>
+
+          <h3 className="text-xl font-bold text-gray-900 mb-2">
+            Room Not Available
+          </h3>
+
+          <p className="text-gray-500 mb-6">
+            The chat room you are looking for does not exist or you don't have
+            access to it.
+          </p>
+
+          <Link
+            to="/dashboard"
+            className="inline-block px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+          >
+            Back to Dashboard
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="h-full flex flex-col bg-white">
+      {/* Chat Header */}
+      <ChatHeader room={room} />
+
+      {/* Chat Messages */}
+      <ChatMessages roomId={room._id} />
+
+      {/* Chat Input Placeholder */}
+      <ChatInput room={room} />
+    </div>
+  );
 };
