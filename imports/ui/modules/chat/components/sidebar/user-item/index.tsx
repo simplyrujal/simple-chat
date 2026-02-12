@@ -18,7 +18,7 @@ const getInitials = (name: string) => {
 interface UserItemProps {
   user: User;
   onCloseMobile?: () => void;
-  isCollapsed?: boolean;
+  isCollapsed: boolean;
 }
 
 const UserItem: React.FC<UserItemProps> = ({

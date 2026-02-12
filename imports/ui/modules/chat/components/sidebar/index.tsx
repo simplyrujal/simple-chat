@@ -155,7 +155,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         )}
 
-        <div className="flex-1 overflow-y-auto scrollbar-thin">
+        <div className="flex-1">
           {data && (
             <div>
               {data.users?.length > 0 ? (
@@ -164,6 +164,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     key={user._id}
                     user={user}
                     onCloseMobile={onCloseMobile}
+                    isCollapsed={isCollapsed}
                   />
                 ))
               ) : (
