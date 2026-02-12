@@ -22,11 +22,11 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 w-full">
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 w-full p-4">
       <div className="w-full max-w-sm">
-        <div className="rounded-lg border border-gray-200 bg-white shadow-sm p-4">
+        <div className="card p-6">
           <div className="text-center mb-6">
-            <h1 className="text-xl font-bold mb-2">Welcome Back</h1>
+            <h1 className="text-xl font-bold mb-2 text-gray-900">Welcome Back</h1>
             <p className="text-gray-600 text-sm">
               Sign in to your account to continue
             </p>
@@ -34,8 +34,8 @@ const Login: React.FC = () => {
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {(error || errors.root) && (
-              <div className="rounded-md bg-red-50 border border-red-200 p-3">
-                <p className="text-red-800 text-sm">
+              <div className="rounded-md bg-danger-50 border border-danger-500/20 p-3">
+                <p className="text-danger-600 text-sm">
                   {error?.message || errors.root?.message}
                 </p>
               </div>
@@ -44,7 +44,7 @@ const Login: React.FC = () => {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-semibold text-gray-700 mb-1"
+                className="block text-sm font-semibold text-gray-700 mb-1.5"
               >
                 Email
               </label>
@@ -54,14 +54,12 @@ const Login: React.FC = () => {
                 placeholder="name@company.com"
                 {...register("email")}
                 disabled={isLoading}
-                className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition ${
-                  errors.email
-                    ? "border-red-500 bg-red-50"
-                    : "border-gray-300 bg-white"
+                className={`input-field ${
+                  errors.email ? "input-field-error" : ""
                 } ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
               />
               {errors.email && (
-                <p className="text-red-600 text-xs mt-1">
+                <p className="text-danger-500 text-xs mt-1.5">
                   {errors.email.message}
                 </p>
               )}
@@ -70,7 +68,7 @@ const Login: React.FC = () => {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-semibold text-gray-700 mb-1"
+                className="block text-sm font-semibold text-gray-700 mb-1.5"
               >
                 Password
               </label>
@@ -80,14 +78,12 @@ const Login: React.FC = () => {
                 placeholder="••••••••"
                 {...register("password")}
                 disabled={isLoading}
-                className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition ${
-                  errors.password
-                    ? "border-red-500 bg-red-50"
-                    : "border-gray-300 bg-white"
+                className={`input-field ${
+                  errors.password ? "input-field-error" : ""
                 } ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
               />
               {errors.password && (
-                <p className="text-red-600 text-xs mt-1">
+                <p className="text-danger-500 text-xs mt-1.5">
                   {errors.password.message}
                 </p>
               )}
@@ -96,26 +92,26 @@ const Login: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+              className="btn-primary mt-2"
             >
               {isLoading ? "Signing In..." : "Sign In"}
             </button>
           </form>
 
-          <div className="text-center mt-4 mb-3">
+          <div className="text-center mt-5 mb-2">
             <a
               href="#"
-              className="text-sm text-blue-600 hover:text-blue-700 transition"
+              className="text-sm text-primary-600 hover:text-primary-700 transition-colors"
             >
               Forgot password?
             </a>
           </div>
 
           <div className="text-center text-sm text-gray-600">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <a
               href="/auth/register"
-              className="font-semibold text-blue-600 hover:text-blue-700 transition"
+              className="font-semibold text-primary-600 hover:text-primary-700 transition-colors"
             >
               Sign Up
             </a>

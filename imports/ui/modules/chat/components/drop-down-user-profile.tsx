@@ -31,10 +31,9 @@ const UserProfileDropDown: React.FC<UserProfileDropDownProps> = ({
 
   return (
     <div ref={dropdownRef} className="relative w-full">
-      {/* BUTTON */}
       <button
         onClick={() => setOpen(!open)}
-        className={`w-full flex items-center p-2 ${
+        className={`w-full flex items-center p-2 rounded-lg hover:bg-gray-200 transition-colors ${
           isCollapsed ? "justify-center" : "justify-between"
         }`}
       >
@@ -46,13 +45,12 @@ const UserProfileDropDown: React.FC<UserProfileDropDownProps> = ({
                 className="w-9 h-9 rounded-full object-cover"
               />
             ) : (
-              <div className="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm">
+              <div className="w-9 h-9 rounded-full bg-primary-600 text-white flex items-center justify-center font-bold text-sm">
                 {initials}
               </div>
             )}
 
-            {/* online dot */}
-            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full" />
+            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-success-500 border-2 border-white rounded-full" />
           </div>
 
           {!isCollapsed && (
@@ -60,11 +58,10 @@ const UserProfileDropDown: React.FC<UserProfileDropDownProps> = ({
               <div className="font-semibold text-sm truncate text-gray-900">
                 {username}
               </div>
-              <div className="text-green-600 text-xs">Online</div>
+              <div className="text-success-600 text-xs">Online</div>
             </div>
           )}
 
-          {/* Dropdown chevron icon - only show when not collapsed */}
           {!isCollapsed && (
             <span className="ml-auto">
               <svg
@@ -87,15 +84,13 @@ const UserProfileDropDown: React.FC<UserProfileDropDownProps> = ({
         </div>
       </button>
 
-      {/* DROPDOWN MENU */}
       {open && (
         <div
-          className={`absolute bottom-full mb-2 bg-white shadow-xl rounded-lg border p-2 z-50 ${
-            isCollapsed ? "w-48" : "w-full min-w-[180px]"
+          className={`absolute bottom-full mb-2 bg-white shadow-xl rounded-lg border border-gray-200 p-1.5 z-50 ${
+            isCollapsed ? "w-48 left-0" : "w-full min-w-[180px] right-0"
           }`}
         >
-          {/* Profile */}
-          <button className="w-full flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-100">
+          <button className="w-full flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100 text-sm text-gray-700 transition-colors">
             <svg
               width="16"
               height="16"
@@ -110,12 +105,11 @@ const UserProfileDropDown: React.FC<UserProfileDropDownProps> = ({
             Profile
           </button>
 
-          <div className="my-2 border-t" />
+          <div className="my-1.5 border-t border-gray-200" />
 
-          {/* Logout */}
           <button
             onClick={logout}
-            className="w-full flex items-center gap-2 px-3 py-2 rounded text-red-600 hover:bg-red-50"
+            className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-danger-600 hover:bg-danger-50 text-sm transition-colors"
           >
             <svg
               width="16"

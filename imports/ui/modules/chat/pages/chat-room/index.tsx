@@ -16,15 +16,15 @@ export const ChatRoomPage: React.FC = () => {
   if (isRoomLoading) {
     return (
       <div className="h-full flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
 
   if (!room || roomError) {
     return (
-      <div className="h-full flex items-center justify-center bg-gray-100">
-        <div className="text-center max-w-md mx-auto px-4">
+      <div className="h-full flex items-center justify-center bg-gray-100 p-4">
+        <div className="text-center max-w-md mx-auto">
           <div className="mb-4 flex justify-center">
             <svg
               width="64"
@@ -46,13 +46,13 @@ export const ChatRoomPage: React.FC = () => {
           </h3>
 
           <p className="text-gray-500 mb-6">
-            The chat room you are looking for does not exist or you don't have
+            The chat room you are looking for does not exist or you don&apos;t have
             access to it.
           </p>
 
           <Link
             to="/dashboard"
-            className="inline-block px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+            className="inline-block px-6 py-2.5 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors"
           >
             Back to Dashboard
           </Link>
@@ -63,13 +63,8 @@ export const ChatRoomPage: React.FC = () => {
 
   return (
     <div className="h-full flex flex-col bg-white">
-      {/* Chat Header */}
       <ChatHeader room={room} />
-
-      {/* Chat Messages */}
       <ChatMessages roomId={room._id} />
-
-      {/* Chat Input Placeholder */}
       <ChatInput room={room} />
     </div>
   );

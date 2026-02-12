@@ -26,17 +26,16 @@ const Message: React.FC<MessageProps> = ({ msg, currentUserId }) => {
     <div
       className={`flex mb-3 ${isCurrentUser ? "justify-end" : "justify-start"}`}
     >
-      <div className="w-full max-w-[80%] md:max-w-[60%] lg:max-w-[50%]">
+      <div className="w-full max-w-[85%] md:max-w-[70%] lg:max-w-[60%]">
         <div
-          className={`p-3 rounded-lg shadow-sm ${
-            isCurrentUser ? "bg-blue-600 text-white" : "bg-white border"
+          className={`p-3 rounded-xl shadow-sm ${
+            isCurrentUser ? "bg-primary-600 text-white" : "bg-white border border-gray-200"
           }`}
         >
-          {/* Sender + Time */}
           <div className="flex justify-between items-center mb-1">
             <span
-              className={`font-bold text-xs ${
-                isCurrentUser ? "text-white/70" : "text-blue-600"
+              className={`font-semibold text-xs ${
+                isCurrentUser ? "text-white/80" : "text-primary-600"
               }`}
             >
               {isCurrentUser ? currentUserName : data?.profile?.name}
@@ -56,15 +55,11 @@ const Message: React.FC<MessageProps> = ({ msg, currentUserId }) => {
             )}
           </div>
 
-          {/* Message Text */}
-          <div>{msg.content?.text}</div>
+          <div className="text-sm leading-relaxed">{msg.content?.text}</div>
 
-          {/* Status (optional) */}
           {isCurrentUser && (
             <div className="text-right mt-1">
-              <span className="text-xs text-white/70">
-                {/* read/delivered status */}
-              </span>
+              <span className="text-xs text-white/70" />
             </div>
           )}
         </div>

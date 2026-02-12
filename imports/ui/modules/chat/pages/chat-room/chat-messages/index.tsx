@@ -9,7 +9,7 @@ const ChatMessages: React.FC<{ roomId: string }> = ({ roomId }) => {
   const currentUserId = Meteor.userId();
 
   return (
-    <div className="w-full flex-1 overflow-auto p-3 bg-gray-100 flex flex-col">
+    <div className="w-full flex-1 overflow-auto p-4 bg-gray-100 flex flex-col scrollbar-thin">
       {currentUserId && messages && messages.length > 0 ? (
         messages.map((msg) => (
           <Message key={msg._id} msg={msg} currentUserId={currentUserId} />
@@ -17,7 +17,6 @@ const ChatMessages: React.FC<{ roomId: string }> = ({ roomId }) => {
       ) : (
         <div className="h-full flex flex-col items-center justify-center text-gray-500">
           <div className="mb-3">
-            {/* Chat icon */}
             <svg
               className="w-12 h-12"
               fill="none"
@@ -29,7 +28,7 @@ const ChatMessages: React.FC<{ roomId: string }> = ({ roomId }) => {
             </svg>
           </div>
 
-          <p className="text-center">
+          <p className="text-center text-sm">
             No messages yet.
             <br />
             Start the conversation!

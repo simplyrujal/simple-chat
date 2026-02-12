@@ -22,40 +22,37 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   if (isLoading) {
     return (
-      <div className="p-3 text-center text-gray-500 text-sm">Loading...</div>
+      <div className="p-4 text-center text-gray-500 text-sm">Loading...</div>
     );
   }
 
   return (
     <>
-      {/* Mobile Overlay */}
       <div
-        className={`fixed inset-0 bg-black/50 z-1040 md:hidden transition-opacity duration-300 ${
+        className={`fixed inset-0 bg-black/50 z-40 md:hidden transition-opacity duration-300 ${
           isMobileOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         onClick={onCloseMobile}
       />
 
       <aside
-        className={`fixed md:relative left-0 top-0 bottom-0 flex flex-col bg-white border-r border-gray-200 shadow-sm z-1050 h-screen transition-all duration-300 ease-in-out ${
+        className={`fixed md:relative left-0 top-0 bottom-0 flex flex-col bg-white border-r border-gray-200 shadow-sm z-50 h-screen transition-all duration-300 ease-in-out ${
           isCollapsed ? "w-20" : "w-[300px]"
         } ${
           isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         }`}
       >
-        {/* Sidebar Header */}
         <div
           className={`flex items-center bg-gray-50 border-b border-gray-200 p-3 transition-all duration-300 ${
             isCollapsed ? "justify-center" : "justify-between"
           }`}
         >
           {!isCollapsed && (
-            <h2 className="text-xl font-bold text-blue-600 m-0">SimpleChat</h2>
+            <h2 className="text-xl font-bold text-primary-600 m-0">SimpleChat</h2>
           )}
           <div className="flex gap-1">
-            {/* Desktop Collapse Toggle */}
             <button
-              className="hidden md:block p-1 text-gray-600 hover:text-gray-900 transition-colors"
+              className="hidden md:block p-1.5 text-gray-600 hover:text-gray-900 hover:bg-gray-200 rounded-lg transition-colors"
               onClick={() => setIsCollapsed(!isCollapsed)}
               title={isCollapsed ? "Expand" : "Collapse"}
             >
@@ -75,9 +72,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </svg>
             </button>
 
-            {/* Mobile Close Button */}
             <button
-              className="md:hidden p-1 text-gray-600 hover:text-gray-900 transition-colors"
+              className="md:hidden p-1.5 text-gray-600 hover:text-gray-900 hover:bg-gray-200 rounded-lg transition-colors"
               onClick={onCloseMobile}
               title="Close"
             >
@@ -93,11 +89,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </svg>
             </button>
 
-            {/* Home Button */}
             {!isCollapsed && (
               <Link
                 to="/dashboard"
-                className="p-1 text-gray-600 hover:text-gray-900 transition-colors"
+                className="p-1.5 text-gray-600 hover:text-gray-900 hover:bg-gray-200 rounded-lg transition-colors"
                 title="Home"
               >
                 <svg
@@ -116,7 +111,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         </div>
 
-        {/* Search Bar */}
         {!isCollapsed && (
           <div className="p-3">
             <div className="relative flex items-center">
@@ -137,7 +131,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <input
                 type="text"
                 placeholder="Search users..."
-                className="w-full py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="input-field py-2 pl-10 pr-10"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -162,8 +156,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         )}
 
-        {/* User List */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto scrollbar-thin">
           {data && (
             <div>
               {data.users?.length > 0 ? (
@@ -183,7 +176,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
           )}
         </div>
 
-        {/* Current User Profile */}
         <div className="p-2 border-t border-gray-200 bg-gray-50">
           <UserProfileDropDown isCollapsed={isCollapsed} />
         </div>

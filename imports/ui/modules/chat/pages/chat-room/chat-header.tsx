@@ -24,11 +24,11 @@ const ChatHeader: React.FC<IProps> = ({ room }) => {
   }
 
   return (
-    <div className="p-3 border-b flex items-center justify-between">
+    <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-white">
       <div>
-        <h5 className="font-bold mb-0">{data?.profile?.name || "Chat Room"}</h5>
+        <h5 className="font-bold mb-0 text-gray-900">{data?.profile?.name || "Chat Room"}</h5>
 
-        <small className="text-gray-500">
+        <small className="text-gray-500 text-sm">
           {room.description || "Private Conversation"}
         </small>
       </div>
