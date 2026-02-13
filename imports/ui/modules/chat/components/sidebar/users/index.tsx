@@ -1,3 +1,4 @@
+import { ListGroup } from "flowbite-react";
 import React from "react";
 import UserItem from "./user-item";
 import { User } from "/imports/collections/user";
@@ -14,7 +15,7 @@ const Users: React.FC<UsersProps> = ({
   isCollapsed,
 }) => {
   return (
-    <div className="flex-1">
+    <ListGroup className="flex-1">
       {users.length > 0 ? (
         users.map((user) => (
           <UserItem
@@ -29,7 +30,7 @@ const Users: React.FC<UsersProps> = ({
           No users found
         </div>
       )}
-    </div>
+    </ListGroup>
   );
 };
 

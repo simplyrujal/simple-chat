@@ -1,3 +1,4 @@
+import { ListItem } from "flowbite-react";
 import React, { memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCreateDirectRoom } from "../../../../hooks/use-room";
@@ -54,7 +55,7 @@ const UserItem: React.FC<UserItemProps> = ({
   };
 
   return (
-    <button
+    <ListItem
       onClick={() => handleUserClick(user._id)}
       className={`w-full flex items-center gap-3 py-2.5 px-4 border-0 transition-all duration-200 rounded-lg ${
         isCollapsed ? "justify-center px-2" : ""
@@ -111,7 +112,7 @@ const UserItem: React.FC<UserItemProps> = ({
           <LastSeen userId={user._id} lastSeenAt={user.lastSeenAt} />
         </div>
       )}
-    </button>
+    </ListItem>
   );
 };
 
