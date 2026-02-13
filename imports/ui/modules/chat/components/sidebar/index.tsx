@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { useUserList } from "../../../../shared/hooks/user/use-user";
-import UserProfileDropDown from "../drop-down-user-profile";
-import SidebarHeaderOptions from "./sidebar-header-options";
+import UserProfileDropDown from "../user-profile";
+import SidebarHeaderOptions from "./header-options";
 import Users from "./users";
 
 interface SidebarProps {
