@@ -5,7 +5,7 @@ import ChatProvider from "../../provider/chat-provider";
 import ChatHeader from "./chat-header";
 import ChatInput from "./chat-input";
 import ChatMessages from "./chat-messages";
-import EmptyRoom from "./empty-room";
+import ErrorRoom from "./error-room";
 import RoomLayout from "./room-layout";
 import Loading from "/imports/ui/shared/components/loading";
 
@@ -22,7 +22,7 @@ export const ChatRoomPage: React.FC = () => {
   }
 
   if (!room || roomError) {
-    return <EmptyRoom />;
+    return <ErrorRoom />;
   }
 
   return (

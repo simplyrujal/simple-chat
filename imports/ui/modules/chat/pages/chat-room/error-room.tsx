@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const EmptyRoom: React.FC = () => {
+const ErrorRoom: React.FC = () => {
   return (
     <div className="h-full flex items-center justify-center bg-gray-100 p-4">
       <div className="text-center max-w-md mx-auto">
@@ -41,4 +41,4 @@ const EmptyRoom: React.FC = () => {
   );
 };
 
-export default EmptyRoom;
+export default ErrorRoom;
