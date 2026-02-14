@@ -26,20 +26,17 @@ const Message: React.FC<MessageProps> = ({ msg, currentUserId }) => {
         }`}
       >
         {!isCurrentUser && (
-          <UserInfo
-            otherUserId={otherUserId}
-            isCurrentUser={isCurrentUser}
-          />
+          <UserInfo otherUserId={otherUserId} isCurrentUser={isCurrentUser} />
         )}
 
         <div
           className={`mt-1 px-4 py-3 rounded-2xl shadow-sm transition-all duration-200 ${
             isCurrentUser
-              ? "bg-gradient-to-br from-primary-600 to-primary-700 text-white rounded-br-md"
+              ? "bg-linear-to-br from-primary-600 to-primary-700 text-white rounded-br-md"
               : "bg-white border border-gray-200 text-gray-800 rounded-bl-md"
           }`}
         >
-          <p className="text-sm leading-relaxed break-words whitespace-pre-wrap">
+          <p className="text-sm leading-relaxed wrap-break-words whitespace-pre-wrap">
             {msg.content?.text}
           </p>
         </div>
