@@ -10,7 +10,6 @@ import { useAuth } from "../../../../shared/hooks/auth/use-auth";
 import useLogout from "../../../../shared/hooks/auth/use-logout";
 import { useUserList } from "../../../../shared/hooks/user/use-user";
 import UserItem from "./users/user-item";
-import Loading from "/imports/ui/shared/components/loading";
 import { debounce } from "/imports/ui/shared/utils/debounce";
 
 interface ChatSidebarProps {
@@ -104,7 +103,7 @@ export const Sidebar: React.FC<ChatSidebarProps> = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const { data, isLoading } = useUserList({
+  const { data } = useUserList({
     searchString: searchQuery,
     limit: 10,
   });
@@ -113,10 +112,6 @@ export const Sidebar: React.FC<ChatSidebarProps> = ({
     debounce((value: string) => setSearchQuery(value), 300),
     [],
   );
-
-  if (isLoading) {
-    return <Loading />;
-  }
 
   return (
     <>
