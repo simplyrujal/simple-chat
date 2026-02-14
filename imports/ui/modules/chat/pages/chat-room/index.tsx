@@ -9,14 +9,7 @@ import EmptyRoom from "./empty-room";
 import RoomLayout from "./room-layout";
 import Loading from "/imports/ui/shared/components/loading";
 
-interface ChatRoomPageProps {
-  onBackClick?: () => void;
-  onToggleMobile?: () => void;
-}
-
-export const ChatRoomPage: React.FC<ChatRoomPageProps> = ({
-  onToggleMobile,
-}) => {
+export const ChatRoomPage: React.FC = () => {
   const { chatRoomId } = useParams<{ chatRoomId: string }>();
   const {
     data: room,
@@ -34,7 +27,7 @@ export const ChatRoomPage: React.FC<ChatRoomPageProps> = ({
 
   return (
     <ChatProvider roomType={room.type}>
-      <RoomLayout onToggleMobile={onToggleMobile}>
+      <RoomLayout>
         <ChatHeader room={room} />
         <ChatMessages roomId={room._id} />
         <ChatInput room={room} />
