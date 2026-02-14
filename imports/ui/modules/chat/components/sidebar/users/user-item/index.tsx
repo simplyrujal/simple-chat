@@ -90,7 +90,9 @@ const UserItem: React.FC<UserItemProps> = ({
         ) : (
           <div
             className={`w-11 h-11 rounded-full flex items-center justify-center font-bold text-sm ${
-              isActive ? "bg-primary-700 text-white" : "bg-primary-600 text-white"
+              isActive
+                ? "bg-primary-700 text-white"
+                : "bg-primary-600 text-white"
             }`}
           >
             {getInitials(user.profile.name || user.username)}
@@ -99,7 +101,7 @@ const UserItem: React.FC<UserItemProps> = ({
         <Status userId={user._id} />
       </div>
 
-      <div className="flex flex-col flex-1 min-w-0">
+      <div className="flex flex-col min-w-0">
         <div className="flex justify-between items-center gap-2">
           <span
             className={`truncate text-sm font-semibold ${
@@ -121,7 +123,7 @@ const UserItem: React.FC<UserItemProps> = ({
             </span>
           )}
         </div>
-        <LastSeen userId={user._id} lastSeenAt={user.lastSeenAt} isActive={isActive} />
+        <LastSeen userId={user._id} lastSeenAt={user.lastSeenAt} />
       </div>
     </button>
   );
