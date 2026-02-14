@@ -1,4 +1,4 @@
-import { ListGroupItem } from "flowbite-react";
+import { Avatar } from "flowbite-react";
 import React, { memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCreateDirectRoom } from "../../../../hooks/use-room";
@@ -54,29 +54,43 @@ const UserItem: React.FC<UserItemProps> = ({
     }
   };
 
+  if (isCollapsed) {
+    return (
+      <button
+        onClick={() => handleUserClick(user._id)}
+        className="w-full flex items-center justify-center py-3 px-2 hover:bg-gray-100 transition-colors"
+        title={user.profile.name}
+      >
+        <div className="relative">
+          {user.avatarUrl ? (
+            <Avatar img={user.avatarUrl} alt={user.username} rounded />
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-primary-600 text-white flex items-center justify-center font-bold text-sm">
+              {getInitials(user.profile.name || user.username)}
+            </div>
+          )}
+          <Status userId={user._id} />
+        </div>
+      </button>
+    );
+  }
+
   return (
-    <ListGroupItem
+    <button
       onClick={() => handleUserClick(user._id)}
-      className={`w-full flex items-center gap-3 py-2.5 px-4 border-0 transition-all duration-200 rounded-lg ${
-        isCollapsed ? "justify-center px-2" : ""
-      } ${
+      className={`w-full flex items-center gap-3 py-3 px-4 transition-all duration-200 ${
         isActive
-          ? "bg-blue-600 text-white shadow-sm"
+          ? "bg-primary-600 text-white"
           : "hover:bg-gray-100 text-gray-700"
       }`}
     >
-      {/* Avatar with Status */}
       <div className="relative shrink-0">
         {user.avatarUrl ? (
-          <img
-            src={user.avatarUrl}
-            alt={user.username}
-            className="w-11 h-11 rounded-full object-cover ring-2 ring-white/10"
-          />
+          <Avatar img={user.avatarUrl} alt={user.username} rounded />
         ) : (
           <div
-            className={`w-11 h-11 rounded-full flex items-center justify-center font-bold text-sm ring-2 ring-white/10 ${
-              isActive ? "bg-blue-700 text-white" : "bg-blue-600 text-white"
+            className={`w-11 h-11 rounded-full flex items-center justify-center font-bold text-sm ${
+              isActive ? "bg-primary-700 text-white" : "bg-primary-600 text-white"
             }`}
           >
             {getInitials(user.profile.name || user.username)}
@@ -85,34 +99,31 @@ const UserItem: React.FC<UserItemProps> = ({
         <Status userId={user._id} />
       </div>
 
-      {/* User Info - Hidden when collapsed */}
-      {!isCollapsed && (
-        <div className="flex flex-col">
-          <div className="flex justify-between items-start gap-2">
-            <h6
-              className={`truncate text-sm font-semibold ${
-                isActive ? "text-white" : "text-gray-800"
+      <div className="flex flex-col flex-1 min-w-0">
+        <div className="flex justify-between items-center gap-2">
+          <span
+            className={`truncate text-sm font-semibold ${
+              isActive ? "text-white" : "text-gray-900"
+            }`}
+          >
+            {user.profile.name}
+          </span>
+          {user.createdAt && (
+            <span
+              className={`text-xs whitespace-nowrap ${
+                isActive ? "text-white/70" : "text-gray-400"
               }`}
             >
-              {user.profile.name}
-            </h6>
-            {user.createdAt && (
-              <span
-                className={`text-xs whitespace-nowrap ${
-                  isActive ? "text-white/60" : "text-gray-400"
-                }`}
-              >
-                {new Date(user.createdAt).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </span>
-            )}
-          </div>
-          <LastSeen userId={user._id} lastSeenAt={user.lastSeenAt} />
+              {new Date(user.createdAt).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </span>
+          )}
         </div>
-      )}
-    </ListGroupItem>
+        <LastSeen userId={user._id} lastSeenAt={user.lastSeenAt} isActive={isActive} />
+      </div>
+    </button>
   );
 };
 

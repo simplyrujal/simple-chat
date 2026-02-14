@@ -1,12 +1,14 @@
 import React from "react";
 import { useGetUserStatus } from "/imports/ui/shared/hooks/user/use-user";
 
-const LastSeen: React.FC<{ userId: string; lastSeenAt: Date }> = ({
+const LastSeen: React.FC<{ userId: string; lastSeenAt: Date; isActive?: boolean }> = ({
   userId,
   lastSeenAt,
+  isActive: propIsActive,
 }) => {
   const status = useGetUserStatus(userId);
-  const isActive = status === "online";
+  const isActiveStatus = status === "online";
+  const isActive = propIsActive ?? isActiveStatus;
 
   return (
     <span
