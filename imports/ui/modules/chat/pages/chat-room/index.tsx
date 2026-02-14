@@ -7,7 +7,11 @@ import ChatInput from "./chat-input";
 import ChatMessages from "./chat-messages";
 import RoomLayout from "./room-layout";
 
-export const ChatRoomPage: React.FC = () => {
+interface ChatRoomPageProps {
+  onBackClick?: () => void;
+}
+
+export const ChatRoomPage: React.FC<ChatRoomPageProps> = ({ onBackClick }) => {
   const { chatRoomId } = useParams<{ chatRoomId: string }>();
   const {
     data: room,
@@ -65,7 +69,7 @@ export const ChatRoomPage: React.FC = () => {
 
   return (
     <ChatProvider>
-      <RoomLayout>
+      <RoomLayout onBackClick={onBackClick}>
         <ChatHeader room={room} />
         <ChatMessages roomId={room._id} />
         <ChatInput room={room} />
