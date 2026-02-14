@@ -14,7 +14,9 @@ interface ChatRoomPageProps {
   onToggleMobile?: () => void;
 }
 
-export const ChatRoomPage: React.FC<ChatRoomPageProps> = ({ onBackClick, onToggleMobile }) => {
+export const ChatRoomPage: React.FC<ChatRoomPageProps> = ({
+  onToggleMobile,
+}) => {
   const { chatRoomId } = useParams<{ chatRoomId: string }>();
   const {
     data: room,
@@ -31,8 +33,8 @@ export const ChatRoomPage: React.FC<ChatRoomPageProps> = ({ onBackClick, onToggl
   }
 
   return (
-    <ChatProvider>
-      <RoomLayout onBackClick={onBackClick} onToggleMobile={onToggleMobile}>
+    <ChatProvider roomType={room.type}>
+      <RoomLayout onToggleMobile={onToggleMobile}>
         <ChatHeader room={room} />
         <ChatMessages roomId={room._id} />
         <ChatInput room={room} />

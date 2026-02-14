@@ -5,6 +5,7 @@ import {
   DropdownItem,
 } from "flowbite-react";
 import React from "react";
+import { useChat } from "../../../provider/chat-provider";
 
 interface RoomHeaderProps {
   onBackClick?: () => void;
@@ -59,7 +60,7 @@ const MoreIcon = () => (
   </svg>
 );
 
-const BackIcon = () => (
+const MenuIcon = () => (
   <svg
     className="w-5 h-5"
     fill="none"
@@ -70,31 +71,13 @@ const BackIcon = () => (
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={2}
-      d="M15 19l-7-7 7-7"
+      d="M4 6h16M4 12h16M4 18h16"
     />
   </svg>
 );
 
-const RoomHeader: React.FC<RoomHeaderProps> = ({
-  onBackClick,
-  onToggleMobile,
-}) => {
-  const MenuIcon = () => (
-    <svg
-      className="w-5 h-5"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M4 6h16M4 12h16M4 18h16"
-      />
-    </svg>
-  );
-
+const RoomHeader: React.FC<RoomHeaderProps> = ({ onToggleMobile }) => {
+  const { roomType } = useChat();
   return (
     <header className="flex-none border-b border-gray-200 bg-white">
       <div className="flex items-center justify-between px-3 py-3 sm:px-4">
@@ -128,11 +111,13 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({
 
           <div className="min-w-0">
             <h1 className="text-base sm:text-lg font-bold text-gray-900 truncate">
-              Group Chat
+              {roomType === "direct" ? "Private Chat" : "Group Chat"}
             </h1>
-            <p className="text-xs sm:text-sm text-gray-500 truncate">
-              Click to view participants
-            </p>
+            {roomType === "channel" && (
+              <p className="text-xs sm:text-sm text-gray-500 truncate">
+                Click to view participants
+              </p>
+            )}
           </div>
         </div>
 

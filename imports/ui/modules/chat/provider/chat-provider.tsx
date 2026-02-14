@@ -19,7 +19,7 @@ export const useChat = () => {
 
 interface IProps {
   children: React.ReactNode;
-  roomType: string;
+  roomType: "direct" | "channel";
 }
 
 const ChatProvider: React.FC<IProps> = ({ children, roomType }) => {
