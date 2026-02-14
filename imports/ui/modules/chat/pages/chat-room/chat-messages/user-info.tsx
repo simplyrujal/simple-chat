@@ -3,31 +3,36 @@ import { useGetUser } from "/imports/ui/shared/hooks/user/use-user";
 
 interface IProps {
   isCurrentUser: boolean;
-  currentUserName: string;
+  currentUserName?: string;
   otherUserId: string;
 }
 
 const UserInfo: React.FC<IProps> = ({
   isCurrentUser,
-  currentUserName,
+  currentUserName = "You",
   otherUserId,
 }) => {
   const { data, isLoading, error } = useGetUser(otherUserId || "");
+
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <span className="text-xs font-medium text-gray-400">Loading...</span>
+    );
   }
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return (
+      <span className="text-xs font-medium text-red-400">Unknown</span>
+    );
   }
 
   return (
     <span
-      className={`font-semibold text-xs ${
+      className={`text-xs font-semibold tracking-wide ${
         isCurrentUser ? "text-white/80" : "text-primary-600"
       }`}
     >
-      {isCurrentUser ? currentUserName : data?.profile?.name}
+      {isCurrentUser ? currentUserName : data?.profile?.name || "Unknown User"}
     </span>
   );
 };
