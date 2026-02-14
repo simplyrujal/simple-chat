@@ -5,10 +5,12 @@ import {
   DropdownItem,
 } from "flowbite-react";
 import React, { useCallback, useState } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../../../shared/hooks/auth/use-auth";
 import useLogout from "../../../../shared/hooks/auth/use-logout";
 import { useUserList } from "../../../../shared/hooks/user/use-user";
 import UserItem from "./users/user-item";
+import Loading from "/imports/ui/shared/components/loading";
 import { debounce } from "/imports/ui/shared/utils/debounce";
 
 interface ChatSidebarProps {
@@ -17,32 +19,82 @@ interface ChatSidebarProps {
 }
 
 const SearchIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+  <svg
+    className="w-5 h-5"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+    />
   </svg>
 );
 
 const ChevronLeftIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+  <svg
+    className="w-5 h-5"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M15 19l-7-7 7-7"
+    />
   </svg>
 );
 
 const ChevronRightIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+  <svg
+    className="w-5 h-5"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M9 5l7 7-7 7"
+    />
   </svg>
 );
 
 const CloseIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+  <svg
+    className="w-5 h-5"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M6 18L18 6M6 6l12 12"
+    />
   </svg>
 );
 
 const LogoIcon = () => (
-  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+  <svg
+    className="w-6 h-6 text-white"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+    />
   </svg>
 );
 
@@ -63,11 +115,7 @@ export const Sidebar: React.FC<ChatSidebarProps> = ({
   );
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <div className="w-8 h-8 border-4 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
+    return <Loading />;
   }
 
   return (
@@ -89,14 +137,19 @@ export const Sidebar: React.FC<ChatSidebarProps> = ({
         <div className="flex flex-col h-full">
           <header className="flex-none border-b border-gray-200">
             <div className="flex items-center justify-between p-4 bg-gray-50">
-              <div className={`flex items-center gap-3 ${isCollapsed ? "justify-center w-full" : ""}`}>
+              <Link
+                to="/dashboard"
+                className={`flex items-center gap-3 ${isCollapsed ? "justify-center w-full" : ""}`}
+              >
                 <div className="p-1.5 bg-primary-600 rounded-lg flex items-center justify-center shrink-0">
                   <LogoIcon />
                 </div>
                 {!isCollapsed && (
-                  <span className="text-lg font-bold text-gray-900">SimpleChat</span>
+                  <span className="text-lg font-bold text-gray-900">
+                    SimpleChat
+                  </span>
                 )}
-              </div>
+              </Link>
               <div className="flex items-center gap-1">
                 <button
                   className="hidden md:flex p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-200 rounded-lg transition-colors items-center justify-center"
@@ -187,7 +240,9 @@ const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
             isCollapsed ? "justify-center" : ""
           }`}
         >
-          <div className={`flex items-center gap-3 overflow-hidden ${isCollapsed ? "justify-center w-full" : ""}`}>
+          <div
+            className={`flex items-center gap-3 overflow-hidden ${isCollapsed ? "justify-center w-full" : ""}`}
+          >
             <div className="relative shrink-0">
               {user?.avatarUrl ? (
                 <Avatar img={user.avatarUrl} alt="User avatar" rounded />
@@ -214,7 +269,10 @@ const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
     >
       <DropdownItem>Profile</DropdownItem>
       <DropdownDivider />
-      <DropdownItem onClick={logout} className="text-danger-600 hover:bg-danger-50">
+      <DropdownItem
+        onClick={logout}
+        className="text-danger-600 hover:bg-danger-50"
+      >
         Logout
       </DropdownItem>
     </Dropdown>
