@@ -4,6 +4,7 @@ interface IChatContext {
   // Simple state for now - can be extended later
   activeRoomId: string | null;
   setActiveRoomId: (id: string | null) => void;
+  roomType: string;
 }
 
 const ChatContext = createContext<IChatContext | undefined>(undefined);
@@ -18,9 +19,10 @@ export const useChat = () => {
 
 interface IProps {
   children: React.ReactNode;
+  roomType: string;
 }
 
-const ChatProvider: React.FC<IProps> = ({ children }) => {
+const ChatProvider: React.FC<IProps> = ({ children, roomType }) => {
   const [activeRoomId, setActiveRoomId] = useState<string | null>(null);
 
   const handleSetActiveRoomId = useCallback((id: string | null) => {
@@ -32,6 +34,7 @@ const ChatProvider: React.FC<IProps> = ({ children }) => {
       value={{
         activeRoomId,
         setActiveRoomId: handleSetActiveRoomId,
+        roomType,
       }}
     >
       {children}
