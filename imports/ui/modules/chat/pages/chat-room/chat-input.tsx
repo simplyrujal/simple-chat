@@ -28,7 +28,7 @@ const ChatInput: React.FC<IProps> = ({ room }) => {
     setMessage("");
   };
   return (
-    <div className="p-3 border-t bg-white">
+    <div className="p-3 bg-white">
       <form onSubmit={handleMessageSend}>
         <div className="flex gap-2">
           <input
