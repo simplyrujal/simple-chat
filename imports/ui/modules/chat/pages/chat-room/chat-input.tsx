@@ -14,6 +14,7 @@ const ChatInput: React.FC<IProps> = ({ room }) => {
 
   const handleMessageSend = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!message) return;
     const currentUserId = Meteor.userId();
 
     const names = room.name.split("-");
