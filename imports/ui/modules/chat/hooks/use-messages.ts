@@ -18,7 +18,6 @@ export const useSubscribeMessages = (roomId: string, query?: TQuery) => {
         { roomId },
         {
           ...(query || {}),
-          sort: { createdAt: 1 },
         },
       ).fetch();
     }
