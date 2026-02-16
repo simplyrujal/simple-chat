@@ -1,5 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { 
+  ChevronExpandIcon, 
+  CloseIcon, 
+  HomeIcon, 
+  SearchIcon 
+} from "../../../../shared/icons";
 
 interface SidebarHeaderOptionsProps {
   isCollapsed: boolean;
@@ -32,20 +38,10 @@ const SidebarHeaderOptions: React.FC<SidebarHeaderOptionsProps> = ({
             onClick={() => setIsCollapsed(!isCollapsed)}
             title={isCollapsed ? "Expand" : "Collapse"}
           >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              {isCollapsed ? (
-                <path d="M13 17l5-5-5-5M6 17l5-5-5-5" />
-              ) : (
-                <path d="M11 17l-5-5 5-5M18 17l-5-5 5-5" />
-              )}
-            </svg>
+            <ChevronExpandIcon 
+              size={20} 
+              direction={isCollapsed ? "right" : "left"} 
+            />
           </button>
 
           <button
@@ -53,16 +49,7 @@ const SidebarHeaderOptions: React.FC<SidebarHeaderOptionsProps> = ({
             onClick={onCloseMobile}
             title="Close"
           >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M18 6L6 18M6 6l12 12" />
-            </svg>
+            <CloseIcon size={20} />
           </button>
 
           {!isCollapsed && (
@@ -71,17 +58,7 @@ const SidebarHeaderOptions: React.FC<SidebarHeaderOptionsProps> = ({
               className="p-1.5 text-gray-600 hover:text-gray-900 hover:bg-gray-200 rounded-lg transition-colors"
               title="Home"
             >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                <polyline points="9 22 9 12 15 12 15 22" />
-              </svg>
+              <HomeIcon size={20} />
             </Link>
           )}
         </div>
@@ -91,18 +68,7 @@ const SidebarHeaderOptions: React.FC<SidebarHeaderOptionsProps> = ({
         <div className="p-3">
           <div className="relative flex items-center">
             <div className="absolute left-3 pointer-events-none">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                className="text-gray-400"
-              >
-                <circle cx="11" cy="11" r="8" />
-                <path d="m21 21-4.35-4.35" />
-              </svg>
+              <SearchIcon size={16} className="text-gray-400" />
             </div>
             <input
               type="text"
@@ -113,16 +79,7 @@ const SidebarHeaderOptions: React.FC<SidebarHeaderOptionsProps> = ({
             />
             {searchQuery && (
               <button className="absolute right-3 text-gray-400 hover:text-gray-600 transition-colors">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M18 6L6 18M6 6l12 12" />
-                </svg>
+                <CloseIcon size={16} />
               </button>
             )}
           </div>

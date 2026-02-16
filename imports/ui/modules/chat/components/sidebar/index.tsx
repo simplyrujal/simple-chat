@@ -6,96 +6,23 @@ import {
 } from "flowbite-react";
 import React, { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../../../shared/hooks/auth/use-auth";
-import useLogout from "../../../../shared/hooks/auth/use-logout";
-import { useUserList } from "../../../../shared/hooks/user/use-user";
 import UserItem from "./users/user-item";
+import { useAuth } from "/imports/ui/shared/hooks/auth/use-auth";
+import useLogout from "/imports/ui/shared/hooks/auth/use-logout";
+import { useUserList } from "/imports/ui/shared/hooks/user/use-user";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  CloseIcon,
+  LogoIcon,
+  SearchIcon,
+} from "/imports/ui/shared/icons";
 import { debounce } from "/imports/ui/shared/utils/debounce";
 
 interface ChatSidebarProps {
   isMobileOpen?: boolean;
   onCloseMobile?: () => void;
 }
-
-const SearchIcon = () => (
-  <svg
-    className="w-5 h-5"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-    />
-  </svg>
-);
-
-const ChevronLeftIcon = () => (
-  <svg
-    className="w-5 h-5"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M15 19l-7-7 7-7"
-    />
-  </svg>
-);
-
-const ChevronRightIcon = () => (
-  <svg
-    className="w-5 h-5"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M9 5l7 7-7 7"
-    />
-  </svg>
-);
-
-const CloseIcon = () => (
-  <svg
-    className="w-5 h-5"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M6 18L18 6M6 6l12 12"
-    />
-  </svg>
-);
-
-const LogoIcon = () => (
-  <svg
-    className="w-6 h-6 text-white"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-    />
-  </svg>
-);
 
 export const Sidebar: React.FC<ChatSidebarProps> = ({
   isMobileOpen,
@@ -137,7 +64,7 @@ export const Sidebar: React.FC<ChatSidebarProps> = ({
                 className={`flex items-center gap-3 ${isCollapsed ? "justify-center w-full" : ""}`}
               >
                 <div className="p-1.5 bg-primary-600 rounded-lg flex items-center justify-center shrink-0">
-                  <LogoIcon />
+                  <LogoIcon className="w-6 h-6 text-white" />
                 </div>
                 {!isCollapsed && (
                   <span className="text-lg font-bold text-gray-900">
@@ -151,14 +78,18 @@ export const Sidebar: React.FC<ChatSidebarProps> = ({
                   onClick={() => setIsCollapsed(!isCollapsed)}
                   title={isCollapsed ? "Expand" : "Collapse"}
                 >
-                  {isCollapsed ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+                  {isCollapsed ? (
+                    <ChevronRightIcon className="w-5 h-5" />
+                  ) : (
+                    <ChevronLeftIcon className="w-5 h-5" />
+                  )}
                 </button>
                 <button
                   className="md:hidden p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-200 rounded-lg transition-colors"
                   onClick={onCloseMobile}
                   title="Close"
                 >
-                  <CloseIcon />
+                  <CloseIcon className="w-5 h-5" />
                 </button>
               </div>
             </div>
@@ -167,7 +98,7 @@ export const Sidebar: React.FC<ChatSidebarProps> = ({
               <div className="p-4 pt-3">
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <SearchIcon />
+                    <SearchIcon className="w-5 h-5" />
                   </div>
                   <input
                     type="text"

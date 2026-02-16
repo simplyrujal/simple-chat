@@ -5,8 +5,13 @@ import {
   DropdownItem,
 } from "flowbite-react";
 import React from "react";
-import { useAuth } from "../../../shared/hooks/auth/use-auth";
-import useLogout from "../../../shared/hooks/auth/use-logout";
+import { useAuth } from "/imports/ui/shared/hooks/auth/use-auth";
+import useLogout from "/imports/ui/shared/hooks/auth/use-logout";
+import {
+  ChevronDownIcon,
+  LogoutIcon,
+  UserIcon,
+} from "/imports/ui/shared/icons";
 interface UserProfileDropDownProps {
   isCollapsed?: boolean;
 }
@@ -57,19 +62,7 @@ const UserProfileDropDown: React.FC<UserProfileDropDownProps> = ({
 
             {!isCollapsed && (
               <span className="ml-auto">
-                <svg
-                  className="w-4 h-4 text-gray-500 transition-transform duration-200"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  strokeWidth="2"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
+                <ChevronDownIcon className="w-4 h-4 text-gray-500 transition-transform duration-200" />
               </span>
             )}
           </div>
@@ -78,40 +71,11 @@ const UserProfileDropDown: React.FC<UserProfileDropDownProps> = ({
       placement="top"
       className={isCollapsed ? "w-48" : "w-full min-w-[180px]"}
     >
-      <DropdownItem
-        icon={() => (
-          <svg
-            width="16"
-            height="16"
-            stroke="currentColor"
-            strokeWidth="2"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-            <circle cx="12" cy="7" r="4" />
-          </svg>
-        )}
-      >
-        Profile
-      </DropdownItem>
+      <DropdownItem icon={() => <UserIcon size={16} />}>Profile</DropdownItem>
       <DropdownDivider />
       <DropdownItem
         onClick={logout}
-        icon={() => (
-          <svg
-            width="16"
-            height="16"
-            stroke="currentColor"
-            strokeWidth="2"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-            <polyline points="16 17 21 12 16 7" />
-            <line x1="21" y1="12" x2="9" y2="12" />
-          </svg>
-        )}
+        icon={() => <LogoutIcon size={16} />}
         className="text-danger-600 hover:bg-danger-50"
       >
         Logout
