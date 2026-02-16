@@ -22,12 +22,31 @@ Meteor.methods({
     check(to, String);
     check(content, String);
 
-    const data = await MessageCollection.insertAsync({
-      roomId,
-      content: {
+    let contentObj: { type: "text" | "image" | "file"; text?: string; fileUrl?: string };
+    
+    try {
+      const parsed = JSON.parse(content);
+      if (parsed.messageType && parsed.name) {
+        contentObj = {
+          type: parsed.messageType as "text" | "image" | "file",
+          fileUrl: parsed.name,
+        };
+      } else {
+        contentObj = {
+          type: "text",
+          text: content,
+        };
+      }
+    } catch {
+      contentObj = {
         type: "text",
         text: content,
-      },
+      };
+    }
+
+    const data = await MessageCollection.insertAsync({
+      roomId,
+      content: contentObj,
       createdAt: new Date(),
       from: this.userId,
       to,

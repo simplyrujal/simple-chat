@@ -8,7 +8,7 @@ export type TMessage = {
   to: string;
 
   content: {
-    type: "text" | "image" | "file";
+    type: "text" | "image" | "file" | "audio" | "video";
     text?: string;
     fileUrl?: string;
   };
