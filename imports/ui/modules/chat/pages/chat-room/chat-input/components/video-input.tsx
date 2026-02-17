@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import useMediaRecording from "../hooks/use-media-recording";
 import { StopIcon, VideoIcon } from "/imports/ui/shared/icons";
 
@@ -12,13 +12,13 @@ const VideoInput: React.FC<VideoInputProps> = ({ onRecordingComplete }) => {
     mediaType: "video",
   });
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     if (isRecording) {
       stopRecording();
     } else {
       startRecording();
     }
-  };
+  }, [isRecording]);
 
   return (
     <button

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import useMediaRecording from "../hooks/use-media-recording";
 import { AudioIcon, StopIcon } from "/imports/ui/shared/icons";
 
@@ -12,13 +12,13 @@ const AudioInput: React.FC<AudioInputProps> = ({ onRecordingComplete }) => {
     mediaType: "audio",
   });
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     if (isRecording) {
       stopRecording();
     } else {
       startRecording();
     }
-  };
+  }, [isRecording]);
 
   return (
     <button
