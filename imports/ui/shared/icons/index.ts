@@ -18,3 +18,4 @@ export { PlusIcon, default as PlusIconDefault } from "./PlusIcon";
 export { WarningIcon, default as WarningIconDefault } from "./WarningIcon";
 export { AttachmentIcon, default as AttachmentIconDefault } from "./AttachmentIcon";
 export { ImageIcon, default as ImageIconDefault } from "./ImageIcon";
+export { StopIcon, default as StopIconDefault } from "./StopIcon";

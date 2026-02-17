@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { VideoIcon } from "/imports/ui/shared/icons";
+import { VideoIcon, StopIcon } from "/imports/ui/shared/icons";
 
 interface VideoInputProps {
   onRecordingComplete: (blob: Blob) => void;
@@ -62,7 +62,14 @@ const VideoInput: React.FC<VideoInputProps> = ({ onRecordingComplete }) => {
       }`}
       title={isRecording ? "Stop Recording" : "Record Video"}
     >
-      <VideoIcon size={18} />
+      {isRecording ? (
+        <div className="relative flex items-center justify-center">
+          <span className="absolute w-4 h-4 border-2 border-red-500 rounded-full animate-ping" />
+          <StopIcon size={18} />
+        </div>
+      ) : (
+        <VideoIcon size={18} />
+      )}
     </button>
   );
 };

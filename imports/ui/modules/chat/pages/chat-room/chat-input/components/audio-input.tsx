@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { AudioIcon } from "/imports/ui/shared/icons";
+import { AudioIcon, StopIcon } from "/imports/ui/shared/icons";
 
 interface AudioInputProps {
   onRecordingComplete: (blob: Blob) => void;
@@ -62,7 +62,14 @@ const AudioInput: React.FC<AudioInputProps> = ({ onRecordingComplete }) => {
       }`}
       title={isRecording ? "Stop Recording" : "Record Audio"}
     >
-      <AudioIcon size={18} />
+      {isRecording ? (
+        <div className="relative flex items-center justify-center">
+          <span className="absolute w-4 h-4 border-2 border-red-500 rounded-full animate-ping" />
+          <StopIcon size={18} />
+        </div>
+      ) : (
+        <AudioIcon size={18} />
+      )}
     </button>
   );
 };
