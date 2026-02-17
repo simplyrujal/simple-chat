@@ -1,14 +1,15 @@
 import React, { useCallback } from "react";
+import { useFormContext } from "react-hook-form";
 import useMediaRecording from "../hooks/use-media-recording";
 import { StopIcon, VideoIcon } from "/imports/ui/shared/icons";
 
-interface VideoInputProps {
-  onRecordingComplete: (blob: Blob) => void;
-}
-
-const VideoInput: React.FC<VideoInputProps> = ({ onRecordingComplete }) => {
+const VideoInput: React.FC = () => {
+  const { setValue } = useFormContext();
   const { startRecording, stopRecording, isRecording } = useMediaRecording({
-    onRecordingComplete,
+    onRecordingComplete: (blob) => {
+      setValue("media", blob);
+      setValue("mediaType", "video");
+    },
     mediaType: "video",
   });
 

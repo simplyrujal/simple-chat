@@ -1,13 +1,26 @@
-import React, { useRef } from "react";
+import React, { useRef, useCallback } from "react";
+import { useFormContext } from "react-hook-form";
 import { ImageIcon } from "/imports/ui/shared/icons";
 
 const ImageInput: React.FC = () => {
   const ref = useRef<HTMLInputElement>(null);
+  const { setValue } = useFormContext();
+
+  const handleFileChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        setValue("media", file);
+        setValue("mediaType", "image");
+      }
+    },
+    [setValue],
+  );
 
   return (
     <button
       type="button"
-      // onClick={() => triggerFileInput(ref)}
+      onClick={() => ref.current?.click()}
       className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors"
       title="Send Image"
     >
@@ -16,7 +29,7 @@ const ImageInput: React.FC = () => {
         type="file"
         accept="image/*"
         className="hidden"
-        // onChange={(e) => handleFileSelect(e, "image")}
+        onChange={handleFileChange}
       />
       <ImageIcon size={18} />
     </button>
