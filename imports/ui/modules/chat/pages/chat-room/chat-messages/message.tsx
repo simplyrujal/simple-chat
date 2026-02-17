@@ -1,7 +1,7 @@
 import React from "react";
 import UserInfo from "./user-info";
 import { TMessage } from "/imports/collections/message";
-import { AudioIcon, ImageIcon, VideoIcon } from "/imports/ui/shared/icons";
+import { ImageMessage, VideoMessage, AudioMessage, TextMessage, FileMessage } from "./components";
 
 interface MessageProps {
   msg: TMessage;
@@ -21,46 +21,25 @@ const Message: React.FC<MessageProps> = ({ msg, currentUserId }) => {
     switch (msg.content?.type) {
       case "image":
         return (
-          <div className="flex items-center gap-3">
-            <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
-              <ImageIcon className="w-8 h-8 text-gray-500" />
-            </div>
-            <div>
-              <p className="text-sm font-medium">{msg.content.fileUrl}</p>
-              <p className="text-xs opacity-75">Image</p>
-            </div>
-          </div>
+          <ImageMessage
+            fileUrl={msg.content.fileUrl}
+            fileName={msg.content.fileName}
+          />
         );
       case "video":
-        return (
-          <div className="flex items-center gap-3">
-            <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
-              <VideoIcon className="w-8 h-8 text-gray-500" />
-            </div>
-            <div>
-              <p className="text-sm font-medium">{msg.content.fileUrl}</p>
-              <p className="text-xs opacity-75">Video</p>
-            </div>
-          </div>
-        );
+        return <VideoMessage fileUrl={msg.content.fileUrl} />;
       case "audio":
+        return <AudioMessage fileUrl={msg.content.fileUrl} />;
+      case "file":
         return (
-          <div className="flex items-center gap-3">
-            <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
-              <AudioIcon className="w-8 h-8 text-gray-500" />
-            </div>
-            <div>
-              <p className="text-sm font-medium">{msg.content.fileUrl}</p>
-              <p className="text-xs opacity-75">Audio</p>
-            </div>
-          </div>
+          <FileMessage
+            fileUrl={msg.content.fileUrl}
+            fileName={msg.content.fileName}
+            fileSize={msg.content.fileSize}
+          />
         );
       default:
-        return (
-          <p className="text-sm leading-relaxed wrap-break-words whitespace-pre-wrap">
-            {msg.content?.text}
-          </p>
-        );
+        return <TextMessage text={msg.content?.text} />;
     }
   };
 

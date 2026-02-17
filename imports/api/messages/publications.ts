@@ -23,8 +23,9 @@ Meteor.publish("room.messages", function (roomId: string, query?: TQuery) {
     const res = MessageCollection.find(
       { roomId },
       {
-        ...(query || {}),
-        sort: { createdAt: 1 },
+        sort: query?.sort || { createdAt: 1 },
+        limit: query?.limit,
+        skip: query?.skip,
       },
     );
 

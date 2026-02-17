@@ -13,7 +13,7 @@ const ChatMessages: React.FC<{ roomId: string }> = ({ roomId }) => {
   const messages = useSubscribeMessages(roomId, {
     limit: PAGE_SIZE,
     skip,
-    sort: { createdAt: -1 },
+    sort: { createdAt: 1 },
   });
   const currentUserId = Meteor.userId();
   const parentRef = useRef<HTMLDivElement>(null);

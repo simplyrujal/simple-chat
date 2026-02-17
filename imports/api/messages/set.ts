@@ -1,16 +1,22 @@
 import { check } from "meteor/check";
 import { Meteor } from "meteor/meteor";
-import { MessageCollection } from "/imports/collections/message";
+import { MessageCollection, TMessageType } from "/imports/collections/message";
 
 Meteor.methods({
-  async "set.message"({
-    to,
-    content,
-    roomId,
-  }: {
+  async "set.message"(data: {
     to: string;
-    content: string;
+    from?: string;
     roomId: string;
+    content: {
+      type: TMessageType;
+      text?: string;
+      fileUrl?: string;
+      fileId?: string;
+      fileName?: string;
+      fileSize?: number;
+      fileMimeType?: string;
+      duration?: number;
+    };
   }) {
     if (!this.userId) {
       throw new Meteor.Error(
@@ -18,40 +24,20 @@ Meteor.methods({
         "You must be logged in to view messages.",
       );
     }
-    check(roomId, String);
-    check(to, String);
-    check(content, String);
+    check(data.roomId, String);
+    check(data.to, String);
+    check(data.content, Object);
 
-    let contentObj: { type: "text" | "image" | "file"; text?: string; fileUrl?: string };
-    
-    try {
-      const parsed = JSON.parse(content);
-      if (parsed.messageType && parsed.name) {
-        contentObj = {
-          type: parsed.messageType as "text" | "image" | "file",
-          fileUrl: parsed.name,
-        };
-      } else {
-        contentObj = {
-          type: "text",
-          text: content,
-        };
-      }
-    } catch {
-      contentObj = {
-        type: "text",
-        text: content,
-      };
-    }
-
-    const data = await MessageCollection.insertAsync({
-      roomId,
-      content: contentObj,
+    const dataToInsert = {
+      roomId: data.roomId,
+      content: data.content,
       createdAt: new Date(),
       from: this.userId,
-      to,
+      to: data.to,
       deleted: false,
-    });
-    return data;
+    };
+
+    const result = await MessageCollection.insertAsync(dataToInsert);
+    return result;
   },
 });

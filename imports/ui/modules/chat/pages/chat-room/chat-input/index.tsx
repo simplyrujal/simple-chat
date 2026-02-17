@@ -41,9 +41,10 @@ const ChatInput: React.FC<IProps> = ({ room }) => {
 
     try {
       await sendMessage.mutateAsync({
+        from: currentUserId || "",
         to: otherUser || "",
-        content: { type: data.mediaType, text: data.message },
         roomId: room._id,
+        content: { type: data.mediaType, text: data.message },
       });
 
       reset({
