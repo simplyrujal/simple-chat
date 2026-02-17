@@ -1,7 +1,7 @@
 import React from "react";
 import UserInfo from "./user-info";
 import { TMessage } from "/imports/collections/message";
-import { ImageIcon, VideoIcon, AudioIcon } from "/imports/ui/shared/icons";
+import { AudioIcon, ImageIcon, VideoIcon } from "/imports/ui/shared/icons";
 
 interface MessageProps {
   msg: TMessage;
@@ -73,7 +73,7 @@ const Message: React.FC<MessageProps> = ({ msg, currentUserId }) => {
           isCurrentUser ? "items-end" : "items-start"
         }`}
       >
-        {!isCurrentUser && (
+        {!isCurrentUser && otherUserId && (
           <UserInfo otherUserId={otherUserId} isCurrentUser={isCurrentUser} />
         )}
 
