@@ -9,6 +9,7 @@ const useGlobalSubscriptions = () => {
             Meteor.subscribe('roomMember.list');
             Meteor.subscribe('user.list');
             Meteor.subscribe('all.messages');
+            Meteor.subscribe('mediaFiles');
         }
     }, []);
 

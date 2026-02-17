@@ -4,7 +4,7 @@ import SubmitButton from "./submit-button";
 import { TMessageType } from "/imports/collections/message";
 type IData = {
   message: string;
-  media: Blob | null;
+  media: File | Blob | null;
   mediaType: TMessageType;
 };
 

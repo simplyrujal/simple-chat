@@ -24,6 +24,7 @@ registerCollection("RoomCollection");
 registerCollection("UsersCollection");
 registerCollection("RoomMemberCollection");
 registerCollection("MessageCollection");
+registerCollection("MediaCollection");
 
 export const App: React.FC = () => {
   useGlobalSubscriptions();

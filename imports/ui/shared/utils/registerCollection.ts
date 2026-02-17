@@ -1,4 +1,5 @@
 import { MessageCollection } from "/imports/collections/message";
+import { MediaCollection } from "/imports/collections/media";
 import { RoomCollection } from "/imports/collections/room";
 import { RoomMemberCollection } from "/imports/collections/room-member";
 import { UsersCollection } from "/imports/collections/user";
@@ -11,6 +12,7 @@ const collections = {
   RoomCollection,
   MessageCollection,
   RoomMemberCollection,
+  MediaCollection,
 };
 
 type Key = keyof typeof collections;
