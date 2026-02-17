@@ -10,16 +10,18 @@ interface IProps {
   room: TRooms;
 }
 
-// type MessageType = "text" | "image" | "file" | "audio" | "video";
+type MediaType = "video" | "audio";
 
 const ChatInput: React.FC<IProps> = ({ room }) => {
   const [message, setMessage] = React.useState("");
+  const [media, setMedia] = React.useState<Blob | null>(null);
+  const [mediaType, setMediaType] = React.useState<MediaType | null>(null);
 
   const sendMessage = useSendMessage();
 
   const handleMessageSend = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!message) return;
+    if (!message && !media) return;
     const currentUserId = Meteor.userId();
 
     const names = room.name.split("-");
@@ -32,10 +34,40 @@ const ChatInput: React.FC<IProps> = ({ room }) => {
     });
 
     setMessage("");
+    handleMediaClear();
+  };
+
+  const handleMediaClear = () => {
+    setMedia(null);
+    setMediaType(null);
   };
 
   return (
     <div className="p-3 bg-white">
+      {media && mediaType && (
+        <div className="mb-2 p-2 border rounded bg-gray-50">
+          {mediaType === "video" ? (
+            <video
+              src={URL.createObjectURL(media)}
+              controls
+              className="max-h-48 w-full rounded"
+            />
+          ) : (
+            <audio
+              src={URL.createObjectURL(media)}
+              controls
+              className="w-full"
+            />
+          )}
+          <button
+            type="button"
+            onClick={handleMediaClear}
+            className="mt-1 text-sm text-red-500 hover:text-red-700"
+          >
+            Remove
+          </button>
+        </div>
+      )}
       <form onSubmit={handleMessageSend}>
         <div className="flex gap-2">
           <input
@@ -50,7 +82,7 @@ const ChatInput: React.FC<IProps> = ({ room }) => {
             Send
           </Button>
         </div>
-        <FileInputs />
+        <FileInputs setMedia={setMedia} setMediaType={setMediaType} />
       </form>
     </div>
   );

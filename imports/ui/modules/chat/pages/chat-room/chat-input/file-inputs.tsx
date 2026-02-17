@@ -4,12 +4,27 @@ import AudioInput from "./components/audio-input";
 import ImageInput from "./components/image-input";
 import VideoInput from "./components/video-input";
 
-const FileInputs: React.FC = () => {
+interface FileInputsProps {
+  setMedia: (media: Blob | null) => void;
+  setMediaType: (type: "video" | "audio" | null) => void;
+}
+
+const FileInputs: React.FC<FileInputsProps> = ({ setMedia, setMediaType }) => {
+  const handleVideoRecording = (blob: Blob) => {
+    setMedia(blob);
+    setMediaType("video");
+  };
+
+  const handleAudioRecording = (blob: Blob) => {
+    setMedia(blob);
+    setMediaType("audio");
+  };
+
   return (
     <div className="flex items-center gap-1 mt-2 pt-2">
       <ImageInput />
-      <VideoInput />
-      <AudioInput />
+      <VideoInput onRecordingComplete={handleVideoRecording} />
+      <AudioInput onRecordingComplete={handleAudioRecording} />
       <AttachmentInput />
     </div>
   );
