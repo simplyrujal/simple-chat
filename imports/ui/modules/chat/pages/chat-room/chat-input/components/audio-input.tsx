@@ -1,4 +1,5 @@
-import React, { useRef, useState } from "react";
+import React from "react";
+import useMediaRecording from "../hooks/use-media-recording";
 import { AudioIcon, StopIcon } from "/imports/ui/shared/icons";
 
 interface AudioInputProps {
@@ -6,42 +7,10 @@ interface AudioInputProps {
 }
 
 const AudioInput: React.FC<AudioInputProps> = ({ onRecordingComplete }) => {
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const chunksRef = useRef<Blob[]>([]);
-  const [isRecording, setIsRecording] = useState(false);
-
-  const startRecording = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
-      chunksRef.current = [];
-
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          chunksRef.current.push(event.data);
-        }
-      };
-
-      mediaRecorder.onstop = () => {
-        const blob = new Blob(chunksRef.current, { type: "audio/webm" });
-        onRecordingComplete(blob);
-        stream.getTracks().forEach((track) => track.stop());
-      };
-
-      mediaRecorder.start();
-      setIsRecording(true);
-    } catch (error) {
-      console.error("Error accessing microphone:", error);
-    }
-  };
-
-  const stopRecording = () => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
-      setIsRecording(false);
-    }
-  };
+  const { startRecording, stopRecording, isRecording } = useMediaRecording({
+    onRecordingComplete,
+    mediaType: "audio",
+  });
 
   const handleClick = () => {
     if (isRecording) {

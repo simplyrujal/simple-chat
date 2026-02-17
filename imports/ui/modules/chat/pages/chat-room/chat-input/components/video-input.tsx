@@ -1,47 +1,16 @@
-import React, { useRef, useState } from "react";
-import { VideoIcon, StopIcon } from "/imports/ui/shared/icons";
+import React from "react";
+import useMediaRecording from "../hooks/use-media-recording";
+import { StopIcon, VideoIcon } from "/imports/ui/shared/icons";
 
 interface VideoInputProps {
   onRecordingComplete: (blob: Blob) => void;
 }
 
 const VideoInput: React.FC<VideoInputProps> = ({ onRecordingComplete }) => {
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const chunksRef = useRef<Blob[]>([]);
-  const [isRecording, setIsRecording] = useState(false);
-
-  const startRecording = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
-      chunksRef.current = [];
-
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          chunksRef.current.push(event.data);
-        }
-      };
-
-      mediaRecorder.onstop = () => {
-        const blob = new Blob(chunksRef.current, { type: "video/webm" });
-        onRecordingComplete(blob);
-        stream.getTracks().forEach((track) => track.stop());
-      };
-
-      mediaRecorder.start();
-      setIsRecording(true);
-    } catch (error) {
-      console.error("Error accessing camera:", error);
-    }
-  };
-
-  const stopRecording = () => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
-      setIsRecording(false);
-    }
-  };
+  const { startRecording, stopRecording, isRecording } = useMediaRecording({
+    onRecordingComplete,
+    mediaType: "video",
+  });
 
   const handleClick = () => {
     if (isRecording) {
