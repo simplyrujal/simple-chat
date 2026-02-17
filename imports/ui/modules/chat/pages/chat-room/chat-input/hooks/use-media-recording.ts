@@ -26,7 +26,10 @@ const useMediaRecording = ({
 
       mediaRecorder.onstop = () => {
         const blob = new Blob(chunksRef.current, {
-          type: mediaType === "audio" ? "audio/webm" : "video/webm",
+          type:
+            mediaType === "audio"
+              ? "audio/webm;codecs=opus"
+              : "video/webm;codecs=vp8,opus",
         });
         onRecordingComplete(blob);
         stream.getTracks().forEach((track) => track.stop());
