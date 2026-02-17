@@ -21,7 +21,9 @@ const ChatMessages: React.FC<{ roomId: string }> = ({ roomId }) => {
   const isInitialLoadRef = useRef(true);
 
   const sortedMessages = [...(messages || [])].sort(
-    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+    (a, b) =>
+      new Date(a?.createdAt || "").getTime() -
+      new Date(b?.createdAt || "").getTime(),
   );
 
   const virtualizer = useVirtualizer({

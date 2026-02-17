@@ -1,4 +1,5 @@
 import React from "react";
+import { useChatInput } from "../context/chat-input-provider";
 import AttachmentInput from "./components/attachment-input";
 import AudioInput from "./components/audio-input";
 import ImageInput from "./components/image-input";
@@ -6,10 +7,11 @@ import VideoInput from "./components/video-input";
 
 interface FileInputsProps {
   setMedia: (media: Blob | null) => void;
-  setMediaType: (type: "video" | "audio" | null) => void;
 }
 
-const FileInputs: React.FC<FileInputsProps> = ({ setMedia, setMediaType }) => {
+const FileInputs: React.FC<FileInputsProps> = ({ setMedia }) => {
+  const { setMediaType } = useChatInput();
+
   const handleVideoRecording = (blob: Blob) => {
     setMedia(blob);
     setMediaType("video");

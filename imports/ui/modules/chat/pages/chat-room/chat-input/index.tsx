@@ -1,21 +1,21 @@
 import { Button } from "flowbite-react";
 import { Meteor } from "meteor/meteor";
-import React from "react";
+import React, { useCallback } from "react";
 import { useSendMessage } from "../../../hooks/use-messages";
 
+import { useChatInput } from "../context/chat-input-provider";
 import FileInputs from "./file-inputs";
+import MediaOutput from "./media-output";
 import { TRooms } from "/imports/collections/room";
 
 interface IProps {
   room: TRooms;
 }
 
-type MediaType = "video" | "audio";
-
 const ChatInput: React.FC<IProps> = ({ room }) => {
   const [message, setMessage] = React.useState("");
   const [media, setMedia] = React.useState<Blob | null>(null);
-  const [mediaType, setMediaType] = React.useState<MediaType | null>(null);
+  const { mediaType, setMediaType } = useChatInput();
 
   const sendMessage = useSendMessage();
 
@@ -29,7 +29,7 @@ const ChatInput: React.FC<IProps> = ({ room }) => {
 
     await sendMessage.mutateAsync({
       to: otherUser || "",
-      content: message,
+      content: { type: mediaType, text: message },
       roomId: room._id,
     });
 
@@ -39,34 +39,25 @@ const ChatInput: React.FC<IProps> = ({ room }) => {
 
   const handleMediaClear = () => {
     setMedia(null);
-    setMediaType(null);
+    setMediaType("text");
   };
+
+  const handleMessage = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setMessage(e.target.value);
+      setMediaType("text");
+    },
+    [],
+  );
 
   return (
     <div className="p-3 bg-white">
       {media && mediaType && (
-        <div className="mb-2 p-2 border rounded bg-gray-50">
-          {mediaType === "video" ? (
-            <video
-              src={URL.createObjectURL(media)}
-              controls
-              className="max-h-48 w-full rounded"
-            />
-          ) : (
-            <audio
-              src={URL.createObjectURL(media)}
-              controls
-              className="w-full"
-            />
-          )}
-          <button
-            type="button"
-            onClick={handleMediaClear}
-            className="mt-1 text-sm text-red-500 hover:text-red-700"
-          >
-            Remove
-          </button>
-        </div>
+        <MediaOutput
+          mediaType={mediaType}
+          media={media}
+          handleMediaClear={handleMediaClear}
+        />
       )}
       <form onSubmit={handleMessageSend}>
         <div className="flex gap-2">
@@ -74,7 +65,7 @@ const ChatInput: React.FC<IProps> = ({ room }) => {
             type="text"
             placeholder="Type a message..."
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={handleMessage}
             className="input-field w-4/5"
           />
 
@@ -82,7 +73,7 @@ const ChatInput: React.FC<IProps> = ({ room }) => {
             Send
           </Button>
         </div>
-        <FileInputs setMedia={setMedia} setMediaType={setMediaType} />
+        <FileInputs setMedia={setMedia} />
       </form>
     </div>
   );

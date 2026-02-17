@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { Meteor } from "meteor/meteor";
 import { useTracker } from "meteor/react-meteor-data";
-import { MessageCollection } from "/imports/collections/message";
+import { MessageCollection, TMessage } from "/imports/collections/message";
 
 type TQuery = {
   limit?: number;
@@ -28,6 +28,5 @@ export const useSubscribeMessages = (roomId: string, query?: TQuery) => {
 
 export const useSendMessage = () =>
   useMutation({
-    mutationFn: (data: { to: string; content: string; roomId: string }) =>
-      Meteor.callAsync("set.message", data),
+    mutationFn: (data: TMessage) => Meteor.callAsync("set.message", data),
   });

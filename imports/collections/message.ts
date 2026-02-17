@@ -1,13 +1,15 @@
 // imports/api/messages/MessageCollection.ts
 import { Mongo } from "meteor/mongo";
 
+export type TMessageType = "text" | "image" | "file" | "audio" | "video";
+
 export type TMessage = {
-  _id: string;
+  _id?: string;
   roomId: string;
-  from: string;
+  from?: string;
   to: string;
   content: {
-    type: "text" | "image" | "file" | "audio" | "video";
+    type: TMessageType;
     text?: string;
     fileUrl?: string; // public URL to stream/download
     fileId?: string; // reference to MediaFiles._id
@@ -16,9 +18,9 @@ export type TMessage = {
     fileMimeType?: string;
     duration?: number; // for audio/video in seconds
   };
-  createdAt: Date;
+  createdAt?: Date;
   editedAt?: Date;
-  deleted: boolean;
+  deleted?: boolean;
 };
 
 export const MessageCollection = new Mongo.Collection<TMessage>("messages");
