@@ -1,6 +1,7 @@
 import { check } from "meteor/check";
 import { Meteor } from "meteor/meteor";
 import { MessageCollection } from "../../collections/message";
+import { MediaCollection } from "/imports/collections/media";
 
 type TQuery = {
   limit?: number;
@@ -39,4 +40,8 @@ Meteor.publish("all.messages", function () {
   }
 
   return MessageCollection.find();
+});
+
+Meteor.publish("mediaFiles", function () {
+  return MediaCollection.find().cursor;
 });
