@@ -57,9 +57,10 @@ const ChatInput: React.FC<IProps> = ({ room }) => {
     const mediaFile = data.media;
 
     if (mediaFile) {
-      fileName = mediaFile instanceof File ? mediaFile.name : `media.${mediaFile.type.split("/")[1]}`;
+      const ext = mediaFile.type.split("/")[1]?.split(";")[0] || "webm";
+      fileName = mediaFile instanceof File ? mediaFile.name : `media.${ext}`;
       fileSize = mediaFile.size;
-      fileMimeType = mediaFile.type;
+      fileMimeType = mediaFile.type.split(";")[0];
 
       try {
         const uploadResult: TMediaUploadResult = await mediaUpload.mutateAsync({

@@ -29,7 +29,7 @@ const Message: React.FC<MessageProps> = ({ msg, currentUserId }) => {
       case "video":
         return <VideoMessage fileUrl={msg.content.fileUrl} />;
       case "audio":
-        return <AudioMessage fileUrl={msg.content.fileUrl} />;
+        return <AudioMessage fileUrl={msg.content.fileUrl} fileMimeType={msg.content.fileMimeType} />;
       case "file":
         return (
           <FileMessage

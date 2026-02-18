@@ -44,25 +44,18 @@ export const useMediaUpload = () =>
             console.error("Media upload error:", error);
             reject(error);
           } else {
-            // Find the file in collection to get the proper reference
             const uploadedFile: any = MediaCollection.findOne(fileObj._id);
-            if (uploadedFile) {
-              resolve({
-                fileId: uploadedFile._id,
-                fileUrl: uploadedFile.link(),
-                fileName: uploadedFile.name,
-                fileSize: uploadedFile.size,
-                fileMimeType: uploadedFile.type,
-              });
-            } else {
-              resolve({
-                fileId: fileObj._id,
-                fileUrl: `/media/${fileObj._id}`,
-                fileName: fileObj.name,
-                fileSize: fileObj.size,
-                fileMimeType: fileObj.type,
-              });
-            }
+            const fileUrl = uploadedFile
+              ? uploadedFile.link()
+              : `/cdn/storage/mediaFiles/${fileObj._id}/original/${fileObj.name}`;
+            console.log("Upload complete, fileUrl:", fileUrl, "fileObj:", fileObj);
+            resolve({
+              fileId: fileObj._id,
+              fileUrl,
+              fileName: fileObj.name,
+              fileSize: fileObj.size,
+              fileMimeType: fileObj.type,
+            });
           }
         });
 

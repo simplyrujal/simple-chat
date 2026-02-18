@@ -2,20 +2,25 @@ import React from "react";
 
 interface AudioMessageProps {
   fileUrl?: string;
+  fileMimeType?: string;
 }
 
-export const AudioMessage: React.FC<AudioMessageProps> = ({ fileUrl }) => {
+export const AudioMessage: React.FC<AudioMessageProps> = ({ fileUrl, fileMimeType }) => {
   if (!fileUrl) {
     return <p className="text-sm opacity-75">Audio</p>;
   }
 
+  const src = fileUrl.startsWith("http") ? fileUrl : `${window.location.origin}${fileUrl}`;
+  const mimeType = (fileMimeType || "audio/webm").split(";")[0];
+
   return (
     <audio
-      src={fileUrl}
+      src={src}
       controls
-      className="w-full max-w-xs"
+      preload="metadata"
+      style={{ width: "250px", minHeight: "54px", display: "block" }}
     >
-      Your browser does not support the audio tag.
+      <source src={src} type={mimeType} />
     </audio>
   );
 };
