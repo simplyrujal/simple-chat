@@ -46,7 +46,7 @@ Meteor.methods({
     const fullName = `${fname} ${lname}`;
 
     // Create the user
-    const userId = Accounts.createUser({
+    const userId = await Accounts.createUserAsync({
       email,
       password,
       username,
