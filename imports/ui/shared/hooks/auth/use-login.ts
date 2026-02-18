@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Meteor } from "meteor/meteor";
 import { useNavigate } from "react-router-dom";
 
@@ -9,6 +9,7 @@ type LoginData = {
 
 const useLogin = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const { mutateAsync, isPending, error } = useMutation({
     mutationFn: (data: LoginData) =>
@@ -21,6 +22,9 @@ const useLogin = () => {
           }
         });
       }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["auth.check"] });
+    },
   });
 
   const login = async (data: LoginData) => {
