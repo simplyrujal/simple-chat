@@ -10,11 +10,7 @@ export const AudioMessage: React.FC<AudioMessageProps> = ({ fileUrl }) => {
   }
 
   return (
-    <audio
-      src={fileUrl}
-      controls
-      className="w-full max-w-xs"
-    >
+    <audio src={fileUrl} controls className="w-[310px]">
       Your browser does not support the audio tag.
     </audio>
   );
