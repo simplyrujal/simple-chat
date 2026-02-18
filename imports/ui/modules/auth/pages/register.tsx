@@ -3,8 +3,9 @@ import { Meteor } from "meteor/meteor";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-import useLogin from "../../../shared/hooks/auth/use-login";
 import { RegisterFormValues, registerSchema } from "../schemas";
+import useLogin from "/imports/ui/shared/hooks/auth/use-login";
+import { EyeIcon, EyeOffIcon } from "/imports/ui/shared/icons";
 
 const COUNTRIES = [
   "United States",
@@ -45,6 +46,8 @@ const COUNTRIES = [
 
 const Register: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { login } = useLogin();
 
   const {
@@ -210,17 +213,30 @@ const Register: React.FC = () => {
                 >
                   Password
                 </label>
-                <input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  {...register("password")}
-                  disabled={submitting}
-                  className={`w-full px-3 py-2 border rounded-md shadow-sm text-sm placeholder-gray-400
+                <div className="relative">
+                  <input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    {...register("password")}
+                    disabled={submitting}
+                    className={`w-full px-3 py-2 pr-10 border rounded-md shadow-sm text-sm placeholder-gray-400
                                         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                                         disabled:bg-gray-100 disabled:text-gray-500
                                         ${errors.password ? "border-red-500" : "border-gray-300"}`}
-                />
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  >
+                    {showPassword ? (
+                      <EyeOffIcon className="h-5 w-5 text-gray-400" />
+                    ) : (
+                      <EyeIcon className="h-5 w-5 text-gray-400" />
+                    )}
+                  </button>
+                </div>
                 {errors.password && (
                   <p className="mt-1 text-xs text-red-600">
                     {errors.password.message}
@@ -235,17 +251,30 @@ const Register: React.FC = () => {
                 >
                   Confirm Password
                 </label>
-                <input
-                  id="confirmPassword"
-                  type="password"
-                  placeholder="••••••••"
-                  {...register("confirmPassword")}
-                  disabled={submitting}
-                  className={`w-full px-3 py-2 border rounded-md shadow-sm text-sm placeholder-gray-400
+                <div className="relative">
+                  <input
+                    id="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    {...register("confirmPassword")}
+                    disabled={submitting}
+                    className={`w-full px-3 py-2 pr-10 border rounded-md shadow-sm text-sm placeholder-gray-400
                                         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                                         disabled:bg-gray-100 disabled:text-gray-500
                                         ${errors.confirmPassword ? "border-red-500" : "border-gray-300"}`}
-                />
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOffIcon className="h-5 w-5 text-gray-400" />
+                    ) : (
+                      <EyeIcon className="h-5 w-5 text-gray-400" />
+                    )}
+                  </button>
+                </div>
                 {errors.confirmPassword && (
                   <p className="mt-1 text-xs text-red-600">
                     {errors.confirmPassword.message}

@@ -1,13 +1,15 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { EyeIcon, EyeOffIcon } from "/imports/ui/shared/icons";
 import { LoginFormValues, loginSchema } from "../schemas";
 import useLogin from "/imports/ui/shared/hooks/auth/use-login";
 
 const Login: React.FC = () => {
   const { login, isLoading, error } = useLogin();
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -72,16 +74,29 @@ const Login: React.FC = () => {
               >
                 Password
               </label>
-              <input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                {...register("password")}
-                disabled={isLoading}
-                className={`input-field ${
-                  errors.password ? "input-field-error" : ""
-                } ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
-              />
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  {...register("password")}
+                  disabled={isLoading}
+                  className={`input-field pr-10 ${
+                    errors.password ? "input-field-error" : ""
+                  } ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                >
+                  {showPassword ? (
+                    <EyeOffIcon className="h-5 w-5 text-gray-400" />
+                  ) : (
+                    <EyeIcon className="h-5 w-5 text-gray-400" />
+                  )}
+                </button>
+              </div>
               {errors.password && (
                 <p className="text-danger-500 text-xs mt-1.5">
                   {errors.password.message}
