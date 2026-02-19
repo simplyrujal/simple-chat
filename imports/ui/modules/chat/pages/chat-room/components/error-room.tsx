@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { WarningIcon } from "../../../../shared/icons";
+import { WarningIcon } from "../../../../../shared/icons";
 
 const ErrorRoom: React.FC = () => {
   return (

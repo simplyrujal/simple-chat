@@ -2,7 +2,7 @@ import { Meteor } from "meteor/meteor";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
-import { useSendMessage } from "../../../hooks/use-messages";
+import { useSendMessage } from "../../../../hooks/use-messages";
 import FileInputs from "./components/file-inputs";
 import MediaOutput from "./components/media-output";
 import MessageForm from "./components/message-form";
@@ -57,7 +57,10 @@ const ChatInput: React.FC<IProps> = ({ room }) => {
     const mediaFile = data.media;
 
     if (mediaFile) {
-      fileName = mediaFile instanceof File ? mediaFile.name : `media.${mediaFile.type.split("/")[1]}`;
+      fileName =
+        mediaFile instanceof File
+          ? mediaFile.name
+          : `media.${mediaFile.type.split("/")[1]}`;
       fileSize = mediaFile.size;
       fileMimeType = mediaFile.type;
 

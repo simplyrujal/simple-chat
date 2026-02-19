@@ -1,7 +1,7 @@
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { Meteor } from "meteor/meteor";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useSubscribeMessages } from "../../../hooks/use-messages";
+import { useSubscribeMessages } from "../../../../hooks/use-messages";
 import Message from "./message";
 import NoMessages from "./no-messages";
 

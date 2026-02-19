@@ -2,10 +2,10 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { useRoom } from "../../hooks/use-room";
 import ChatProvider from "../../provider/chat-provider";
-import ChatHeader from "./chat-header";
-import ChatInput from "./chat-input";
-import ChatMessages from "./chat-messages";
-import ErrorRoom from "./error-room";
+import ChatHeader from "./components/chat-header";
+import ChatInput from "./components/chat-input";
+import ChatMessages from "./components/chat-messages";
+import ErrorRoom from "./components/error-room";
 import RoomLayout from "./room-layout";
 import Loading from "/imports/ui/shared/components/loading";
 
