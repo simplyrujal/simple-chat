@@ -3,6 +3,33 @@ import UserInfo from "./user-info";
 import { TMessage } from "/imports/collections/message";
 import { ImageMessage, VideoMessage, AudioMessage, TextMessage, FileMessage } from "./components";
 
+interface MessageContentProps {
+  content: TMessage["content"];
+}
+
+const MessageContent: React.FC<MessageContentProps> = ({ content }) => {
+  switch (content?.type) {
+    case "image":
+      return (
+        <ImageMessage fileUrl={content.fileUrl} fileName={content.fileName} />
+      );
+    case "video":
+      return <VideoMessage fileUrl={content.fileUrl} />;
+    case "audio":
+      return <AudioMessage fileUrl={content.fileUrl} />;
+    case "file":
+      return (
+        <FileMessage
+          fileUrl={content.fileUrl}
+          fileName={content.fileName}
+          fileSize={content.fileSize}
+        />
+      );
+    default:
+      return <TextMessage text={content?.text} />;
+  }
+};
+
 interface MessageProps {
   msg: TMessage;
   currentUserId: string;
@@ -15,32 +42,6 @@ const Message: React.FC<MessageProps> = ({ msg, currentUserId }) => {
   const formatTime = (date: Date) => {
     const d = new Date(date);
     return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  };
-
-  const renderContent = () => {
-    switch (msg.content?.type) {
-      case "image":
-        return (
-          <ImageMessage
-            fileUrl={msg.content.fileUrl}
-            fileName={msg.content.fileName}
-          />
-        );
-      case "video":
-        return <VideoMessage fileUrl={msg.content.fileUrl} />;
-      case "audio":
-        return <AudioMessage fileUrl={msg.content.fileUrl} />;
-      case "file":
-        return (
-          <FileMessage
-            fileUrl={msg.content.fileUrl}
-            fileName={msg.content.fileName}
-            fileSize={msg.content.fileSize}
-          />
-        );
-      default:
-        return <TextMessage text={msg.content?.text} />;
-    }
   };
 
   return (
@@ -63,7 +64,7 @@ const Message: React.FC<MessageProps> = ({ msg, currentUserId }) => {
               : "bg-white border border-gray-200 text-gray-800 rounded-bl-md"
           }`}
         >
-          {renderContent()}
+          <MessageContent content={msg.content} />
         </div>
 
         <span
