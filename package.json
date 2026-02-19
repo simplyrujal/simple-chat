@@ -4,9 +4,10 @@
   "scripts": {
     "start": "meteor run",
     "test": "meteor test --once --driver-package meteortesting:mocha",
-    "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
+    "test:app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
     "visualize": "meteor --production --extra-packages bundle-visualizer",
-    "dsv": "bash deploy.sh",
+    "deploy": "bash deploy.sh",
+    "deploy:reload": "bash deploy.reload.sh",
     "postinstall": "flowbite-react register"
   },
   "dependencies": {
