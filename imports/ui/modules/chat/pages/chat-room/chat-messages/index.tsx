@@ -106,7 +106,7 @@ const ChatMessages: React.FC<{ roomId: string }> = ({ roomId }) => {
       ref={parentRef}
       className="flex-1 overflow-y-auto px-4 py-6 bg-linear-gradient-to-b from-gray-50 to-white"
     >
-      <div className="max-w-4xl mx-auto">
+      <div>
         {hasMore && (
           <div className="text-center py-2 text-sm text-gray-500">
             Scroll up to load more messages
