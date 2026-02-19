@@ -7,4 +7,7 @@ rm -rf ./bundle
 cp -r ./bundle-output/bundle ./bundle
 
 echo "Starting Docker..."
-docker-compose up --build
+docker-compose up -d --build
+
+echo "Cleaning up..."
+rm -rf ./bundle-output ./bundle

@@ -49,7 +49,7 @@ const ChatMessages: React.FC<{ roomId: string }> = ({ roomId }) => {
   useEffect(() => {
     const el = parentRef.current;
     if (!el) return;
-    el.addEventListener("scroll", handleScroll);
+    el.addEventListener("scroll", handleScroll, { passive: true });
     return () => el.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
