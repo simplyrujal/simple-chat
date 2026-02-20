@@ -5,9 +5,8 @@
     "servers/*"
   ],
   "scripts": {
-    "start": "meteor run",
+    "start": "node scripts/start-app.js",
     "start:signaling": "bun run servers/signaling-server/index.ts",
-    "start:all": "meteor run & bun run start:signaling",
     "dev:signaling": "bun run --cwd servers/signaling-server dev",
     "build:signaling": "bun run --cwd servers/signaling-server build",
     "test": "meteor test --once --driver-package meteortesting:mocha",
