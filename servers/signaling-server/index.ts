@@ -20,7 +20,32 @@ interface SignalMessage {
   signal: any; // RTCSessionDescription or RTCIceCandidate
 }
 
-type ClientMessage = RegisterMessage | SignalMessage;
+interface CallRequestMessage {
+  type: "call-request";
+  targetUserId: string;
+  callId: string;
+  callType: "audio" | "video";
+}
+
+interface CallResponseMessage {
+  type: "call-response";
+  targetUserId: string;
+  callId: string;
+  message: "accepted" | "rejected";
+}
+
+interface CallEndedMessage {
+  type: "call-ended";
+  targetUserId: string;
+  callId: string;
+}
+
+type ClientMessage =
+  | RegisterMessage
+  | SignalMessage
+  | CallRequestMessage
+  | CallResponseMessage
+  | CallEndedMessage;
 
 server.on("connection", (ws: WebSocket) => {
   let currentUserId: string | null = null;
@@ -46,21 +71,119 @@ server.on("connection", (ws: WebSocket) => {
             );
             return;
           }
-          const { targetUserId, signal } = message;
-          const targetWs = clients.get(targetUserId);
+          const signalMsg = message as SignalMessage;
+          const targetWs = clients.get(signalMsg.targetUserId);
           if (targetWs && targetWs.readyState === WebSocket.OPEN) {
             targetWs.send(
               JSON.stringify({
                 type: "signal",
                 from: currentUserId,
-                signal,
+                signal: signalMsg.signal,
               }),
             );
           } else {
             ws.send(
               JSON.stringify({
                 type: "error",
-                message: `User ${targetUserId} is not online`,
+                message: `User ${signalMsg.targetUserId} is not online`,
+              }),
+            );
+          }
+          break;
+
+        case "call-request":
+          if (!currentUserId) {
+            ws.send(
+              JSON.stringify({
+                type: "error",
+                message: "You must register first",
+              }),
+            );
+            return;
+          }
+          const callRequestMsg = message as CallRequestMessage;
+          const requestTargetWs = clients.get(callRequestMsg.targetUserId);
+          if (
+            requestTargetWs &&
+            requestTargetWs.readyState === WebSocket.OPEN
+          ) {
+            requestTargetWs.send(
+              JSON.stringify({
+                type: "call-request",
+                from: currentUserId,
+                callId: callRequestMsg.callId,
+                callType: callRequestMsg.callType,
+              }),
+            );
+          } else {
+            ws.send(
+              JSON.stringify({
+                type: "error",
+                message: `User ${callRequestMsg.targetUserId} is not online`,
+              }),
+            );
+          }
+          break;
+
+        case "call-response":
+          if (!currentUserId) {
+            ws.send(
+              JSON.stringify({
+                type: "error",
+                message: "You must register first",
+              }),
+            );
+            return;
+          }
+          const callResponseMsg = message as CallResponseMessage;
+          const responseTargetWs = clients.get(callResponseMsg.targetUserId);
+          if (
+            responseTargetWs &&
+            responseTargetWs.readyState === WebSocket.OPEN
+          ) {
+            responseTargetWs.send(
+              JSON.stringify({
+                type: "call-response",
+                from: currentUserId,
+                callId: callResponseMsg.callId,
+                message: callResponseMsg.message,
+              }),
+            );
+          } else {
+            ws.send(
+              JSON.stringify({
+                type: "error",
+                message: `User ${callResponseMsg.targetUserId} is not online`,
+              }),
+            );
+          }
+          break;
+
+        case "call-ended":
+          if (!currentUserId) {
+            ws.send(
+              JSON.stringify({
+                type: "error",
+                message: "You must register first",
+              }),
+            );
+            return;
+          }
+          const callEndedMsg = message as CallEndedMessage;
+          const endedTargetWs = clients.get(callEndedMsg.targetUserId);
+          if (endedTargetWs && endedTargetWs.readyState === WebSocket.OPEN) {
+            endedTargetWs.send(
+              JSON.stringify({
+                type: "call-ended",
+                from: currentUserId,
+                callId: callEndedMsg.callId,
+              }),
+            );
+          } else {
+            ws.send(
+              JSON.stringify({
+                type: "error",
+                message: `User ${callEndedMsg.targetUserId} is not online`,
               }),
             );
           }
