@@ -30,6 +30,7 @@ export const App: React.FC = () => {
   useGlobalSubscriptions();
   return (
     <QueryClientProvider client={queryClient}>
+      {/* <SignalingTest /> */}
       <ThemeProvider theme={theme}>
         <BrowserRouter>
           <Routes>

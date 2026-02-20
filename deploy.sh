@@ -1,18 +1,41 @@
 #!/bin/bash
 set -e
 
+echo "=========================================="
+echo "Building Signaling Server..."
+echo "=========================================="
+cd apps/signaling-server
+bun run build
+cd ../..
+
+echo "=========================================="
 echo "Building Meteor bundle..."
+echo "=========================================="
 meteor build --directory ./bundle-output --server-only
 
+echo "=========================================="
 echo "Copying bundle..."
+echo "=========================================="
 rm -rf ./bundle
 cp -r ./bundle-output/bundle ./bundle
 
-echo "Building Docker image (no cache)..."
+echo "=========================================="
+echo "Building Docker images (no cache)..."
+echo "=========================================="
 docker-compose build --no-cache
 
+echo "=========================================="
 echo "Starting containers..."
+echo "=========================================="
 docker-compose up -d
 
+echo "=========================================="
 echo "Cleaning up temporary files..."
-rm -rf ./bundle-output ./bundle
+echo "=========================================="
+rm -rf ./bundle-output ./bundle ./apps/signaling-server/dist
+
+echo "=========================================="
+echo "Deployment complete!"
+echo "=========================================="
+echo "Meteor app: http://localhost:3000"
+echo "Signaling server: ws://localhost:8080"

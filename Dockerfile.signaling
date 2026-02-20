@@ -1,0 +1,21 @@
+FROM oven/bun:1-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY apps/signaling-server/package.json apps/signaling-server/package-lock.json* ./
+
+# Install dependencies
+RUN bun install --frozen-lockfile
+
+# Copy source code
+COPY apps/signaling-server/ .
+
+# Build TypeScript
+RUN bun run build
+
+EXPOSE 8080
+
+ENV SIGNALING_PORT=8080
+
+CMD ["bun", "run", "start"]
