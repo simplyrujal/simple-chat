@@ -2,9 +2,14 @@
 set -e
 
 echo "=========================================="
+echo "Cleaning previous builds if exists..."
+echo "=========================================="
+rm -rf ./bundle-output ./bundle ./servers/signaling-server/dist
+
+echo "=========================================="
 echo "Building Signaling Server..."
 echo "=========================================="
-cd apps/signaling-server
+cd servers/signaling-server
 bun run build
 cd ../..
 
@@ -32,7 +37,7 @@ docker-compose up -d
 echo "=========================================="
 echo "Cleaning up temporary files..."
 echo "=========================================="
-rm -rf ./bundle-output ./bundle ./apps/signaling-server/dist
+rm -rf ./bundle-output ./bundle ./servers/signaling-server/dist
 
 echo "=========================================="
 echo "Deployment complete!"

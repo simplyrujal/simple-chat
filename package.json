@@ -2,14 +2,14 @@
   "name": "simple-chat-monorepo",
   "private": true,
   "workspaces": [
-    "apps/*"
+    "servers/*"
   ],
   "scripts": {
     "start": "meteor run",
-    "start:signaling": "bun run apps/signaling-server/index.ts",
+    "start:signaling": "bun run servers/signaling-server/index.ts",
     "start:all": "bun run meteor & bun run start:signaling",
-    "dev:signaling": "bun run --cwd apps/signaling-server dev",
-    "build:signaling": "bun run --cwd apps/signaling-server build",
+    "dev:signaling": "bun run --cwd servers/signaling-server dev",
+    "build:signaling": "bun run --cwd servers/signaling-server build",
     "test": "meteor test --once --driver-package meteortesting:mocha",
     "test:app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
     "visualize": "meteor --production --extra-packages bundle-visualizer",

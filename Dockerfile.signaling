@@ -3,13 +3,13 @@ FROM oven/bun:1-alpine
 WORKDIR /app
 
 # Copy package files
-COPY apps/signaling-server/package.json apps/signaling-server/package-lock.json* ./
+COPY servers/signaling-server/package.json servers/signaling-server/package-lock.json* ./
 
 # Install dependencies
 RUN bun install --frozen-lockfile
 
 # Copy source code
-COPY apps/signaling-server/ .
+COPY servers/signaling-server/ .
 
 # Build TypeScript
 RUN bun run build
