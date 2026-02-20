@@ -1,12 +1,12 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { Sidebar } from "./components/sidebar";
-import { ChatRoomPage } from "./pages/chat-room";
 import { DashboardPage } from "./pages/dashboard";
 
 import { useAuth } from "../../shared/hooks/auth/use-auth";
 import { userSetStatus } from "../../shared/hooks/user/use-user";
 import { MenuIcon } from "../../shared/icons";
+import ChatRoomPage from "./pages/chat-room";
 
 export const ChatRoutes: React.FC = () => {
   const { user } = useAuth();
@@ -37,10 +37,7 @@ export const ChatRoutes: React.FC = () => {
         </div>
         <Routes>
           <Route path="dashboard" element={<DashboardPage />} />
-          <Route
-            path="chat/:chatRoomId"
-            element={<ChatRoomPage />}
-          />
+          <Route path="chat/:chatRoomId" element={<ChatRoomPage />} />
         </Routes>
       </div>
     </div>

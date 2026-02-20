@@ -182,6 +182,15 @@ export const CallProvider: React.FC<CallProviderProps> = ({ children }) => {
 
   const initiateCall = useCallback(
     async (targetUserId: string, callType: "audio" | "video") => {
+      if (typeof window === "undefined") return;
+
+      // Guard: mediaDevices is undefined in non-secure contexts (HTTP)
+      if (!navigator.mediaDevices?.getUserMedia) {
+        console.error(
+          "getUserMedia is not available. Ensure the app is served over HTTPS or localhost.",
+        );
+        return;
+      }
       try {
         // Initialize local media
         const stream = await navigator.mediaDevices.getUserMedia({

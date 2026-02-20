@@ -12,6 +12,7 @@ import RoomLayout from "./room-layout";
 import RoomAction from "./room-layout/room-header/room-action";
 import Loading from "/imports/ui/shared/components/loading";
 import { useAuth } from "/imports/ui/shared/hooks/auth/use-auth";
+import ChatProvider from "../../provider/chat-provider";
 
 // Inner component that can use useCall hook
 const ChatRoomContent: React.FC = () => {
@@ -54,7 +55,7 @@ const ChatRoomContent: React.FC = () => {
   }
 
   return (
-    <>
+    <ChatProvider roomType={room.type}>
       <RoomLayout>
         <ChatHeader room={room} />
         <div className="flex items-center gap-1 sm:gap-2">
@@ -76,7 +77,7 @@ const ChatRoomContent: React.FC = () => {
         onReject={rejectCall}
         onEndCall={endCall}
       />
-    </>
+    </ChatProvider>
   );
 };
 
