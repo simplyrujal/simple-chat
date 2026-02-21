@@ -52,13 +52,29 @@ export const useWebRTC = (): UseWebRTCReturn => {
     setIsClient(true);
   }, []);
 
-  const signalingUrl = isClient && typeof window !== "undefined" 
-    ? (() => {
-        const host = window.location.hostname;
-        const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-        return `${protocol}//${host}:8080`;
-      })()
-    : "ws://localhost:8080";
+  const getSignalingUrl = (): string => {
+    if (typeof window === "undefined") return "ws://localhost:8080";
+    const host = window.location.hostname;
+    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    return `${protocol}//${host}:8080`;
+  };
+
+  const signalingUrl = isClient ? getSignalingUrl() : "ws://localhost:8080";
+
+  const isMediaDevicesAvailable = (): boolean => {
+    if (typeof window === "undefined" || typeof navigator === "undefined") {
+      return false;
+    }
+    return !!navigator.mediaDevices && !!navigator.mediaDevices.getUserMedia;
+  };
+
+  const isSecureContext = (): boolean => {
+    if (typeof window === "undefined") return false;
+    const hostname = window.location.hostname.toLowerCase();
+    if (window.location.protocol === "https:") return true;
+    if (hostname === "localhost" || hostname === "127.0.0.1") return true;
+    return window.location.protocol === "https:";
+  };
 
   useEffect(() => {
     if (!isClient) return;
@@ -347,14 +363,26 @@ export const useWebRTC = (): UseWebRTCReturn => {
   };
 
   const getMediaStream = async (callType: "audio" | "video"): Promise<MediaStream | null> => {
+    console.log("Getting media stream, checking prerequisites...");
+    
+    // Check if we're in a browser environment
     if (typeof window === "undefined" || typeof navigator === "undefined") {
-      console.error("Window or navigator not available");
+      console.error("Not in browser environment");
+      alert("Cannot access camera/microphone from server-side.");
       return null;
     }
     
+    // Check if MediaDevices exists
     if (!navigator.mediaDevices) {
-      console.error("MediaDevices not available - make sure you're using HTTPS or localhost");
+      console.error("MediaDevices not available in this browser");
+      alert("Your browser does not support camera/microphone access.");
       return null;
+    }
+    
+    // Warn about secure context but try anyway
+    if (!isSecureContext()) {
+      console.warn("Not a secure context (HTTPS/localhost). Camera/microphone may be blocked.");
+      console.log("Current URL:", window.location.href);
     }
     
     try {
@@ -372,13 +400,17 @@ export const useWebRTC = (): UseWebRTCReturn => {
       console.log("Got media stream:", stream);
       return stream;
     } catch (error: any) {
-      console.error("Error getting media stream:", error.message);
-      if (error.name === "NotAllowedError") {
-        console.error("Permission denied - please allow camera/microphone access");
+      console.error("Error getting media stream:", error.name, error.message);
+      if (error.name === "NotAllowedError" || error.name === "PermissionDeniedError") {
+        alert("Camera/Microphone access denied.\n\nPlease:\n1. Click the camera icon in browser address bar\n2. Allow camera and microphone permissions");
       } else if (error.name === "NotFoundError") {
-        console.error("No camera/microphone found");
+        alert("No camera or microphone found.\n\nPlease connect a camera/microphone to your device.");
       } else if (error.name === "NotReadableError") {
-        console.error("Device is already in use");
+        alert("Camera or microphone is already in use.\n\nPlease close other apps using camera/microphone.");
+      } else if (error.name === "NotSupportedError") {
+        alert("Camera/microphone not supported.\n\nThis feature requires HTTPS or localhost.");
+      } else {
+        alert(`Error: ${error.name}\n${error.message}`);
       }
       return null;
     }
@@ -386,10 +418,7 @@ export const useWebRTC = (): UseWebRTCReturn => {
 
   const startCall = useCallback(
     async (remoteUserId: string, callType: "audio" | "video") => {
-      if (!isClient) {
-        console.error("Cannot start call on server side");
-        return;
-      }
+      console.log("Starting call, isClient:", isClient);
       const stream = await getMediaStream(callType);
       if (!stream) {
         console.error("Failed to get media stream");
@@ -422,10 +451,6 @@ export const useWebRTC = (): UseWebRTCReturn => {
 
   const answerCall = useCallback(
     async (callId: string) => {
-      if (!isClient) {
-        console.error("Cannot answer call on server side");
-        return;
-      }
       const callType = callState.callType || "audio";
       const stream = await getMediaStream(callType);
       if (!stream) {
