@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
 
-const SIGNALING_URL = "ws://localhost:8080";
+// Dynamically resolve the signaling server URL based on the current host.
+// This ensures it works whether you're on localhost OR accessing from another PC via IP.
+const getSignalingUrl = (): string => {
+  if (typeof window === "undefined") return "ws://localhost:8080";
+  const host = window.location.hostname; // e.g. "localhost" or "192.168.1.x"
+  const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+  return `${protocol}//${host}:8080`;
+};
+
+const SIGNALING_URL = getSignalingUrl();
 
 interface SignalingStatus {
   connected: boolean;
@@ -23,7 +32,7 @@ export const SignalingTest: React.FC = () => {
         ws = new WebSocket(SIGNALING_URL);
 
         ws.onopen = () => {
-          console.log("Signaling server connected");
+          console.log("Signaling server connected to:", SIGNALING_URL);
           setStatus({ connected: true, error: null });
 
           // Register as test user
@@ -46,12 +55,15 @@ export const SignalingTest: React.FC = () => {
         };
 
         ws.onerror = (error) => {
-          console.error("WebSocket error:", error);
-          setStatus({ connected: false, error: "Connection error" });
+          console.error("WebSocket error connecting to:", SIGNALING_URL, error);
+          setStatus({
+            connected: false,
+            error: `Connection error to ${SIGNALING_URL}`,
+          });
         };
 
         ws.onclose = () => {
-          console.log("Signaling server disconnected");
+          console.log("Signaling server disconnected from:", SIGNALING_URL);
           setStatus({ connected: false, error: "Disconnected" });
 
           // Attempt to reconnect after 3 seconds
