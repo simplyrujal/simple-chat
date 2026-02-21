@@ -61,13 +61,6 @@ export const useWebRTC = (): UseWebRTCReturn => {
 
   const signalingUrl = isClient ? getSignalingUrl() : "ws://localhost:8080";
 
-  const isMediaDevicesAvailable = (): boolean => {
-    if (typeof window === "undefined" || typeof navigator === "undefined") {
-      return false;
-    }
-    return !!navigator.mediaDevices && !!navigator.mediaDevices.getUserMedia;
-  };
-
   const isSecureContext = (): boolean => {
     if (typeof window === "undefined") return false;
     const hostname = window.location.hostname.toLowerCase();
@@ -266,6 +259,14 @@ export const useWebRTC = (): UseWebRTCReturn => {
   }) => {
     const pc = peerConnectionRef.current;
 
+    const isSessionDescription = (signal: any): signal is RTCSessionDescriptionInit => {
+      return signal.type === "offer" || signal.type === "answer";
+    };
+
+    const isIceCandidate = (signal: any): signal is { type: string; candidate: RTCIceCandidateInit } => {
+      return signal.type === "candidate";
+    };
+
     if (!pc) {
       console.log("Creating peer connection for incoming signal");
       const newPc = createPeerConnection();
@@ -277,29 +278,25 @@ export const useWebRTC = (): UseWebRTCReturn => {
         });
       }
 
-      if (message.signal.type === "offer") {
+      if (isSessionDescription(message.signal)) {
         try {
           await newPc.setRemoteDescription(message.signal);
-          const answer = await newPc.createAnswer();
-          await newPc.setLocalDescription(answer);
+          if (message.signal.type === "offer") {
+            const answer = await newPc.createAnswer();
+            await newPc.setLocalDescription(answer);
 
-          wsRef.current?.send(
-            JSON.stringify({
-              type: "signal",
-              targetUserId: message.from,
-              signal: answer,
-            })
-          );
+            wsRef.current?.send(
+              JSON.stringify({
+                type: "signal",
+                targetUserId: message.from,
+                signal: answer,
+              })
+            );
+          }
         } catch (error) {
-          console.error("Error handling offer:", error);
+          console.error("Error handling session description:", error);
         }
-      } else if (message.signal.type === "answer") {
-        try {
-          await newPc.setRemoteDescription(message.signal);
-        } catch (error) {
-          console.error("Error handling answer:", error);
-        }
-      } else if (message.signal.type === "candidate") {
+      } else if (isIceCandidate(message.signal)) {
         try {
           await newPc.addIceCandidate(message.signal.candidate);
         } catch (error) {
@@ -307,29 +304,27 @@ export const useWebRTC = (): UseWebRTCReturn => {
         }
       }
     } else {
-      if (message.signal.type === "offer") {
+      if (isSessionDescription(message.signal)) {
         try {
-          await pc.setRemoteDescription(message.signal);
-          const answer = await pc.createAnswer();
-          await pc.setLocalDescription(answer);
+          if (message.signal.type === "offer") {
+            await pc.setRemoteDescription(message.signal);
+            const answer = await pc.createAnswer();
+            await pc.setLocalDescription(answer);
 
-          wsRef.current?.send(
-            JSON.stringify({
-              type: "signal",
-              targetUserId: message.from,
-              signal: answer,
-            })
-          );
+            wsRef.current?.send(
+              JSON.stringify({
+                type: "signal",
+                targetUserId: message.from,
+                signal: answer,
+              })
+            );
+          } else {
+            await pc.setRemoteDescription(message.signal);
+          }
         } catch (error) {
-          console.error("Error handling offer:", error);
+          console.error("Error handling session description:", error);
         }
-      } else if (message.signal.type === "answer") {
-        try {
-          await pc.setRemoteDescription(message.signal);
-        } catch (error) {
-          console.error("Error handling answer:", error);
-        }
-      } else if (message.signal.type === "candidate") {
+      } else if (isIceCandidate(message.signal)) {
         try {
           await pc.addIceCandidate(message.signal.candidate);
         } catch (error) {
@@ -339,7 +334,7 @@ export const useWebRTC = (): UseWebRTCReturn => {
     }
   };
 
-  const handleCallEnded = (message: { from: string; callId: string }) => {
+  const handleCallEnded = (_message: { from: string; callId: string }) => {
     handleEndCall();
   };
 

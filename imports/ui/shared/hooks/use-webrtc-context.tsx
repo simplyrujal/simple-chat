@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from "react";
-import { useWebRTC, UseWebRTCReturn, CallState } from "./use-webrtc";
+import { useWebRTC, UseWebRTCReturn } from "./use-webrtc";
 
 const WebRTCContext = createContext<UseWebRTCReturn | null>(null);
 
