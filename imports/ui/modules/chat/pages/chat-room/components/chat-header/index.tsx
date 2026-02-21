@@ -23,7 +23,7 @@ const ChatHeader: React.FC<IProps> = ({ room }) => {
         </div>
         {otherUser && <ProfileName otherUser={otherUser} />}
       </div>
-      <RoomAction />
+      <RoomAction remoteUserId={otherUser || null} />
     </div>
   );
 };
