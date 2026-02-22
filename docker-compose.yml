@@ -37,8 +37,20 @@ services:
     networks:
       - simple-chat-network
 
+  coturn:
+    image: instrumentisto/coturn:latest
+    restart: unless-stopped
+    ports:
+      - "3478:3478"
+      - "3478:3478/udp"
+    volumes:
+      - ./turnserver.conf:/etc/coturn/turnserver.conf:ro
+      - coturn_data:/var/lib/coturn
+    command: -c /etc/coturn/turnserver.conf
+
 volumes:
   mongo_data:
+  coturn_data:
 
 networks:
   simple-chat-network:

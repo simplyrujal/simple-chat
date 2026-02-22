@@ -30,6 +30,12 @@ const ICE_SERVERS: RTCIceServer[] = [
   { urls: "stun:stun1.l.google.com:19302" },
 ];
 
+// const ICE_SERVERS: RTCIceServer[] = [
+//   { urls: "stun:localhost:3478" },
+//   { urls: "stun:127.0.0.1:3478" },
+//   { urls: "turn:localhost:3478", username: "testuser", credential: "testpass" },
+// ];
+
 export const useWebRTC = (): UseWebRTCReturn => {
   const [callState, setCallState] = useState<CallState>({
     status: "idle",
@@ -71,7 +77,7 @@ export const useWebRTC = (): UseWebRTCReturn => {
 
   useEffect(() => {
     if (!isClient) return;
-    
+
     let ws: WebSocket | null = null;
     let reconnectTimeout: NodeJS.Timeout | null = null;
 
@@ -87,7 +93,7 @@ export const useWebRTC = (): UseWebRTCReturn => {
               JSON.stringify({
                 type: "register",
                 userId: currentUserId,
-              })
+              }),
             );
           }
         };
@@ -168,7 +174,7 @@ export const useWebRTC = (): UseWebRTCReturn => {
               type: "candidate",
               candidate: event.candidate,
             },
-          })
+          }),
         );
       }
     };
@@ -182,7 +188,10 @@ export const useWebRTC = (): UseWebRTCReturn => {
       console.log("ICE Connection State:", pc.iceConnectionState);
       if (pc.iceConnectionState === "connected") {
         setCallState((prev) => ({ ...prev, status: "connected" }));
-      } else if (pc.iceConnectionState === "disconnected" || pc.iceConnectionState === "failed") {
+      } else if (
+        pc.iceConnectionState === "disconnected" ||
+        pc.iceConnectionState === "failed"
+      ) {
         handleEndCall();
       }
     };
@@ -235,7 +244,7 @@ export const useWebRTC = (): UseWebRTCReturn => {
             type: "signal",
             targetUserId: message.from,
             signal: offer,
-          })
+          }),
         );
       } catch (error) {
         console.error("Error creating offer:", error);
@@ -255,15 +264,21 @@ export const useWebRTC = (): UseWebRTCReturn => {
 
   const handleSignal = async (message: {
     from: string;
-    signal: RTCSessionDescriptionInit | { type: string; candidate: RTCIceCandidateInit };
+    signal:
+      | RTCSessionDescriptionInit
+      | { type: string; candidate: RTCIceCandidateInit };
   }) => {
     const pc = peerConnectionRef.current;
 
-    const isSessionDescription = (signal: any): signal is RTCSessionDescriptionInit => {
+    const isSessionDescription = (
+      signal: any,
+    ): signal is RTCSessionDescriptionInit => {
       return signal.type === "offer" || signal.type === "answer";
     };
 
-    const isIceCandidate = (signal: any): signal is { type: string; candidate: RTCIceCandidateInit } => {
+    const isIceCandidate = (
+      signal: any,
+    ): signal is { type: string; candidate: RTCIceCandidateInit } => {
       return signal.type === "candidate";
     };
 
@@ -290,7 +305,7 @@ export const useWebRTC = (): UseWebRTCReturn => {
                 type: "signal",
                 targetUserId: message.from,
                 signal: answer,
-              })
+              }),
             );
           }
         } catch (error) {
@@ -316,7 +331,7 @@ export const useWebRTC = (): UseWebRTCReturn => {
                 type: "signal",
                 targetUserId: message.from,
                 signal: answer,
-              })
+              }),
             );
           } else {
             await pc.setRemoteDescription(message.signal);
@@ -357,53 +372,71 @@ export const useWebRTC = (): UseWebRTCReturn => {
     });
   };
 
-  const getMediaStream = async (callType: "audio" | "video"): Promise<MediaStream | null> => {
+  const getMediaStream = async (
+    callType: "audio" | "video",
+  ): Promise<MediaStream | null> => {
     console.log("Getting media stream, checking prerequisites...");
-    
+
     // Check if we're in a browser environment
     if (typeof window === "undefined" || typeof navigator === "undefined") {
       console.error("Not in browser environment");
       alert("Cannot access camera/microphone from server-side.");
       return null;
     }
-    
+
     // Check if MediaDevices exists
     if (!navigator.mediaDevices) {
       console.error("MediaDevices not available in this browser");
       alert("Your browser does not support camera/microphone access.");
       return null;
     }
-    
+
     // Warn about secure context but try anyway
     if (!isSecureContext()) {
-      console.warn("Not a secure context (HTTPS/localhost). Camera/microphone may be blocked.");
+      console.warn(
+        "Not a secure context (HTTPS/localhost). Camera/microphone may be blocked.",
+      );
       console.log("Current URL:", window.location.href);
     }
-    
+
     try {
       const constraints: MediaStreamConstraints = {
         audio: true,
-        video: callType === "video" ? {
-          width: { ideal: 1280 },
-          height: { ideal: 720 },
-          facingMode: "user"
-        } : false
+        video:
+          callType === "video"
+            ? {
+                width: { ideal: 1280 },
+                height: { ideal: 720 },
+                facingMode: "user",
+              }
+            : false,
       };
-      
+
       console.log("Requesting media with constraints:", constraints);
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
       console.log("Got media stream:", stream);
       return stream;
     } catch (error: any) {
       console.error("Error getting media stream:", error.name, error.message);
-      if (error.name === "NotAllowedError" || error.name === "PermissionDeniedError") {
-        alert("Camera/Microphone access denied.\n\nPlease:\n1. Click the camera icon in browser address bar\n2. Allow camera and microphone permissions");
+      if (
+        error.name === "NotAllowedError" ||
+        error.name === "PermissionDeniedError"
+      ) {
+        alert(
+          "Camera/Microphone access denied.\n\nPlease:\n1. Click the camera icon in browser address bar\n2. Allow camera and microphone permissions",
+        );
       } else if (error.name === "NotFoundError") {
-        alert("No camera or microphone found.\n\nPlease connect a camera/microphone to your device.");
+        alert(
+          "No camera or microphone found.\n\nPlease connect a camera/microphone to your device.",
+        );
       } else if (error.name === "NotReadableError") {
-        alert("Camera or microphone is already in use.\n\nPlease close other apps using camera/microphone.");
+        alert(
+          "Camera or microphone is already in use.\n\nPlease close other apps using camera/microphone.",
+        );
       } else if (error.name === "NotSupportedError") {
-        alert("Camera/microphone not supported.\n\nThis feature requires HTTPS or localhost.");
+        alert(
+          "Camera/microphone not supported.\n\nThis feature requires HTTPS or localhost.",
+        );
       } else {
         alert(`Error: ${error.name}\n${error.message}`);
       }
@@ -438,10 +471,10 @@ export const useWebRTC = (): UseWebRTCReturn => {
           targetUserId: remoteUserId,
           callId,
           callType,
-        })
+        }),
       );
     },
-    []
+    [],
   );
 
   const answerCall = useCallback(
@@ -464,10 +497,10 @@ export const useWebRTC = (): UseWebRTCReturn => {
           targetUserId: callState.remoteUserId,
           callId,
           message: "accepted",
-        })
+        }),
       );
     },
-    [callState.callType, callState.remoteUserId]
+    [callState.callType, callState.remoteUserId],
   );
 
   const rejectCall = useCallback(
@@ -478,7 +511,7 @@ export const useWebRTC = (): UseWebRTCReturn => {
           targetUserId: callState.remoteUserId,
           callId,
           message: "rejected",
-        })
+        }),
       );
       setCallState({
         status: "idle",
@@ -488,7 +521,7 @@ export const useWebRTC = (): UseWebRTCReturn => {
         remoteUserName: null,
       });
     },
-    [callState.remoteUserId]
+    [callState.remoteUserId],
   );
 
   const endCall = useCallback(() => {
@@ -498,7 +531,7 @@ export const useWebRTC = (): UseWebRTCReturn => {
           type: "call-ended",
           targetUserId: callState.remoteUserId,
           callId: callState.callId,
-        })
+        }),
       );
     }
     handleEndCall();
