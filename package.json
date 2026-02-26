@@ -5,6 +5,7 @@
     "servers/*"
   ],
   "scripts": {
+    "dev": "meteor run",
     "start": "node scripts/start-app.js",
     "start:signaling": "bun run servers/signaling-server/index.ts",
     "dev:signaling": "bun run --cwd servers/signaling-server dev",
@@ -18,6 +19,7 @@
   "dependencies": {
     "@babel/runtime": "^7.28.6",
     "@hookform/resolvers": "^5.2.2",
+    "@jitsi/react-sdk": "^1.4.4",
     "@tanstack/react-query": "^5.90.21",
     "@tanstack/react-virtual": "^3.13.18",
     "flowbite-react": "^0.12.17",
