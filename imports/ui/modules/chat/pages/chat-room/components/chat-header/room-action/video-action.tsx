@@ -33,7 +33,7 @@ const VideoAction: React.FC<VideoActionProps> = ({ room }) => {
     sendCallResponse,
     clearIncomingCall,
     setCallbacks,
-  } = useSignaling(currentUserId);
+  } = useSignaling(room._id, currentUserId);
 
   useEffect(() => {
     setCallbacks({

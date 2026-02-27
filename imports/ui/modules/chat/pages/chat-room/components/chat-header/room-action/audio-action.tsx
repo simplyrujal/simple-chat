@@ -33,7 +33,7 @@ const AudioAction: React.FC<AudioActionProps> = ({ room }) => {
     sendCallResponse,
     clearIncomingCall,
     setCallbacks,
-  } = useSignaling(currentUserId);
+  } = useSignaling(room._id, currentUserId);
 
   useEffect(() => {
     setCallbacks({

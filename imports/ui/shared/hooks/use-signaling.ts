@@ -19,7 +19,7 @@ export interface IncomingSignal {
   signal: any;
 }
 
-export const useSignaling = (userId: string | null) => {
+export const useSignaling = (roomId: string | null, userId: string | null) => {
   const wsRef = useRef<WebSocket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [incomingCall, setIncomingCall] = useState<CallRequest | null>(null);
@@ -31,7 +31,7 @@ export const useSignaling = (userId: string | null) => {
   }>({});
 
   useEffect(() => {
-    if (!userId) return;
+    if (!userId || !roomId) return;
 
     const ws = new WebSocket(SIGNALING_URL);
     wsRef.current = ws;
@@ -39,7 +39,7 @@ export const useSignaling = (userId: string | null) => {
     ws.onopen = () => {
       console.log("Signaling connected");
       setIsConnected(true);
-      ws.send(JSON.stringify({ type: "register", userId }));
+      ws.send(JSON.stringify({ type: "register", userId, roomId }));
     };
 
     ws.onmessage = (event) => {
@@ -84,7 +84,7 @@ export const useSignaling = (userId: string | null) => {
     return () => {
       ws.close();
     };
-  }, [userId]);
+  }, [roomId, userId]);
 
   const setCallbacks = useCallback((callbacks: typeof callbacksRef.current) => {
     callbacksRef.current = callbacks;
@@ -103,12 +103,13 @@ export const useSignaling = (userId: string | null) => {
           targetUserId,
           callId,
           callType,
+          roomId,
         })
       );
       console.log("Sent call request to", targetUserId, "callId:", callId);
       return callId;
     },
-    [userId]
+    [userId, roomId]
   );
 
   const sendCallResponse = useCallback(
@@ -123,11 +124,12 @@ export const useSignaling = (userId: string | null) => {
           targetUserId,
           callId,
           message,
+          roomId,
         })
       );
       console.log("Sent call response:", message, "to", targetUserId);
     },
-    []
+    [roomId]
   );
 
   const sendSignal = useCallback((targetUserId: string, signal: any) => {

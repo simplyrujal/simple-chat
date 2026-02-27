@@ -6,7 +6,7 @@
   ],
   "scripts": {
     "dev": "meteor run",
-    "start": "node scripts/start-app.js",
+    "start": "bunx concurrently \"meteor run\" \"bun run start:signaling\"",
     "start:signaling": "bun run servers/signaling-server/index.ts",
     "dev:signaling": "bun run --cwd servers/signaling-server dev",
     "build:signaling": "bun run --cwd servers/signaling-server build",
