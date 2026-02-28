@@ -6,8 +6,10 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AdminRoutes } from "./modules/admin/routes";
 import { AuthRoutes } from "./modules/auth/routes";
 import { ChatRoutes } from "./modules/chat/routes";
+import { CallManager } from "./shared/components/call-manager";
 import { RequireAuth } from "./shared/components/require-auth";
 import { SignalingTest } from "./shared/components/signaling-test";
+import { SignalingProvider } from "./shared/contexts/signaling-context";
 import useGlobalSubscriptions from "./shared/hooks/use-global-subscriptions";
 import theme from "./shared/theme";
 import registerCollection from "./shared/utils/registerCollection";
@@ -31,22 +33,25 @@ export const App: React.FC = () => {
   useGlobalSubscriptions();
   return (
     <QueryClientProvider client={queryClient}>
-      <SignalingTest />
-      <ThemeProvider theme={theme}>
-        <BrowserRouter>
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/auth/*" element={<AuthRoutes />} />
+      <SignalingProvider>
+        <CallManager />
+        <SignalingTest />
+        <ThemeProvider theme={theme}>
+          <BrowserRouter>
+            <Routes>
+              {/* Public Routes */}
+              <Route path="/auth/*" element={<AuthRoutes />} />
 
-            {/* Protected Routes */}
-            <Route element={<RequireAuth />}>
-              <Route path="/admin/*" element={<AdminRoutes />} />
-              <Route path="/*" element={<ChatRoutes />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </ThemeProvider>
+              {/* Protected Routes */}
+              <Route element={<RequireAuth />}>
+                <Route path="/admin/*" element={<AdminRoutes />} />
+                <Route path="/*" element={<ChatRoutes />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </ThemeProvider>
+      </SignalingProvider>
     </QueryClientProvider>
   );
 };
