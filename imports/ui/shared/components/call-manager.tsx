@@ -3,7 +3,7 @@ import { useTracker } from "meteor/react-meteor-data";
 import React, { useCallback, useMemo } from "react";
 import IncomingCallModal from "../components/incoming-call-modal";
 import JitsiMeetingComponent from "../components/jitsi-meeting";
-import { useSignalingContext } from "../contexts/signaling-context";
+import { generateJitsiRoomName, useSignalingContext } from "../contexts/signaling-context";
 
 export const CallManager: React.FC = () => {
     const {
@@ -38,7 +38,8 @@ export const CallManager: React.FC = () => {
 
         sendCallResponse(incomingCall.from, incomingCall.callId, "accepted", incomingCall.roomId || "global");
 
-        const roomName = `chat-room-${incomingCall.roomId || "global"}-${incomingCall.callId}`;
+        // Consistent room name generation
+        const roomName = generateJitsiRoomName(incomingCall.roomId || "global", incomingCall.callId);
 
         startActiveCall({
             callId: incomingCall.callId,

@@ -7,14 +7,7 @@ export interface CallRequest {
     callId: string;
     from: string;
     callType: CallType;
-    roomId?: string;
-}
-
-export interface CallResponse {
-    callId: string;
-    from: string;
-    message: "accepted" | "rejected";
-    roomId?: string;
+    roomId: string;
 }
 
 export interface ActiveCall {
@@ -45,6 +38,12 @@ const getSignalingUrl = (): string => {
     return `${protocol}//${host}:8080`;
 };
 
+const generateJitsiRoomName = (roomId: string, callId: string) => {
+    const cleanRoomId = (roomId || "global").replace(/[^a-zA-Z0-9]/g, "");
+    const cleanCallId = (callId || "unknown").replace(/[^a-zA-Z0-9]/g, "");
+    return `SimpleChat_${cleanRoomId}_${cleanCallId}`;
+};
+
 export const SignalingProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [isConnected, setIsConnected] = useState(false);
     const [incomingCall, setIncomingCall] = useState<CallRequest | null>(null);
@@ -54,7 +53,6 @@ export const SignalingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
     const connect = useCallback(() => {
         if (!userId) return;
-
         if (wsRef.current?.readyState === WebSocket.OPEN) return;
 
         const url = getSignalingUrl();
@@ -62,7 +60,7 @@ export const SignalingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         wsRef.current = ws;
 
         ws.onopen = () => {
-            console.log("Signaling connected to:", url);
+            console.log("📶 Signaling connected");
             setIsConnected(true);
             ws.send(JSON.stringify({ type: "register", userId }));
         };
@@ -70,94 +68,83 @@ export const SignalingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         ws.onmessage = (event) => {
             try {
                 const message = JSON.parse(event.data);
-                console.log("Signaling message received:", message.type, message);
+                console.log("📥 Received:", message.type, message);
 
                 switch (message.type) {
                     case "call-request":
+                        // Set incoming call even if roomId is missing (graceful fallback)
                         setIncomingCall({
                             callId: message.callId,
                             from: message.from,
                             callType: message.callType,
-                            roomId: message.roomId
+                            roomId: message.roomId || "global"
                         });
                         break;
                     case "call-response":
                         if (message.message === "accepted") {
-                            const roomName = `chat-room-${message.roomId}-${message.callId}`;
+                            const roomName = generateJitsiRoomName(message.roomId, message.callId);
                             setActiveCall({
                                 callId: message.callId,
                                 roomName,
-                                callType: "video", // Default to video if not specified, but usually we know from context
+                                callType: message.callType || "video",
                                 targetUserId: message.from,
-                                callerName: message.from // In a real app, look up the name
+                                callerName: message.from
                             });
                         } else {
-                            console.log("Call rejected by", message.from);
-                            // Optionally show a notification
+                            console.log("❌ Call rejected");
+                            setActiveCall(null);
                         }
                         break;
                     case "call-ended":
                         setActiveCall(null);
                         break;
-                    case "error":
-                        console.error("Signaling error:", message.message);
-                        break;
                 }
             } catch (err) {
-                console.error("Error parsing signaling message:", err);
+                console.error("Error parsing message:", err);
             }
         };
 
         ws.onclose = () => {
-            console.log("Signaling disconnected");
             setIsConnected(false);
-            setTimeout(() => {
-                if (Meteor.userId()) {
-                    connect();
-                }
-            }, 3000);
-        };
-
-        ws.onerror = (error) => {
-            console.error("WebSocket error:", error);
+            setTimeout(() => userId && connect(), 3000);
         };
     }, [userId]);
 
     useEffect(() => {
         connect();
-        return () => {
-            wsRef.current?.close();
-        };
+        return () => wsRef.current?.close();
     }, [connect]);
 
     const sendCallRequest = useCallback((targetUserId: string, callType: CallType, roomId: string) => {
-        if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
-            console.error("WebSocket not connected");
-            return null;
-        }
+        if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) return null;
+
         const callId = `${userId}-${Date.now()}`;
-        wsRef.current.send(JSON.stringify({
+        const payload = {
             type: "call-request",
             targetUserId,
             callId,
             callType,
-            roomId
-        }));
+            roomId: roomId || "global"
+        };
+
+        console.log("📤 Sending call request:", payload);
+        wsRef.current.send(JSON.stringify(payload));
         return callId;
     }, [userId]);
 
     const sendCallResponse = useCallback((targetUserId: string, callId: string, message: "accepted" | "rejected", roomId: string) => {
-        if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
-            console.error("WebSocket not connected");
-            return;
-        }
-        wsRef.current.send(JSON.stringify({
+        if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) return;
+
+        const payload = {
             type: "call-response",
             targetUserId,
             callId,
             message,
-            roomId
-        }));
+            roomId: roomId || "global"
+        };
+
+        console.log("📤 Sending call response:", payload);
+        wsRef.current.send(JSON.stringify(payload));
     }, []);
 
     const endCall = useCallback(() => {
@@ -191,8 +178,8 @@ export const SignalingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
 export const useSignalingContext = () => {
     const context = useContext(SignalingContext);
-    if (context === undefined) {
-        throw new Error("useSignalingContext must be used within a SignalingProvider");
-    }
+    if (!context) throw new Error("useSignalingContext must be used within SignalingProvider");
     return context;
 };
+
+export { generateJitsiRoomName };
