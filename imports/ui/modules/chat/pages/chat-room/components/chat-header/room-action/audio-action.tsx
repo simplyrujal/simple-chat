@@ -23,7 +23,7 @@ const AudioAction: React.FC<AudioActionProps> = ({ room }) => {
     console.log("☎️ Triggering audio call for room:", room._id);
     setIsCalling(true);
 
-    // const callId = sendCallRequest(targetUserId, "audio");
+    sendCallRequest(targetUserId, "audio");
 
     // Reset "calling" state after 3 seconds to re-enable button
     setTimeout(() => setIsCalling(false), 3000);
