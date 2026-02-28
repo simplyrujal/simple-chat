@@ -63,7 +63,7 @@ export const CallManager: React.FC = () => {
                     callType={activeCall.callType}
                     isCaller={activeCall.isCaller}
                     callerName={activeCall.callerName}
-                    userName={currentUser?.profile?.name || currentUser?.username || "You"}
+                    userName={currentUser?.emails?.[0]?.address || currentUser?.username || "You"}
                     onLeave={handleLeaveMeeting}
                 />
             )}
