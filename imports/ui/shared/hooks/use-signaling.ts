@@ -14,9 +14,9 @@ export const useSignaling = (roomId: string | null) => {
   } = context;
 
   const initiateCall = useCallback(
-    (targetUserId: string, callType: CallType) => {
+    (targetUserId: string, callType: CallType, callerName?: string) => {
       if (!roomId) return null;
-      return sendCallRequest(targetUserId, callType, roomId);
+      return sendCallRequest(targetUserId, callType, roomId, callerName);
     },
     [roomId, sendCallRequest],
   );

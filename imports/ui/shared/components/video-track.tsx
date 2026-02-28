@@ -1,69 +1,51 @@
 import React, { useEffect, useRef } from 'react';
 
 interface VideoTrackProps {
-    track: any;
+    stream: MediaStream | null;
     isLocal?: boolean;
     participantName?: string;
     isAudioOnly?: boolean;
+    muted?: boolean;
 }
 
 const VideoTrack: React.FC<VideoTrackProps> = ({
-    track,
+    stream,
     isLocal = false,
     participantName = 'Participant',
-    isAudioOnly = false
+    isAudioOnly = false,
+    muted = false,
 }) => {
     const videoRef = useRef<HTMLVideoElement>(null);
-    const audioRef = useRef<HTMLAudioElement>(null);
 
     useEffect(() => {
-        if (!track) return;
-
-        if (track.getType() === 'video') {
-            if (videoRef.current) {
-                track.attach(videoRef.current);
-            }
-        } else if (track.getType() === 'audio') {
-            if (audioRef.current) {
-                track.attach(audioRef.current);
-            }
+        if (videoRef.current && stream) {
+            videoRef.current.srcObject = stream;
         }
+    }, [stream]);
 
-        return () => {
-            if (track) {
-                if (track.getType() === 'video' && videoRef.current) {
-                    track.detach(videoRef.current);
-                } else if (track.getType() === 'audio' && audioRef.current) {
-                    track.detach(audioRef.current);
-                }
-            }
-        };
-    }, [track]);
-
-    const isVideo = track?.getType() === 'video';
+    const hasVideo = stream && stream.getVideoTracks().length > 0 && !isAudioOnly;
 
     return (
         <div className="relative w-full h-full bg-gray-800 rounded-2xl overflow-hidden shadow-2xl border border-gray-700/50 group transition-all duration-300 hover:border-blue-500/50">
-            {isVideo ? (
-                <video
-                    ref={videoRef}
-                    autoPlay
-                    playsInline
-                    muted={isLocal}
-                    className={`w-full h-full object-cover ${isLocal ? 'scale-x-[-1]' : ''}`}
-                />
-            ) : (
-                <audio ref={audioRef} autoPlay playsInline muted={isLocal} />
-            )}
+            {/* Video element — always rendered; hidden if audio-only so audio still plays */}
+            <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                muted={isLocal || muted}
+                className={`w-full h-full object-cover transition-opacity duration-300 ${isLocal ? 'scale-x-[-1]' : ''} ${hasVideo ? 'opacity-100' : 'opacity-0 absolute'}`}
+            />
 
-            {(!isVideo || isAudioOnly) && (
-                <div className="absolute inset-0 flex items-center justify-center bg-gray-900/40 backdrop-blur-sm">
-                    <div className="w-24 h-24 rounded-full bg-gray-700 flex items-center justify-center text-3xl font-bold text-white shadow-inner">
+            {/* Avatar overlay when no video */}
+            {!hasVideo && (
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800">
+                    <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-3xl font-bold text-white shadow-2xl ring-4 ring-white/10">
                         {participantName.charAt(0).toUpperCase()}
                     </div>
                 </div>
             )}
 
+            {/* Name label */}
             <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
                 <div className="px-3 py-1 bg-black/50 backdrop-blur-md rounded-full text-white text-xs font-semibold shadow-lg border border-white/10">
                     {participantName} {isLocal ? '(You)' : ''}

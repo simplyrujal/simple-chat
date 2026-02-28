@@ -6,27 +6,47 @@ export type CallType = "audio" | "video";
 export interface CallRequest {
     callId: string;
     from: string;
+    callerName: string;
     callType: CallType;
     roomId: string;
 }
 
 export interface ActiveCall {
     callId: string;
-    roomName: string;
     callType: CallType;
     targetUserId: string;
     callerName: string;
+    isCaller: boolean;
 }
+
+// WebRTC Signal types handled by the signaling server
+export type WebRTCSignalType = "webrtc-offer" | "webrtc-answer" | "webrtc-ice-candidate";
+
+export interface WebRTCSignal {
+    type: WebRTCSignalType;
+    from: string;
+    callId: string;
+    offer?: RTCSessionDescriptionInit;
+    answer?: RTCSessionDescriptionInit;
+    candidate?: RTCIceCandidateInit;
+}
+
+type WebRTCSignalHandler = (signal: WebRTCSignal) => void;
 
 interface SignalingContextType {
     isConnected: boolean;
     incomingCall: CallRequest | null;
     activeCall: ActiveCall | null;
-    sendCallRequest: (targetUserId: string, callType: CallType, roomId: string) => string | null;
+    sendCallRequest: (targetUserId: string, callType: CallType, roomId: string, callerName?: string) => string | null;
     sendCallResponse: (targetUserId: string, callId: string, message: "accepted" | "rejected", roomId: string) => void;
     startActiveCall: (call: ActiveCall) => void;
     endCall: () => void;
     clearIncomingCall: () => void;
+    // WebRTC signaling
+    sendWebRTCOffer: (targetUserId: string, offer: RTCSessionDescriptionInit, callId: string) => void;
+    sendWebRTCAnswer: (targetUserId: string, answer: RTCSessionDescriptionInit, callId: string) => void;
+    sendICECandidate: (targetUserId: string, candidate: RTCIceCandidateInit, callId: string) => void;
+    onWebRTCSignal: (handler: WebRTCSignalHandler | null) => void;
 }
 
 const SignalingContext = createContext<SignalingContextType | undefined>(undefined);
@@ -38,18 +58,16 @@ const getSignalingUrl = (): string => {
     return `${protocol}//${host}:8080`;
 };
 
-const generateJitsiRoomName = (roomId: string, callId: string) => {
-    const cleanRoomId = (roomId || "global").replace(/[^a-zA-Z0-9]/g, "");
-    const cleanCallId = (callId || "unknown").replace(/[^a-zA-Z0-9]/g, "");
-    return `SimpleChat_${cleanRoomId}_${cleanCallId}`;
-};
-
 export const SignalingProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [isConnected, setIsConnected] = useState(false);
     const [incomingCall, setIncomingCall] = useState<CallRequest | null>(null);
     const [activeCall, setActiveCall] = useState<ActiveCall | null>(null);
     const wsRef = useRef<WebSocket | null>(null);
     const userId = Meteor.userId();
+    // Reference to WebRTC signal handler (set by the call component)
+    const webrtcSignalHandlerRef = useRef<WebRTCSignalHandler | null>(null);
+    // Track outgoing call info so we can restore it when callee accepts
+    const pendingCallRef = useRef<{ callId: string; callType: CallType; targetUserId: string; callerName: string } | null>(null);
 
     const connect = useCallback(() => {
         if (!userId) return;
@@ -72,31 +90,44 @@ export const SignalingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
                 switch (message.type) {
                     case "call-request":
-                        // Set incoming call even if roomId is missing (graceful fallback)
                         setIncomingCall({
                             callId: message.callId,
                             from: message.from,
+                            callerName: message.callerName || message.from,
                             callType: message.callType,
                             roomId: message.roomId || "global"
                         });
                         break;
+
                     case "call-response":
-                        if (message.message === "accepted") {
-                            const roomName = generateJitsiRoomName(message.roomId, message.callId);
+                        if (message.message === "accepted" && pendingCallRef.current) {
+                            // The callee accepted our call — we are the caller (isCaller: true)
                             setActiveCall({
-                                callId: message.callId,
-                                roomName,
-                                callType: message.callType || "video",
-                                targetUserId: message.from,
-                                callerName: message.from
+                                callId: pendingCallRef.current.callId,
+                                callType: pendingCallRef.current.callType,
+                                targetUserId: pendingCallRef.current.targetUserId,
+                                callerName: pendingCallRef.current.callerName,
+                                isCaller: true,
                             });
+                            pendingCallRef.current = null;
                         } else {
                             console.log("❌ Call rejected");
+                            pendingCallRef.current = null;
                             setActiveCall(null);
                         }
                         break;
+
                     case "call-ended":
                         setActiveCall(null);
+                        break;
+
+                    // WebRTC signaling — delegate to the active call component
+                    case "webrtc-offer":
+                    case "webrtc-answer":
+                    case "webrtc-ice-candidate":
+                        if (webrtcSignalHandlerRef.current) {
+                            webrtcSignalHandlerRef.current(message as WebRTCSignal);
+                        }
                         break;
                 }
             } catch (err) {
@@ -115,7 +146,7 @@ export const SignalingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         return () => wsRef.current?.close();
     }, [connect]);
 
-    const sendCallRequest = useCallback((targetUserId: string, callType: CallType, roomId: string) => {
+    const sendCallRequest = useCallback((targetUserId: string, callType: CallType, roomId: string, callerName?: string) => {
         if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) return null;
 
         const callId = `${userId}-${Date.now()}`;
@@ -124,8 +155,12 @@ export const SignalingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             targetUserId,
             callId,
             callType,
-            roomId: roomId || "global"
+            roomId: roomId || "global",
+            callerName: callerName || userId,
         };
+
+        // Store pending call so we can restore it when accepted
+        pendingCallRef.current = { callId, callType, targetUserId, callerName: callerName || targetUserId };
 
         console.log("📤 Sending call request:", payload);
         wsRef.current.send(JSON.stringify(payload));
@@ -160,6 +195,28 @@ export const SignalingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
     const clearIncomingCall = useCallback(() => setIncomingCall(null), []);
 
+    // --- WebRTC Signaling Methods ---
+    const sendWebRTCOffer = useCallback((targetUserId: string, offer: RTCSessionDescriptionInit, callId: string) => {
+        if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) return;
+        console.log("📤 Sending WebRTC offer");
+        wsRef.current.send(JSON.stringify({ type: "webrtc-offer", targetUserId, offer, callId }));
+    }, []);
+
+    const sendWebRTCAnswer = useCallback((targetUserId: string, answer: RTCSessionDescriptionInit, callId: string) => {
+        if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) return;
+        console.log("📤 Sending WebRTC answer");
+        wsRef.current.send(JSON.stringify({ type: "webrtc-answer", targetUserId, answer, callId }));
+    }, []);
+
+    const sendICECandidate = useCallback((targetUserId: string, candidate: RTCIceCandidateInit, callId: string) => {
+        if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) return;
+        wsRef.current.send(JSON.stringify({ type: "webrtc-ice-candidate", targetUserId, candidate, callId }));
+    }, []);
+
+    const onWebRTCSignal = useCallback((handler: WebRTCSignalHandler | null) => {
+        webrtcSignalHandlerRef.current = handler;
+    }, []);
+
     return (
         <SignalingContext.Provider value={{
             isConnected,
@@ -169,7 +226,11 @@ export const SignalingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             sendCallResponse,
             startActiveCall: setActiveCall,
             endCall,
-            clearIncomingCall
+            clearIncomingCall,
+            sendWebRTCOffer,
+            sendWebRTCAnswer,
+            sendICECandidate,
+            onWebRTCSignal,
         }}>
             {children}
         </SignalingContext.Provider>
@@ -181,5 +242,3 @@ export const useSignalingContext = () => {
     if (!context) throw new Error("useSignalingContext must be used within SignalingProvider");
     return context;
 };
-
-export { generateJitsiRoomName };

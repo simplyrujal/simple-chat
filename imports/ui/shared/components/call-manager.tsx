@@ -1,9 +1,9 @@
 import { Meteor } from "meteor/meteor";
 import { useTracker } from "meteor/react-meteor-data";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback } from "react";
 import IncomingCallModal from "../components/incoming-call-modal";
-import JitsiMeetingComponent from "../components/jitsi-meeting";
-import { generateJitsiRoomName, useSignalingContext } from "../contexts/signaling-context";
+import WebRTCCall from "../components/webrtc-call";
+import { useSignalingContext } from "../contexts/signaling-context";
 
 export const CallManager: React.FC = () => {
     const {
@@ -17,36 +17,21 @@ export const CallManager: React.FC = () => {
 
     const currentUser = useTracker(() => Meteor.user());
 
-    const caller = useTracker(() => {
-        if (incomingCall?.from) {
-            // @ts-ignore
-            return Meteor.users.findOne(incomingCall.from);
-        }
-        return null;
-    });
-
-    const callerName = useMemo(() => {
-        // @ts-ignore
-        if (caller?.profile?.name) return caller.profile.name;
-        // @ts-ignore
-        if (caller?.username) return caller.username;
-        return incomingCall?.from || "User";
-    }, [caller, incomingCall]);
+    // Use the callerName sent in the call-request payload.
+    // Falls back to the from userId if name wasn't resolved.
+    const callerName = incomingCall?.callerName || incomingCall?.from || "User";
 
     const handleAcceptCall = useCallback(() => {
         if (!incomingCall) return;
 
         sendCallResponse(incomingCall.from, incomingCall.callId, "accepted", incomingCall.roomId || "global");
 
-        // Consistent room name generation
-        const roomName = generateJitsiRoomName(incomingCall.roomId || "global", incomingCall.callId);
-
         startActiveCall({
             callId: incomingCall.callId,
-            roomName,
             callType: incomingCall.callType,
             targetUserId: incomingCall.from,
-            callerName: callerName
+            callerName: callerName,
+            isCaller: false, // We are the callee (receiver)
         });
 
         clearIncomingCall();
@@ -72,11 +57,14 @@ export const CallManager: React.FC = () => {
                 onReject={handleRejectCall}
             />
             {activeCall && (
-                <JitsiMeetingComponent
-                    roomName={activeCall.roomName}
-                    userName={currentUser?.username || "User"}
-                    onLeave={handleLeaveMeeting}
+                <WebRTCCall
+                    targetUserId={activeCall.targetUserId}
+                    callId={activeCall.callId}
                     callType={activeCall.callType}
+                    isCaller={activeCall.isCaller}
+                    callerName={activeCall.callerName}
+                    userName={currentUser?.profile?.name || currentUser?.username || "You"}
+                    onLeave={handleLeaveMeeting}
                 />
             )}
         </>
