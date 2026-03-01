@@ -20,7 +20,6 @@ const VideoAction: React.FC<VideoActionProps> = ({ room }) => {
   const handleVideoCall = useCallback(() => {
     if (!targetUserId || !currentUserId || isCalling) return;
 
-    console.log("🎥 Triggering video call for room:", room._id);
     setIsCalling(true);
 
     sendCallRequest(targetUserId, "video");

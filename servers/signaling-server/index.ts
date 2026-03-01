@@ -22,7 +22,6 @@ const clients = new Map<string, WebSocket>();
 
 wss.on("connection", (ws: WebSocket, req) => {
   const remoteAddress = req.socket.remoteAddress;
-  console.log(`New connection from: ${remoteAddress}`);
 
   let currentUserId: string | null = null;
 
@@ -34,7 +33,6 @@ wss.on("connection", (ws: WebSocket, req) => {
       if (type === "register") {
         currentUserId = message.userId;
         clients.set(currentUserId!, ws);
-        console.log(`User registered: ${currentUserId} from ${remoteAddress}`);
         ws.send(JSON.stringify({ type: "registered", userId: currentUserId }));
         return;
       }

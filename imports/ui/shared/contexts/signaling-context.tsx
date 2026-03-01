@@ -78,7 +78,6 @@ export const SignalingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         wsRef.current = ws;
 
         ws.onopen = () => {
-            console.log("📶 Signaling connected");
             setIsConnected(true);
             ws.send(JSON.stringify({ type: "register", userId }));
         };
@@ -86,7 +85,6 @@ export const SignalingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         ws.onmessage = (event) => {
             try {
                 const message = JSON.parse(event.data);
-                console.log("📥 Received:", message.type, message);
 
                 switch (message.type) {
                     case "call-request":
@@ -161,7 +159,6 @@ export const SignalingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         // Store pending call so we can restore it when accepted
         pendingCallRef.current = { callId: roomId, callType, targetUserId, callerName: callerName || targetUserId };
 
-        console.log("📤 Sending call request:", payload);
         wsRef.current.send(JSON.stringify(payload));
         return roomId;
     }, [userId]);
@@ -177,7 +174,6 @@ export const SignalingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             roomId: roomId || "global"
         };
 
-        console.log("📤 Sending call response:", payload);
         wsRef.current.send(JSON.stringify(payload));
     }, []);
 
@@ -197,7 +193,6 @@ export const SignalingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     // --- WebRTC Signaling Methods ---
     const sendWebRTCOffer = useCallback((targetUserId: string, offer: RTCSessionDescriptionInit, callId: string) => {
         if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) return;
-        console.log("📤 Sending WebRTC offer");
         wsRef.current.send(JSON.stringify({ type: "webrtc-offer", targetUserId, offer, callId }));
     }, []);
 

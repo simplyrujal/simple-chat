@@ -32,7 +32,6 @@ export const SignalingTest: React.FC = () => {
         ws = new WebSocket(SIGNALING_URL);
 
         ws.onopen = () => {
-          console.log("Signaling server connected to:", SIGNALING_URL);
           setStatus({ connected: true, error: null });
 
           // Register as test user
@@ -47,7 +46,6 @@ export const SignalingTest: React.FC = () => {
         ws.onmessage = (event) => {
           try {
             const message = JSON.parse(event.data);
-            console.log("Received message:", message);
             setTestMessage(JSON.stringify(message, null, 2));
           } catch (e) {
             console.error("Failed to parse message:", e);
@@ -98,11 +96,10 @@ export const SignalingTest: React.FC = () => {
         <div className="flex items-center gap-2">
           <span className="font-medium">Status:</span>
           <span
-            className={`px-2 py-1 rounded text-sm ${
-              status.connected
+            className={`px-2 py-1 rounded text-sm ${status.connected
                 ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
                 : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
-            }`}
+              }`}
           >
             {status.connected ? "Connected" : "Disconnected"}
           </span>

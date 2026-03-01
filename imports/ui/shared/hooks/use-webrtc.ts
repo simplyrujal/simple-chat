@@ -88,7 +88,6 @@ export function useWebRTC({
 
       try {
         if (signal.type === "webrtc-offer" && signal.offer) {
-          console.log("📥 Received WebRTC offer");
           await pc.setRemoteDescription(
             new RTCSessionDescription(signal.offer),
           );
@@ -175,7 +174,6 @@ export function useWebRTC({
 
         // 6. Connection state monitoring
         pc.onconnectionstatechange = () => {
-          console.log("🔗 Connection state:", pc.connectionState);
           if (pc.connectionState === "connected") {
             setIsConnecting(false);
           } else if (
@@ -192,7 +190,6 @@ export function useWebRTC({
 
         // 8. If we are the caller, create and send offer
         if (isCaller) {
-          console.log("📤 Creating and sending offer as caller");
           const offer = await pc.createOffer();
           await pc.setLocalDescription(offer);
           sendWebRTCOffer(targetUserId, offer, callId);

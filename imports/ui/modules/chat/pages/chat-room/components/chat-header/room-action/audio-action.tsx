@@ -20,7 +20,6 @@ const AudioAction: React.FC<AudioActionProps> = ({ room }) => {
   const handleAudioCall = useCallback(() => {
     if (!targetUserId || !currentUserId || isCalling) return;
 
-    console.log("☎️ Triggering audio call for room:", room._id);
     setIsCalling(true);
 
     sendCallRequest(targetUserId, "audio");
