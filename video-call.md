@@ -111,7 +111,7 @@ const createOffer = async () => {
 const socket = useRef(null);
 
 useEffect(() => {
-  socket.current = new WebSocket("ws://localhost:8080");
+  socket.current = new WebSocket("ws://localhost:5000");
 
   socket.current.onopen = () => console.log("Connected to signaling server");
 
@@ -187,3 +187,137 @@ peerConnection.current.ontrack = (event) => {
 3. ICE candidates exchanged → Remote video appears
 
 ---
+
+**Congratulations!** You now have a complete basic WebRTC video call system in React + MeteorJS.
+
+---
+
+# Next Steps – Building a Real Video Call App
+
+## OPTION A – Build Real UI for Video Call
+
+### Goal
+
+Create a proper video call screen like Zoom/Meet with layout and call buttons.
+
+### What We Will Add
+
+- Two video boxes (My video + Remote video)
+- Call start button
+- Call end button
+- Simple professional layout
+
+### Example UI Structure
+
+```jsx
+<div className="call-container">
+  <div className="videos">
+    <video ref={videoRef} autoPlay playsInline />
+    <video ref={remoteVideoRef} autoPlay playsInline />
+  </div>
+
+  <div className="controls">
+    <button onClick={createOffer}>Start Call</button>
+    <button onClick={endCall}>End Call</button>
+  </div>
+</div>
+```
+
+### End Call Logic
+
+```js
+const endCall = () => {
+  peerConnection.current.close();
+  socket.current.close();
+  alert("Call Ended");
+};
+```
+
+### What This Achieves
+
+- Clean UI like real apps
+- Proper call start/stop control
+- Ready base for production features
+
+---
+
+## OPTION B – Add Call Controls (Mute / Camera Off)
+
+### Goal
+
+Allow users to:
+
+- Mute microphone
+- Turn camera ON/OFF
+
+This is a must-have feature in real apps.
+
+---
+
+### 1. Mute / Unmute Microphone
+
+#### Logic
+
+We simply enable/disable the audio track.
+
+```js
+const toggleMute = () => {
+  const audioTrack = videoRef.current.srcObject
+    .getTracks()
+    .find((track) => track.kind === "audio");
+
+  audioTrack.enabled = !audioTrack.enabled;
+};
+```
+
+---
+
+### 2. Camera ON / OFF
+
+#### Logic
+
+Enable/disable video track.
+
+```js
+const toggleCamera = () => {
+  const videoTrack = videoRef.current.srcObject
+    .getTracks()
+    .find((track) => track.kind === "video");
+
+  videoTrack.enabled = !videoTrack.enabled;
+};
+```
+
+---
+
+### 3. UI Buttons for Controls
+
+```jsx
+<div className="controls">
+  <button onClick={toggleMute}>Mute / Unmute</button>
+  <button onClick={toggleCamera}>Camera ON/OFF</button>
+</div>
+```
+
+---
+
+## Final Result After These Steps
+
+Your app will now support:
+
+- Real video call layout
+- Call start & end
+- Microphone mute
+- Camera toggle
+
+These features make your project look like a real video calling application.
+
+---
+
+## Next Possible Improvements (Future Lessons)
+
+- Screen sharing
+- Multi‑user rooms
+- Chat during call
+- TURN server for production
+- Call notifications
