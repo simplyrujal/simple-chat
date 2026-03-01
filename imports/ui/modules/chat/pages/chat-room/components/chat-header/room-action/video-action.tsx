@@ -31,7 +31,7 @@ const VideoAction: React.FC<VideoActionProps> = ({ room }) => {
   return (
     <>
       <Button
-        className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all border-none"
+        className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all border-none md:hidden"
         title="Video Call"
         onClick={handleVideoCall}
         disabled={isCalling}
@@ -42,7 +42,7 @@ const VideoAction: React.FC<VideoActionProps> = ({ room }) => {
       <Button
         color="gray"
         size="sm"
-        className="hidden sm:flex border-none hover:bg-gray-100 ml-2"
+        className="hidden md:flex border-none hover:bg-gray-100 ml-2"
         onClick={handleVideoCall}
         disabled={isCalling}
       >
