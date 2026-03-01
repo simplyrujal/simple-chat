@@ -7,9 +7,15 @@ import {
 const ICE_SERVERS: RTCConfiguration = {
   iceServers: [
     // { urls: "stun:stun.l.google.com:19302" },
-    { urls: "stun:stun1.l.google.com:19302" },
-    // { urls: "stun:stun2.l.google.com:19302" },
+    // { urls: "stun:stun1.l.google.com:19302" },
+    { urls: "stun:192.168.1.77:3478" },
+    {
+      urls: "turn:192.168.1.77:3478",
+      username: "testuser",
+      credential: "testpass",
+    },
   ],
+  iceCandidatePoolSize: 10,
 };
 
 interface UseWebRTCOptions {
