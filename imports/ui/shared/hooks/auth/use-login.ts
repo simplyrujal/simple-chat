@@ -29,6 +29,14 @@ const useLogin = () => {
 
   const login = async (data: LoginData) => {
     try {
+      await new Promise<void>((resolve) => {
+        Meteor.logout((err) => {
+          if (err) {
+            console.warn("Logout before login failed:", err);
+          }
+          resolve();
+        });
+      });
       await mutateAsync(data);
       navigate("/dashboard");
     } catch (err) {
