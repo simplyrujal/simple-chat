@@ -149,22 +149,21 @@ export const SignalingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const sendCallRequest = useCallback((targetUserId: string, callType: CallType, roomId: string, callerName?: string) => {
         if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) return null;
 
-        const callId = `${userId}-${Date.now()}`;
         const payload = {
             type: "call-request",
             targetUserId,
-            callId,
+            callId: roomId,
             callType,
             roomId: roomId || "global",
             callerName: callerName || userId,
         };
 
         // Store pending call so we can restore it when accepted
-        pendingCallRef.current = { callId, callType, targetUserId, callerName: callerName || targetUserId };
+        pendingCallRef.current = { callId: roomId, callType, targetUserId, callerName: callerName || targetUserId };
 
         console.log("📤 Sending call request:", payload);
         wsRef.current.send(JSON.stringify(payload));
-        return callId;
+        return roomId;
     }, [userId]);
 
     const sendCallResponse = useCallback((targetUserId: string, callId: string, message: "accepted" | "rejected", roomId: string) => {
