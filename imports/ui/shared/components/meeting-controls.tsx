@@ -48,18 +48,16 @@ const MeetingControls: React.FC<MeetingControlsProps> = ({
                 </button>
             )}
 
-            {!isAudioOnly && (
-                <button
-                    onClick={onToggleScreenShare}
-                    className={`p-4 rounded-full transition-all duration-300 hover:scale-110 active:scale-95 shadow-lg ${isScreenSharing
-                        ? 'bg-blue-500 hover:bg-blue-600 text-white shadow-blue-500/20'
-                        : 'bg-gray-800 hover:bg-gray-700 text-gray-200'
-                        }`}
-                    title={isScreenSharing ? 'Stop Screen Share' : 'Share Screen'}
-                >
-                    <ScreenShareIcon className={`w-6 h-6 ${isScreenSharing ? 'opacity-100' : 'opacity-80'}`} />
-                </button>
-            )}
+            <button
+                onClick={onToggleScreenShare}
+                className={`p-4 rounded-full transition-all duration-300 hover:scale-110 active:scale-95 shadow-lg ${isScreenSharing
+                    ? 'bg-blue-500 hover:bg-blue-600 text-white shadow-blue-500/20'
+                    : 'bg-gray-800 hover:bg-gray-700 text-gray-200'
+                    }`}
+                title={isScreenSharing ? 'Stop Screen Share' : 'Share Screen'}
+            >
+                <ScreenShareIcon className={`w-6 h-6 ${isScreenSharing ? 'opacity-100' : 'opacity-80'}`} />
+            </button>
 
             <div className="w-px h-8 bg-white/10 mx-2" />
 
