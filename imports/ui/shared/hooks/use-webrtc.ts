@@ -31,10 +31,13 @@ interface UseWebRTCReturn {
   remoteStream: MediaStream | null;
   isAudioMuted: boolean;
   isVideoMuted: boolean;
+  isScreenSharing: boolean;
   isConnecting: boolean;
   error: string | null;
   toggleAudio: () => void;
   toggleVideo: () => void;
+  startScreenShare: () => Promise<void>;
+  stopScreenShare: () => void;
   hangup: () => void;
 }
 
@@ -56,11 +59,14 @@ export function useWebRTC({
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
   const [isAudioMuted, setIsAudioMuted] = useState(false);
   const [isVideoMuted, setIsVideoMuted] = useState(false);
+  const [isScreenSharing, setIsScreenSharing] = useState(false);
   const [isConnecting, setIsConnecting] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const pcRef = useRef<RTCPeerConnection | null>(null);
   const localStreamRef = useRef<MediaStream | null>(null);
+  const screenStreamRef = useRef<MediaStream | null>(null);
+  const cameraStreamRef = useRef<MediaStream | null>(null);
   // Buffer ICE candidates received before remote description is set
   const pendingCandidatesRef = useRef<RTCIceCandidateInit[]>([]);
   const remoteDescSetRef = useRef(false);
@@ -75,6 +81,11 @@ export function useWebRTC({
       localStreamRef.current.getTracks().forEach((t) => t.stop());
       localStreamRef.current = null;
     }
+    if (screenStreamRef.current) {
+      screenStreamRef.current.getTracks().forEach((t) => t.stop());
+      screenStreamRef.current = null;
+    }
+    cameraStreamRef.current = null;
     setLocalStream(null);
     setRemoteStream(null);
     onWebRTCSignal(null);
@@ -143,6 +154,7 @@ export function useWebRTC({
         }
 
         localStreamRef.current = stream;
+        cameraStreamRef.current = stream;
         setLocalStream(stream);
 
         // 2. Create peer connection
@@ -245,6 +257,61 @@ export function useWebRTC({
     setIsVideoMuted((prev) => !prev);
   }, []);
 
+  const startScreenShare = useCallback(async () => {
+    const pc = pcRef.current;
+    if (!pc) return;
+
+    try {
+      const screenStream = await navigator.mediaDevices.getDisplayMedia({
+        video: true,
+        audio: true,
+      });
+
+      const screenTrack = screenStream.getVideoTracks()[0];
+      screenStreamRef.current = screenStream;
+
+      const sender = pc.getSenders().find((s) => s.track?.kind === "video");
+
+      if (sender) {
+        await sender.replaceTrack(screenTrack);
+      }
+
+      setLocalStream(screenStream);
+      setIsScreenSharing(true);
+
+      screenTrack.onended = async () => {
+        stopScreenShare();
+      };
+    } catch (err: any) {
+      if (err.name !== "AbortError" && err.name !== "NotAllowedError") {
+        console.error("Screen share error:", err);
+      }
+    }
+  }, []);
+
+  const stopScreenShare = useCallback(() => {
+    const pc = pcRef.current;
+    if (!pc) return;
+
+    if (screenStreamRef.current) {
+      screenStreamRef.current.getTracks().forEach((track) => track.stop());
+      screenStreamRef.current = null;
+    }
+
+    if (cameraStreamRef.current) {
+      const cameraTrack = cameraStreamRef.current.getVideoTracks()[0];
+      const sender = pc.getSenders().find((s) => s.track?.kind === "video");
+
+      if (sender && cameraTrack) {
+        sender.replaceTrack(cameraTrack);
+      }
+
+      setLocalStream(cameraStreamRef.current);
+    }
+
+    setIsScreenSharing(false);
+  }, []);
+
   const hangup = useCallback(() => {
     cleanup();
     onHangup?.();
@@ -255,10 +322,13 @@ export function useWebRTC({
     remoteStream,
     isAudioMuted,
     isVideoMuted,
+    isScreenSharing,
     isConnecting,
     error,
     toggleAudio,
     toggleVideo,
+    startScreenShare,
+    stopScreenShare,
     hangup,
   };
 }

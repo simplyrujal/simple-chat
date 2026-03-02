@@ -31,10 +31,13 @@ const WebRTCCall: React.FC<WebRTCCallProps> = ({
         remoteStream,
         isAudioMuted,
         isVideoMuted,
+        isScreenSharing,
         isConnecting,
         error,
         toggleAudio,
         toggleVideo,
+        startScreenShare,
+        stopScreenShare,
         hangup,
     } = useWebRTC({
         targetUserId,
@@ -43,6 +46,14 @@ const WebRTCCall: React.FC<WebRTCCallProps> = ({
         isCaller,
         onHangup: onLeave,
     });
+
+    const handleToggleScreenShare = () => {
+        if (isScreenSharing) {
+            stopScreenShare();
+        } else {
+            startScreenShare();
+        }
+    };
 
     if (error) {
         return (
@@ -165,8 +176,10 @@ const WebRTCCall: React.FC<WebRTCCallProps> = ({
                     isAudioMuted={isAudioMuted}
                     isVideoMuted={isVideoMuted}
                     isAudioOnly={callType === "audio"}
+                    isScreenSharing={isScreenSharing}
                     onToggleAudio={toggleAudio}
                     onToggleVideo={toggleVideo}
+                    onToggleScreenShare={handleToggleScreenShare}
                     onHangup={hangup}
                 />
             </div>

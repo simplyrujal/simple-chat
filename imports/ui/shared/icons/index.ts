@@ -1,3 +1,4 @@
+export { ScreenShareIcon } from "./ScreenShareIcon";
 export { SearchIcon } from "./SearchIcon";
 export { ChevronLeftIcon } from "./ChevronLeftIcon";
 export { ChevronRightIcon } from "./ChevronRightIcon";

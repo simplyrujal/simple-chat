@@ -1,12 +1,14 @@
 import React from 'react';
-import { AudioIcon, StopIcon, VideoIcon } from "/imports/ui/shared/icons";
+import { AudioIcon, ScreenShareIcon, StopIcon, VideoIcon } from "/imports/ui/shared/icons";
 
 interface MeetingControlsProps {
     isAudioMuted: boolean;
     isVideoMuted: boolean;
     isAudioOnly?: boolean;
+    isScreenSharing?: boolean;
     onToggleAudio: () => void;
     onToggleVideo: () => void;
+    onToggleScreenShare: () => void;
     onHangup: () => void;
 }
 
@@ -14,8 +16,10 @@ const MeetingControls: React.FC<MeetingControlsProps> = ({
     isAudioMuted,
     isVideoMuted,
     isAudioOnly = false,
+    isScreenSharing = false,
     onToggleAudio,
     onToggleVideo,
+    onToggleScreenShare,
     onHangup,
 }) => {
     return (
@@ -23,8 +27,8 @@ const MeetingControls: React.FC<MeetingControlsProps> = ({
             <button
                 onClick={onToggleAudio}
                 className={`p-4 rounded-full transition-all duration-300 hover:scale-110 active:scale-95 shadow-lg ${isAudioMuted
-                        ? 'bg-red-500 hover:bg-red-600 text-white shadow-red-500/20'
-                        : 'bg-gray-800 hover:bg-gray-700 text-gray-200'
+                    ? 'bg-red-500 hover:bg-red-600 text-white shadow-red-500/20'
+                    : 'bg-gray-800 hover:bg-gray-700 text-gray-200'
                     }`}
                 title={isAudioMuted ? 'Unmute' : 'Mute'}
             >
@@ -35,8 +39,8 @@ const MeetingControls: React.FC<MeetingControlsProps> = ({
                 <button
                     onClick={onToggleVideo}
                     className={`p-4 rounded-full transition-all duration-300 hover:scale-110 active:scale-95 shadow-lg ${isVideoMuted
-                            ? 'bg-red-500 hover:bg-red-600 text-white shadow-red-500/20'
-                            : 'bg-gray-800 hover:bg-gray-700 text-gray-200'
+                        ? 'bg-red-500 hover:bg-red-600 text-white shadow-red-500/20'
+                        : 'bg-gray-800 hover:bg-gray-700 text-gray-200'
                         }`}
                     title={isVideoMuted ? 'Start Camera' : 'Stop Camera'}
                 >
@@ -44,7 +48,20 @@ const MeetingControls: React.FC<MeetingControlsProps> = ({
                 </button>
             )}
 
-            <div className="w-[1px] h-8 bg-white/10 mx-2" />
+            {!isAudioOnly && (
+                <button
+                    onClick={onToggleScreenShare}
+                    className={`p-4 rounded-full transition-all duration-300 hover:scale-110 active:scale-95 shadow-lg ${isScreenSharing
+                        ? 'bg-blue-500 hover:bg-blue-600 text-white shadow-blue-500/20'
+                        : 'bg-gray-800 hover:bg-gray-700 text-gray-200'
+                        }`}
+                    title={isScreenSharing ? 'Stop Screen Share' : 'Share Screen'}
+                >
+                    <ScreenShareIcon className={`w-6 h-6 ${isScreenSharing ? 'opacity-100' : 'opacity-80'}`} />
+                </button>
+            )}
+
+            <div className="w-px h-8 bg-white/10 mx-2" />
 
             <button
                 onClick={onHangup}
