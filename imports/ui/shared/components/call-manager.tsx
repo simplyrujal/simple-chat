@@ -1,6 +1,6 @@
 import { Meteor } from "meteor/meteor";
 import { useTracker } from "meteor/react-meteor-data";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import IncomingCallModal from "../components/incoming-call-modal";
 import WebRTCCall from "../components/webrtc-call";
 import { useSignalingContext } from "../contexts/signaling-context";
@@ -15,10 +15,10 @@ export const CallManager: React.FC = () => {
         endCall
     } = useSignalingContext();
 
+    const [isMinimized, setIsMinimized] = useState(false);
+
     const currentUser = useTracker(() => Meteor.user());
 
-    // Use the callerName sent in the call-request payload.
-    // Falls back to the from userId if name wasn't resolved.
     const callerName = incomingCall?.callerName || incomingCall?.from || "User";
 
     const handleAcceptCall = useCallback(() => {
@@ -31,7 +31,7 @@ export const CallManager: React.FC = () => {
             callType: incomingCall.callType,
             targetUserId: incomingCall.from,
             callerName: callerName,
-            isCaller: false, // We are the callee (receiver)
+            isCaller: false,
         });
 
         clearIncomingCall();
@@ -45,7 +45,12 @@ export const CallManager: React.FC = () => {
 
     const handleLeaveMeeting = useCallback(() => {
         endCall();
+        setIsMinimized(false);
     }, [endCall]);
+
+    const toggleMinimize = useCallback(() => {
+        setIsMinimized(prev => !prev);
+    }, []);
 
     return (
         <>
@@ -65,6 +70,8 @@ export const CallManager: React.FC = () => {
                     callerName={activeCall.callerName}
                     userName={currentUser?.emails?.[0]?.address || currentUser?.username || "You"}
                     onLeave={handleLeaveMeeting}
+                    isMinimized={isMinimized}
+                    onToggleMinimize={toggleMinimize}
                 />
             )}
         </>
