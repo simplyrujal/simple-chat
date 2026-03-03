@@ -99,6 +99,7 @@ export function useWebRTC({
 
       try {
         if (signal.type === "webrtc-offer" && signal.offer) {
+          console.log("📥 Received WebRTC offer (renegotiation)", signal.offer.type);
           await pc.setRemoteDescription(
             new RTCSessionDescription(signal.offer),
           );
@@ -111,6 +112,7 @@ export function useWebRTC({
           const answer = await pc.createAnswer();
           await pc.setLocalDescription(answer);
           sendWebRTCAnswer(targetUserId, answer, callId);
+          console.log("📤 Sent WebRTC answer for renegotiation");
         } else if (signal.type === "webrtc-answer" && signal.answer) {
           console.log("📥 Received WebRTC answer");
           await pc.setRemoteDescription(
@@ -169,10 +171,22 @@ export function useWebRTC({
         setRemoteStream(remoteMediaStream);
 
         pc.ontrack = (event) => {
-          console.log("🎥 Remote track received:", event.track.kind);
-          event.streams[0]?.getTracks().forEach((track) => {
+          console.log("🎥 Remote track received:", event.track.kind, "streams:", event.streams.length);
+          
+          // Get the stream from the event, fallback to remoteMediaStream
+          const incomingStream = event.streams[0] || remoteMediaStream;
+          
+          // Add all tracks from the incoming stream
+          incomingStream.getTracks().forEach((track) => {
+            const existingTrack = remoteMediaStream.getTracks().find(t => t.kind === track.kind);
+            if (existingTrack) {
+              // Replace existing track of the same kind
+              remoteMediaStream.removeTrack(existingTrack);
+            }
             remoteMediaStream.addTrack(track);
           });
+          
+          // Update state with a new stream reference to trigger re-render
           setRemoteStream(new MediaStream(remoteMediaStream.getTracks()));
           setIsConnecting(false);
         };
@@ -262,6 +276,7 @@ export function useWebRTC({
     if (!pc) return;
 
     try {
+      console.log("🖥️ Starting screen share...");
       const screenStream = await navigator.mediaDevices.getDisplayMedia({
         video: true,
         audio: true,
@@ -273,7 +288,14 @@ export function useWebRTC({
       const sender = pc.getSenders().find((s) => s.track?.kind === "video");
 
       if (sender) {
+        console.log("🔄 Replacing video track with screen share...");
         await sender.replaceTrack(screenTrack);
+        
+        // Renegotiate to ensure remote peer receives the new track
+        const offer = await pc.createOffer();
+        await pc.setLocalDescription(offer);
+        console.log("📤 Sending renegotiation offer for screen share");
+        sendWebRTCOffer(targetUserId, offer, callId);
       }
 
       setLocalStream(screenStream);
@@ -287,9 +309,9 @@ export function useWebRTC({
         console.error("Screen share error:", err);
       }
     }
-  }, []);
+  }, [targetUserId, callId, sendWebRTCOffer]);
 
-  const stopScreenShare = useCallback(() => {
+  const stopScreenShare = useCallback(async () => {
     const pc = pcRef.current;
     if (!pc) return;
 
@@ -303,14 +325,19 @@ export function useWebRTC({
       const sender = pc.getSenders().find((s) => s.track?.kind === "video");
 
       if (sender && cameraTrack) {
-        sender.replaceTrack(cameraTrack);
+        await sender.replaceTrack(cameraTrack);
+        
+        // Renegotiate to ensure remote peer receives the camera track
+        const offer = await pc.createOffer();
+        await pc.setLocalDescription(offer);
+        sendWebRTCOffer(targetUserId, offer, callId);
       }
 
       setLocalStream(cameraStreamRef.current);
     }
 
     setIsScreenSharing(false);
-  }, []);
+  }, [targetUserId, callId, sendWebRTCOffer]);
 
   const hangup = useCallback(() => {
     cleanup();
