@@ -1,7 +1,12 @@
 .git
 .gitignore
 node_modules
+app/node_modules
+servers/signaling-server/node_modules
+servers/coturn/node_modules
 .meteor/local
+app/.meteor/local
+app/bundle-output
 .meteor/package-metadata.v2.json
 .meteor/package-metadata.v2.lock
 .DS_Store

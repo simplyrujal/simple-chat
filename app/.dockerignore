@@ -1,0 +1,5 @@
+node_modules
+.meteor/local
+bundle-output
+.DS_Store
+*.log
