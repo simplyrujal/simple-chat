@@ -2,3 +2,4 @@ node_modules/
 bundle/
 bundle-output/
 dist
+.env
