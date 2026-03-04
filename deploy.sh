@@ -11,7 +11,7 @@ echo "Building Signaling Server..."
 echo "=========================================="
 cd servers/signaling-server
 bun install
-bunx tsc
+npx tsc
 cd ../..
 
 echo "=========================================="
