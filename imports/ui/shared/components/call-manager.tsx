@@ -1,9 +1,9 @@
 import { Meteor } from "meteor/meteor";
 import { useTracker } from "meteor/react-meteor-data";
 import React, { useCallback, useState } from "react";
+import IncomingCallModal from "../components/incoming-call-modal";
+import WebRTCCall from "../components/webrtc-call";
 import { useSignalingContext } from "../contexts/signaling-context";
-import IncomingCallModal from "./incoming-call-modal";
-import WebRTCCall from "./webrtc-call";
 
 export const CallManager: React.FC = () => {
     const {

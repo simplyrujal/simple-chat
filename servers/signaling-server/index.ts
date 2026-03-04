@@ -21,7 +21,7 @@ const wss = new WebSocketServer({ server: httpServer });
 const clients = new Map<string, WebSocket>();
 
 wss.on("connection", (ws: WebSocket, req) => {
-  // const remoteAddress = req.socket.remoteAddress;
+  const remoteAddress = req.socket.remoteAddress;
 
   let currentUserId: string | null = null;
 
