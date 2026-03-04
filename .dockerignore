@@ -1,6 +1,8 @@
 .git
 .gitignore
 node_modules
+servers/*/node_modules
+servers/*/dist
 .meteor/local
 .meteor/package-metadata.v2.json
 .meteor/package-metadata.v2.lock
