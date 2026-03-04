@@ -1,9 +1,14 @@
 .git
 .gitignore
 node_modules
+<<<<<<< HEAD
 app/node_modules
 servers/signaling-server/node_modules
 servers/coturn/node_modules
+=======
+servers/*/node_modules
+servers/*/dist
+>>>>>>> goto-prev
 .meteor/local
 app/.meteor/local
 app/bundle-output
