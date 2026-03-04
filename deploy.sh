@@ -10,7 +10,7 @@ echo "=========================================="
 echo "Building Signaling Server..."
 echo "=========================================="
 cd servers/signaling-server
-bun install
+npm install
 npx tsc
 cd ../..
 
