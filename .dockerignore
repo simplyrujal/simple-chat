@@ -1,17 +1,9 @@
 .git
 .gitignore
 node_modules
-<<<<<<< HEAD
-app/node_modules
-servers/signaling-server/node_modules
-servers/coturn/node_modules
-=======
 servers/*/node_modules
 servers/*/dist
->>>>>>> 3691ef80a1561dad8b4c4ca80cd5b7090737a547
 .meteor/local
-app/.meteor/local
-app/bundle-output
 .meteor/package-metadata.v2.json
 .meteor/package-metadata.v2.lock
 .DS_Store

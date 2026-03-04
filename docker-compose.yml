@@ -11,7 +11,7 @@ services:
       - simple-chat-network
 
   app:
-    build: ./app
+    build: .
     restart: unless-stopped
     ports:
       - "3000:3000"
@@ -27,8 +27,8 @@ services:
 
   signaling:
     build:
-      context: ./servers/signaling-server
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./servers/signaling-server/Dockerfile
     restart: unless-stopped
     ports:
       - "8080:8080"
@@ -38,9 +38,7 @@ services:
       - simple-chat-network
 
   coturn:
-    build:
-      context: ./servers/coturn
-      dockerfile: Dockerfile
+    build: ./servers/coturn
     container_name: coturn-server
     ports:
       - "3478:3478"
