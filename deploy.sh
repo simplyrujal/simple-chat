@@ -27,12 +27,12 @@ cp -r ./bundle-output/bundle ./bundle
 echo "=========================================="
 echo "Building Docker images (no cache)..."
 echo "=========================================="
-docker-compose build --no-cache
+docker compose build --no-cache
 
 echo "=========================================="
 echo "Starting containers..."
 echo "=========================================="
-docker-compose up -d
+docker compose up -d
 
 echo "=========================================="
 echo "Cleaning up temporary files..."
