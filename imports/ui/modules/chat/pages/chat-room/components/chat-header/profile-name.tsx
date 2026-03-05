@@ -9,14 +9,14 @@ const ProfileName: React.FC<IProps> = ({ otherUser }) => {
   const { data, isLoading, error } = useGetUser(otherUser || "");
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div style={{ color: "#6272a4" }}>Loading...</div>;
   }
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return <div className="text-danger-500">Error: {error.message}</div>;
   }
   return (
-    <h5 className="font-bold mb-0 text-gray-900">
+    <h5 className="font-bold mb-0 text-gray-100">
       {data?.profile?.name || "Chat Room"}
     </h5>
   );

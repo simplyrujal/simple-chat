@@ -58,14 +58,14 @@ const UserItem: React.FC<UserItemProps> = ({
     return (
       <button
         onClick={() => handleUserClick(user._id)}
-        className="w-full flex items-center justify-center py-3 px-2 hover:bg-gray-100 transition-colors"
+        className="w-full flex items-center justify-center py-3 px-2 hover:bg-gray-700/50 transition-colors"
         title={user.profile.name}
       >
         <div className="relative">
           {user.avatarUrl ? (
             <Avatar img={user.avatarUrl} alt={user.username} rounded />
           ) : (
-            <div className="w-10 h-10 rounded-full bg-primary-600 text-white flex items-center justify-center font-bold text-sm">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-dracula-pink text-white flex items-center justify-center font-bold text-sm">
               {getInitials(user.profile.name || user.username)}
             </div>
           )}
@@ -80,9 +80,10 @@ const UserItem: React.FC<UserItemProps> = ({
       onClick={() => handleUserClick(user._id)}
       className={`w-full flex items-center gap-3 py-3 px-4 transition-all duration-200 ${
         isActive
-          ? "bg-primary-600 text-white"
-          : "hover:bg-gray-100 text-gray-700"
+          ? "bg-gradient-to-r from-primary-500/30 to-dracula-pink/30"
+          : "hover:bg-gray-700/30"
       }`}
+      style={{ borderLeft: isActive ? "3px solid #bd93f9" : "3px solid transparent" }}
     >
       <div className="relative shrink-0">
         {user.avatarUrl ? (
@@ -91,8 +92,8 @@ const UserItem: React.FC<UserItemProps> = ({
           <div
             className={`w-11 h-11 rounded-full flex items-center justify-center font-bold text-sm ${
               isActive
-                ? "bg-primary-700 text-white"
-                : "bg-primary-600 text-white"
+                ? "bg-gradient-to-br from-primary-500 to-dracula-pink text-white"
+                : "bg-primary-500 text-white"
             }`}
           >
             {getInitials(user.profile.name || user.username)}
@@ -105,7 +106,7 @@ const UserItem: React.FC<UserItemProps> = ({
         <div className="flex justify-between items-center gap-2">
           <span
             className={`truncate text-sm font-semibold ${
-              isActive ? "text-white" : "text-gray-900"
+              isActive ? "text-white" : "text-gray-100"
             }`}
           >
             {user.profile.name}
@@ -113,7 +114,7 @@ const UserItem: React.FC<UserItemProps> = ({
           {user.createdAt && (
             <span
               className={`text-xs whitespace-nowrap ${
-                isActive ? "text-white/70" : "text-gray-400"
+                isActive ? "text-white/70" : "text-gray-500"
               }`}
             >
               {new Date(user.createdAt).toLocaleTimeString([], {

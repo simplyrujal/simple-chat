@@ -8,7 +8,8 @@ const MoreAction: React.FC = () => {
       label=""
       renderTrigger={() => (
         <button
-          className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+          className="p-2 rounded-lg transition-colors hover:bg-gray-700/50"
+          style={{ color: "#6272a4" }}
           title="More options"
         >
           <MoreIcon className="w-5 h-5" />
@@ -16,12 +17,12 @@ const MoreAction: React.FC = () => {
       )}
       placement="bottom-end"
     >
-      <DropdownItem>View Profile</DropdownItem>
-      <DropdownItem>Search in conversation</DropdownItem>
-      <DropdownItem>Notifications</DropdownItem>
-      <DropdownDivider />
-      <DropdownItem>Block user</DropdownItem>
-      <DropdownItem className="text-danger-600 hover:bg-danger-50">
+      <DropdownItem className="text-gray-100 hover:bg-gray-700">View Profile</DropdownItem>
+      <DropdownItem className="text-gray-100 hover:bg-gray-700">Search in conversation</DropdownItem>
+      <DropdownItem className="text-gray-100 hover:bg-gray-700">Notifications</DropdownItem>
+      <DropdownDivider className="bg-gray-700" />
+      <DropdownItem className="text-gray-100 hover:bg-gray-700">Block user</DropdownItem>
+      <DropdownItem className="text-danger-500 hover:bg-danger-500/10">
         Report
       </DropdownItem>
     </Dropdown>
