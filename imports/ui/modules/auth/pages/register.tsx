@@ -84,11 +84,16 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+    <div className="min-h-screen flex items-center justify-center w-full p-4 bg-gradient-to-br from-gray-900 via-dracula-bg to-gray-600">
       <div className="w-full max-w-md">
-        <div className="bg-white shadow-sm rounded-lg p-4 border border-gray-200">
-          <div className="text-center mb-6">
-            <h1 className="text-2xl font-bold text-gray-900 mb-1">
+        <div className="bg-gray-800/95 rounded-2xl border border-primary-500/20 p-8 shadow-2xl">
+          <div className="text-center mb-8">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center bg-gradient-to-br from-primary-500 to-dracula-pink">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+              </svg>
+            </div>
+            <h1 className="text-2xl font-bold mb-2 text-gray-50">
               Create Account
             </h1>
             <p className="text-sm text-gray-500">
@@ -96,10 +101,12 @@ const Register: React.FC = () => {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             {errors.root && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded text-sm">
-                {errors.root.message}
+              <div className="rounded-lg p-3 bg-danger-500/15 border border-danger-500/30">
+                <p className="text-sm text-danger-500">
+                  {errors.root.message}
+                </p>
               </div>
             )}
 
@@ -107,7 +114,7 @@ const Register: React.FC = () => {
               <div>
                 <label
                   htmlFor="fname"
-                  className="block text-xs font-semibold text-gray-700 mb-1"
+                  className="block text-sm font-semibold mb-2 text-gray-50"
                 >
                   First Name
                 </label>
@@ -117,13 +124,14 @@ const Register: React.FC = () => {
                   placeholder="John"
                   {...register("fname")}
                   disabled={submitting}
-                  className={`w-full px-3 py-2 border rounded-md shadow-sm text-sm placeholder-gray-400
-                                        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                                        disabled:bg-gray-100 disabled:text-gray-500
-                                        ${errors.fname ? "border-red-500" : "border-gray-300"}`}
+                  className={`w-full px-4 py-3 rounded-lg text-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+                    errors.fname 
+                      ? "border-2 border-danger-500 bg-danger-500/10 text-white placeholder:text-danger-400/50 focus:border-danger-500 focus:ring-2 focus:ring-danger-500/30 focus:outline-none" 
+                      : "border border-gray-600 bg-gray-800/80 text-white placeholder:text-gray-500 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30 focus:outline-none"
+                  }`}
                 />
                 {errors.fname && (
-                  <p className="mt-1 text-xs text-red-600">
+                  <p className="text-xs mt-1.5 text-danger-500">
                     {errors.fname.message}
                   </p>
                 )}
@@ -132,7 +140,7 @@ const Register: React.FC = () => {
               <div>
                 <label
                   htmlFor="lname"
-                  className="block text-xs font-semibold text-gray-700 mb-1"
+                  className="block text-sm font-semibold mb-2 text-gray-50"
                 >
                   Last Name
                 </label>
@@ -142,13 +150,14 @@ const Register: React.FC = () => {
                   placeholder="Doe"
                   {...register("lname")}
                   disabled={submitting}
-                  className={`w-full px-3 py-2 border rounded-md shadow-sm text-sm placeholder-gray-400
-                                        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                                        disabled:bg-gray-100 disabled:text-gray-500
-                                        ${errors.lname ? "border-red-500" : "border-gray-300"}`}
+                  className={`w-full px-4 py-3 rounded-lg text-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+                    errors.lname 
+                      ? "border-2 border-danger-500 bg-danger-500/10 text-white placeholder:text-danger-400/50 focus:border-danger-500 focus:ring-2 focus:ring-danger-500/30 focus:outline-none" 
+                      : "border border-gray-600 bg-gray-800/80 text-white placeholder:text-gray-500 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30 focus:outline-none"
+                  }`}
                 />
                 {errors.lname && (
-                  <p className="mt-1 text-xs text-red-600">
+                  <p className="text-xs mt-1.5 text-danger-500">
                     {errors.lname.message}
                   </p>
                 )}
@@ -158,7 +167,7 @@ const Register: React.FC = () => {
             <div>
               <label
                 htmlFor="username"
-                className="block text-xs font-semibold text-gray-700 mb-1"
+                className="block text-sm font-semibold mb-2 text-gray-50"
               >
                 Username
               </label>
@@ -168,13 +177,14 @@ const Register: React.FC = () => {
                 placeholder="johndoe"
                 {...register("username")}
                 disabled={submitting}
-                className={`w-full px-3 py-2 border rounded-md shadow-sm text-sm placeholder-gray-400
-                                    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                                    disabled:bg-gray-100 disabled:text-gray-500
-                                    ${errors.username ? "border-red-500" : "border-gray-300"}`}
+                className={`w-full px-4 py-3 rounded-lg text-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+                  errors.username 
+                    ? "border-2 border-danger-500 bg-danger-500/10 text-white placeholder:text-danger-400/50 focus:border-danger-500 focus:ring-2 focus:ring-danger-500/30 focus:outline-none" 
+                    : "border border-gray-600 bg-gray-800/80 text-white placeholder:text-gray-500 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30 focus:outline-none"
+                }`}
               />
               {errors.username && (
-                <p className="mt-1 text-xs text-red-600">
+                <p className="text-xs mt-1.5 text-danger-500">
                   {errors.username.message}
                 </p>
               )}
@@ -183,23 +193,24 @@ const Register: React.FC = () => {
             <div>
               <label
                 htmlFor="email"
-                className="block text-xs font-semibold text-gray-700 mb-1"
+                className="block text-sm font-semibold mb-2 text-gray-50"
               >
-                Email
+                Email Address
               </label>
               <input
                 id="email"
                 type="email"
-                placeholder="name@company.com"
+                placeholder="you@example.com"
                 {...register("email")}
                 disabled={submitting}
-                className={`w-full px-3 py-2 border rounded-md shadow-sm text-sm placeholder-gray-400
-                                    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                                    disabled:bg-gray-100 disabled:text-gray-500
-                                    ${errors.email ? "border-red-500" : "border-gray-300"}`}
+                className={`w-full px-4 py-3 rounded-lg text-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+                  errors.email 
+                    ? "border-2 border-danger-500 bg-danger-500/10 text-white placeholder:text-danger-400/50 focus:border-danger-500 focus:ring-2 focus:ring-danger-500/30 focus:outline-none" 
+                    : "border border-gray-600 bg-gray-800/80 text-white placeholder:text-gray-500 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30 focus:outline-none"
+                }`}
               />
               {errors.email && (
-                <p className="mt-1 text-xs text-red-600">
+                <p className="text-xs mt-1.5 text-danger-500">
                   {errors.email.message}
                 </p>
               )}
@@ -209,7 +220,7 @@ const Register: React.FC = () => {
               <div>
                 <label
                   htmlFor="password"
-                  className="block text-xs font-semibold text-gray-700 mb-1"
+                  className="block text-sm font-semibold mb-2 text-gray-50"
                 >
                   Password
                 </label>
@@ -217,28 +228,29 @@ const Register: React.FC = () => {
                   <input
                     id="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder="••••••••"
+                    placeholder="Enter password"
                     {...register("password")}
                     disabled={submitting}
-                    className={`w-full px-3 py-2 pr-10 border rounded-md shadow-sm text-sm placeholder-gray-400
-                                        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                                        disabled:bg-gray-100 disabled:text-gray-500
-                                        ${errors.password ? "border-red-500" : "border-gray-300"}`}
+                    className={`w-full px-4 py-3 pr-12 rounded-lg text-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+                      errors.password 
+                        ? "border-2 border-danger-500 bg-danger-500/10 text-white placeholder:text-danger-400/50 focus:border-danger-500 focus:ring-2 focus:ring-danger-500/30 focus:outline-none" 
+                        : "border border-gray-600 bg-gray-800/80 text-white placeholder:text-gray-500 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30 focus:outline-none"
+                    }`}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-500 hover:text-gray-300 transition-colors"
                   >
                     {showPassword ? (
-                      <EyeOffIcon className="h-5 w-5 text-gray-400" />
+                      <EyeOffIcon className="h-5 w-5" />
                     ) : (
-                      <EyeIcon className="h-5 w-5 text-gray-400" />
+                      <EyeIcon className="h-5 w-5" />
                     )}
                   </button>
                 </div>
                 {errors.password && (
-                  <p className="mt-1 text-xs text-red-600">
+                  <p className="text-xs mt-1.5 text-danger-500">
                     {errors.password.message}
                   </p>
                 )}
@@ -247,7 +259,7 @@ const Register: React.FC = () => {
               <div>
                 <label
                   htmlFor="confirmPassword"
-                  className="block text-xs font-semibold text-gray-700 mb-1"
+                  className="block text-sm font-semibold mb-2 text-gray-50"
                 >
                   Confirm Password
                 </label>
@@ -255,28 +267,29 @@ const Register: React.FC = () => {
                   <input
                     id="confirmPassword"
                     type={showConfirmPassword ? "text" : "password"}
-                    placeholder="••••••••"
+                    placeholder="Confirm password"
                     {...register("confirmPassword")}
                     disabled={submitting}
-                    className={`w-full px-3 py-2 pr-10 border rounded-md shadow-sm text-sm placeholder-gray-400
-                                        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                                        disabled:bg-gray-100 disabled:text-gray-500
-                                        ${errors.confirmPassword ? "border-red-500" : "border-gray-300"}`}
+                    className={`w-full px-4 py-3 pr-12 rounded-lg text-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+                      errors.confirmPassword 
+                        ? "border-2 border-danger-500 bg-danger-500/10 text-white placeholder:text-danger-400/50 focus:border-danger-500 focus:ring-2 focus:ring-danger-500/30 focus:outline-none" 
+                        : "border border-gray-600 bg-gray-800/80 text-white placeholder:text-gray-500 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30 focus:outline-none"
+                    }`}
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-500 hover:text-gray-300 transition-colors"
                   >
                     {showConfirmPassword ? (
-                      <EyeOffIcon className="h-5 w-5 text-gray-400" />
+                      <EyeOffIcon className="h-5 w-5" />
                     ) : (
-                      <EyeIcon className="h-5 w-5 text-gray-400" />
+                      <EyeIcon className="h-5 w-5" />
                     )}
                   </button>
                 </div>
                 {errors.confirmPassword && (
-                  <p className="mt-1 text-xs text-red-600">
+                  <p className="text-xs mt-1.5 text-danger-500">
                     {errors.confirmPassword.message}
                   </p>
                 )}
@@ -286,7 +299,7 @@ const Register: React.FC = () => {
             <div>
               <label
                 htmlFor="country"
-                className="block text-xs font-semibold text-gray-700 mb-1"
+                className="block text-sm font-semibold mb-2 text-gray-50"
               >
                 Country
               </label>
@@ -294,20 +307,21 @@ const Register: React.FC = () => {
                 id="country"
                 {...register("country")}
                 disabled={submitting}
-                className={`w-full px-3 py-2 border rounded-md shadow-sm text-sm bg-white
-                                    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                                    disabled:bg-gray-100 disabled:text-gray-500
-                                    ${errors.country ? "border-red-500" : "border-gray-300"}`}
+                className={`w-full px-4 py-3 rounded-lg text-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+                  errors.country 
+                    ? "border-2 border-danger-500 bg-danger-500/10 text-white focus:border-danger-500 focus:ring-2 focus:ring-danger-500/30 focus:outline-none" 
+                    : "border border-gray-600 bg-gray-800/80 text-white focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30 focus:outline-none"
+                }`}
               >
-                <option value="">Select your country</option>
+                <option value="" className="text-gray-900">Select your country</option>
                 {COUNTRIES.map((c) => (
-                  <option key={c} value={c}>
+                  <option key={c} value={c} className="text-gray-900">
                     {c}
                   </option>
                 ))}
               </select>
               {errors.country && (
-                <p className="mt-1 text-xs text-red-600">
+                <p className="text-xs mt-1.5 text-danger-500">
                   {errors.country.message}
                 </p>
               )}
@@ -316,17 +330,19 @@ const Register: React.FC = () => {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md text-sm transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3.5 px-4 font-semibold rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02] active:scale-[0.98] bg-gradient-to-r from-primary-500 to-dracula-pink text-gray-900 hover:shadow-lg hover:shadow-primary-500/30"
             >
               {submitting ? "Creating Account..." : "Sign Up"}
             </button>
           </form>
 
-          <div className="text-center mt-4 text-sm">
-            Already have an account?{" "}
+          <div className="text-center mt-6 pt-4 border-t border-gray-600/30">
+            <span className="text-sm text-gray-500">
+              Already have an account?{" "}
+            </span>
             <Link
               to="/auth/login"
-              className="text-blue-600 hover:text-blue-800 font-semibold no-underline"
+              className="text-sm font-semibold text-dracula-pink hover:text-dracula-pink/80 transition-colors"
             >
               Sign In
             </Link>
