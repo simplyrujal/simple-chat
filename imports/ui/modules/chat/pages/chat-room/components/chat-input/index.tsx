@@ -108,7 +108,7 @@ const ChatInput: React.FC<IProps> = ({ room }) => {
   };
 
   return (
-    <div className="p-3 bg-white">
+    <div className="p-3" style={{ backgroundColor: "rgba(40, 42, 54, 0.95)", borderTop: "1px solid rgba(189, 147, 249, 0.15)" }}>
       <FormProvider {...methods}>
         <MediaOutput />
         <MessageForm onSubmit={handleMessageSend} />

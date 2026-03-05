@@ -50,31 +50,33 @@ export const Sidebar: React.FC<ChatSidebarProps> = ({
       />
 
       <aside
-        className={`fixed md:relative left-0 top-0 bottom-0 z-50 flex flex-col bg-white border-r border-gray-200 h-screen transition-all duration-300 ${
+        className={`fixed md:relative left-0 top-0 bottom-0 z-50 flex flex-col border-r transition-all duration-300 ${
           isCollapsed ? "w-sidebar-collapsed" : "w-sidebar-width"
         } ${
           isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         }`}
+        style={{ backgroundColor: "rgba(40, 42, 54, 0.95)", borderColor: "rgba(189, 147, 249, 0.15)" }}
       >
         <div className="flex flex-col h-full">
-          <header className="flex-none border-b border-gray-200">
-            <div className="flex items-center justify-between p-4 bg-gray-50">
+          <header className="flex-none" style={{ borderBottom: "1px solid rgba(189, 147, 249, 0.15)" }}>
+            <div className="flex items-center justify-between p-4" style={{ backgroundColor: "rgba(26, 27, 38, 0.5)" }}>
               <Link
                 to="/dashboard"
                 className={`flex items-center gap-3 ${isCollapsed ? "justify-center w-full" : ""}`}
               >
-                <div className="p-1.5 bg-primary-600 rounded-lg flex items-center justify-center shrink-0">
+                <div className="p-1.5 rounded-lg flex items-center justify-center shrink-0 bg-gradient-to-br from-primary-500 to-dracula-pink">
                   <LogoIcon className="w-6 h-6 text-white" />
                 </div>
                 {!isCollapsed && (
-                  <span className="text-lg font-bold text-gray-900">
+                  <span className="text-lg font-bold text-gray-50">
                     SimpleChat
                   </span>
                 )}
               </Link>
               <div className="flex items-center gap-1">
                 <button
-                  className="hidden md:flex p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-200 rounded-lg transition-colors items-center justify-center"
+                  className="hidden md:flex p-2 rounded-lg transition-colors items-center justify-center hover:bg-gray-700/50"
+                  style={{ color: "#6272a4" }}
                   onClick={() => setIsCollapsed(!isCollapsed)}
                   title={isCollapsed ? "Expand" : "Collapse"}
                 >
@@ -85,7 +87,8 @@ export const Sidebar: React.FC<ChatSidebarProps> = ({
                   )}
                 </button>
                 <button
-                  className="md:hidden p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-200 rounded-lg transition-colors"
+                  className="md:hidden p-2 rounded-lg transition-colors hover:bg-gray-700/50"
+                  style={{ color: "#6272a4" }}
                   onClick={onCloseMobile}
                   title="Close"
                 >
@@ -98,12 +101,19 @@ export const Sidebar: React.FC<ChatSidebarProps> = ({
               <div className="p-4 pt-3">
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <SearchIcon className="w-5 h-5" />
+                    <span className="w-5 h-5" style={{ color: "#6272a4" }}>
+                      <SearchIcon />
+                    </span>
                   </div>
                   <input
                     type="text"
                     placeholder="Search users..."
-                    className="w-full pl-10 pr-4 py-2.5 bg-gray-100 border-0 rounded-lg text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:bg-white transition-all"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-lg text-sm transition-all border-0"
+                    style={{ 
+                      backgroundColor: "rgba(26, 27, 38, 0.8)", 
+                      color: "#f8f8f2",
+                      border: "1px solid rgba(189, 147, 249, 0.2)"
+                    }}
                     onChange={(e) => handleSearch(e.target.value)}
                   />
                 </div>
@@ -115,7 +125,7 @@ export const Sidebar: React.FC<ChatSidebarProps> = ({
             {data && data.users && data.users.length > 0 ? (
               <div className="py-2">
                 {!isCollapsed && (
-                  <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  <div className="px-4 py-2 text-xs font-semibold uppercase tracking-wider" style={{ color: "#6272a4" }}>
                     Chats
                   </div>
                 )}
@@ -129,13 +139,13 @@ export const Sidebar: React.FC<ChatSidebarProps> = ({
                 ))}
               </div>
             ) : (
-              <div className="p-4 text-center text-gray-500 text-sm">
+              <div className="p-4 text-center text-sm" style={{ color: "#6272a4" }}>
                 No users found
               </div>
             )}
           </div>
 
-          <div className="flex-none border-t border-gray-200">
+          <div className="flex-none" style={{ borderTop: "1px solid rgba(189, 147, 249, 0.15)" }}>
             <UserProfileDropdown isCollapsed={isCollapsed} />
           </div>
         </div>
@@ -162,7 +172,7 @@ const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
       label=""
       renderTrigger={() => (
         <button
-          className={`w-full flex items-center p-4 hover:bg-gray-50 transition-colors ${
+          className={`w-full flex items-center p-4 transition-colors hover:bg-gray-700/30 ${
             isCollapsed ? "justify-center" : ""
           }`}
         >
@@ -173,19 +183,19 @@ const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
               {user?.avatarUrl ? (
                 <Avatar img={user.avatarUrl} alt="User avatar" rounded />
               ) : (
-                <div className="w-10 h-10 rounded-full bg-primary-600 text-white flex items-center justify-center font-bold text-sm">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-dracula-pink text-white flex items-center justify-center font-bold text-sm">
                   {initials}
                 </div>
               )}
-              <span className="absolute bottom-0 right-0 w-3 h-3 bg-success-500 border-2 border-white rounded-full" />
+              <span className="absolute bottom-0 right-0 w-3 h-3 bg-success-500 border-2 border-gray-800 rounded-full" />
             </div>
 
             {!isCollapsed && (
               <div className="flex-1 overflow-hidden">
-                <div className="font-semibold text-sm truncate text-gray-900">
+                <div className="font-semibold text-sm truncate text-gray-50">
                   {username}
                 </div>
-                <div className="text-xs text-success-600">Online</div>
+                <div className="text-xs text-success-500">Online</div>
               </div>
             )}
           </div>
@@ -193,11 +203,11 @@ const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
       )}
       placement="top"
     >
-      <DropdownItem>Profile</DropdownItem>
-      <DropdownDivider />
+      <DropdownItem className="text-gray-100 hover:bg-gray-700">Profile</DropdownItem>
+      <DropdownDivider className="bg-gray-700" />
       <DropdownItem
         onClick={logout}
-        className="text-danger-600 hover:bg-danger-50"
+        className="text-danger-500 hover:bg-danger-500/10"
       >
         Logout
       </DropdownItem>

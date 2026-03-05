@@ -104,11 +104,12 @@ const ChatMessages: React.FC<{ roomId: string }> = ({ roomId }) => {
   return (
     <div
       ref={parentRef}
-      className="flex-1 overflow-y-auto px-4 py-6 bg-linear-gradient-to-b from-gray-50 to-white"
+      className="flex-1 overflow-y-auto px-4 py-6"
+      style={{ background: "linear-gradient(180deg, rgba(26, 27, 38, 0.95) 0%, rgba(40, 42, 54, 0.95) 100%)" }}
     >
       <div>
         {hasMore && (
-          <div className="text-center py-2 text-sm text-gray-500">
+          <div className="text-center py-2 text-sm" style={{ color: "#6272a4" }}>
             Scroll up to load more messages
           </div>
         )}

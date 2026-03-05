@@ -30,33 +30,33 @@ const UserProfileDropDown: React.FC<UserProfileDropDownProps> = ({
       label="" // no label, we use custom trigger
       renderTrigger={() => (
         <button
-          className={`w-full flex items-center p-2 bg-gray-200 transition-colors ${
+          className={`w-full flex items-center p-2 transition-colors ${
             isCollapsed ? "justify-center" : "justify-between"
           }`}
+          style={{ backgroundColor: "rgba(26, 27, 38, 0.5)" }}
         >
           <div className="flex items-center gap-2 overflow-hidden w-full">
             <div className="relative shrink-0">
               {user?.avatarUrl ? (
                 <Avatar
                   img={user.avatarUrl}
-                  // className="w-9 h-9 rounded-full object-cover"
                   alt="User avatar"
                 />
               ) : (
-                <div className="w-9 h-9 rounded-full bg-primary-600 text-white flex items-center justify-center font-bold text-sm">
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary-500 to-dracula-pink text-white flex items-center justify-center font-bold text-sm">
                   {initials}
                 </div>
               )}
 
-              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-success-500 border-2 border-white rounded-full" />
+              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-success-500 border-2 border-gray-800 rounded-full" />
             </div>
 
             {!isCollapsed && (
               <div className="text-left overflow-hidden">
-                <div className="font-semibold text-sm truncate text-gray-900">
+                <div className="font-semibold text-sm truncate text-gray-100">
                   {username}
                 </div>
-                <div className="text-success-600 text-xs">Online</div>
+                <div className="text-success-500 text-xs">Online</div>
               </div>
             )}
 
@@ -71,12 +71,12 @@ const UserProfileDropDown: React.FC<UserProfileDropDownProps> = ({
       placement="top"
       className={isCollapsed ? "w-48" : "w-full min-w-[180px]"}
     >
-      <DropdownItem icon={() => <UserIcon size={16} />}>Profile</DropdownItem>
-      <DropdownDivider />
+      <DropdownItem icon={() => <UserIcon size={16} />} className="text-gray-100 hover:bg-gray-700">Profile</DropdownItem>
+      <DropdownDivider className="bg-gray-700" />
       <DropdownItem
         onClick={logout}
         icon={() => <LogoutIcon size={16} />}
-        className="text-danger-600 hover:bg-danger-50"
+        className="text-danger-500 hover:bg-danger-500/10"
       >
         Logout
       </DropdownItem>
