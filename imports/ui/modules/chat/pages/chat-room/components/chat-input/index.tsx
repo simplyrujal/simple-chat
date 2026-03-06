@@ -9,6 +9,8 @@ import MessageForm from "./components/message-form";
 import { useMediaUpload } from "./hooks/use-media-upload";
 import { TMessageType } from "/imports/collections/message";
 import { TRooms } from "/imports/collections/room";
+import { useTypingIndicator } from "/imports/ui/shared/hooks/use-typing-indicator";
+import { TypingIndicator } from "/imports/ui/shared/components/typing-indicator";
 
 interface IProps {
   room: TRooms;
@@ -31,6 +33,7 @@ type TMediaUploadResult = {
 const ChatInput: React.FC<IProps> = ({ room }) => {
   const sendMessage = useSendMessage();
   const mediaUpload = useMediaUpload();
+  const { handleTyping, stopTyping } = useTypingIndicator(room._id);
 
   const methods = useForm<IFormValues>({
     defaultValues: {
@@ -44,6 +47,9 @@ const ChatInput: React.FC<IProps> = ({ room }) => {
 
   const handleMessageSend = async (data: IFormValues) => {
     if (!data.message && !data.media) return;
+    
+    stopTyping();
+    
     const currentUserId = Meteor.userId();
 
     const names = room.name.split("-");
@@ -109,9 +115,10 @@ const ChatInput: React.FC<IProps> = ({ room }) => {
 
   return (
     <div className="p-3" style={{ backgroundColor: "rgba(40, 42, 54, 0.95)", borderTop: "1px solid rgba(189, 147, 249, 0.15)" }}>
+      <TypingIndicator roomId={room._id} />
       <FormProvider {...methods}>
         <MediaOutput />
-        <MessageForm onSubmit={handleMessageSend} />
+        <MessageForm onSubmit={handleMessageSend} onTyping={handleTyping} onBlur={stopTyping} />
         <FileInputs />
       </FormProvider>
     </div>
