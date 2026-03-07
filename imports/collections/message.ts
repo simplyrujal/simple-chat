@@ -11,16 +11,17 @@ export type TMessage = {
   content: {
     type: TMessageType;
     text?: string;
-    fileUrl?: string; // public URL to stream/download
-    fileId?: string; // reference to MediaFiles._id
+    fileUrl?: string;
+    fileId?: string;
     fileName?: string;
     fileSize?: number;
     fileMimeType?: string;
-    duration?: number; // for audio/video in seconds
+    duration?: number;
   };
   createdAt?: Date;
   editedAt?: Date;
   deleted?: boolean;
+  read?: boolean;
 };
 
 export const MessageCollection = new Mongo.Collection<TMessage>("messages");

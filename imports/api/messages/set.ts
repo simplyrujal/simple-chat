@@ -41,3 +41,22 @@ Meteor.methods({
     return result;
   },
 });
+
+Meteor.methods({
+  async "set.message.read"(messageId: string) {
+    if (!this.userId) {
+      throw new Meteor.Error(
+        "not-authorized",
+        "You must be logged in to view messages.",
+      );
+    }
+    check(messageId, String);
+
+    const result = await MessageCollection.updateAsync(messageId, {
+      $set: {
+        read: true,
+      },
+    });
+    return result;
+  },
+});

@@ -4,12 +4,6 @@ These are the non‑negotiable building blocks that users expect from any modern
 
 1. Real‑Time Messaging
 
-   Instant delivery of messages using Meteor’s DDP (Distributed Data Protocol) or WebSockets.
-
-   Message history – store messages in a database (e.g., MongoDB) and load them on demand with pagination.
-
-   Typing indicators – show when another user is composing a message.
-
    Read receipts & delivery status – at least “sent” and “delivered”; “read” is highly desirable.
 
    Message editing & deletion – allow users to correct or remove their own messages (with optional time limits).
