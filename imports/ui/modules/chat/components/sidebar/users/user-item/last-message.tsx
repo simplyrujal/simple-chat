@@ -19,8 +19,6 @@ const LastMessage: React.FC<LastMessageProps> = ({
     enabled: !!roomId,
   });
 
-  console.log({ lastMessage })
-
   const getLastMessageText = () => {
     if (!lastMessage) return "No messages yet";
 

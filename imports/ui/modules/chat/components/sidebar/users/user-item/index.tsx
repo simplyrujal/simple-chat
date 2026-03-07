@@ -124,7 +124,7 @@ const UserItem: React.FC<UserItemProps> = ({
             </span>
           )}
         </div>
-        <div className="flex flex-col gap-1 justify-items-start">
+        <div className="flex flex-col gap-1 items-baseline">
           <LastMessage
             roomId={roomId}
             currentUserId={currentUserId}
