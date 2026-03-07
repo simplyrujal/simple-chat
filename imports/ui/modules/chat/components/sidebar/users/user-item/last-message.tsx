@@ -6,12 +6,14 @@ interface LastMessageProps {
   roomId: string | null;
   currentUserId: string | undefined;
   isActive: boolean;
+  otherUserName: string;
 }
 
 const LastMessage: React.FC<LastMessageProps> = ({
   roomId,
   currentUserId,
   isActive,
+  otherUserName,
 }) => {
   const { data: lastMessage } = useQuery({
     queryKey: ["lastMessage", roomId],
@@ -23,7 +25,7 @@ const LastMessage: React.FC<LastMessageProps> = ({
     if (!lastMessage) return "No messages yet";
 
     const isSentByMe = lastMessage.from === currentUserId;
-    const prefix = isSentByMe ? "You: " : "";
+    const prefix = isSentByMe ? "You: " : `${otherUserName}: `;
 
     if (lastMessage.content?.type === "text") {
       return prefix + (lastMessage.content.text || "");

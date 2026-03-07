@@ -129,6 +129,7 @@ const UserItem: React.FC<UserItemProps> = ({
             roomId={roomId}
             currentUserId={currentUserId}
             isActive={isActive}
+            otherUserName={user.username}
           />
           <LastSeen userId={user._id} lastSeenAt={user.lastSeenAt} />
         </div>
