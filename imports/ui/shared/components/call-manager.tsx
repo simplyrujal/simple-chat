@@ -15,7 +15,7 @@ export const CallManager: React.FC = () => {
         endCall
     } = useSignalingContext();
 
-    const [isMinimized, setIsMinimized] = useState(false);
+    const [isMinimized, setIsMinimized] = useState(true);
 
     const currentUser = useTracker(() => Meteor.user());
 

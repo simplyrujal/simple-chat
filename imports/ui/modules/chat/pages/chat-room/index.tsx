@@ -8,7 +8,6 @@ import ChatMessages from "./components/chat-messages";
 import ErrorRoom from "./components/error-room";
 import RoomLayout from "./room-layout";
 import Loading from "/imports/ui/shared/components/loading";
-import { SignalingProvider } from "/imports/ui/shared/contexts/signaling-context";
 
 export const ChatRoomPage: React.FC = () => {
   const { chatRoomId } = useParams<{ chatRoomId: string }>();
@@ -27,14 +26,12 @@ export const ChatRoomPage: React.FC = () => {
   }
 
   return (
-    <SignalingProvider>
-      <ChatProvider roomType={room.type}>
-        <RoomLayout>
-          <ChatHeader room={room} />
-          <ChatMessages roomId={room._id} />
-          <ChatInput room={room} />
-        </RoomLayout>
-      </ChatProvider>
-    </SignalingProvider>
+    <ChatProvider roomType={room.type}>
+      <RoomLayout>
+        <ChatHeader room={room} />
+        <ChatMessages roomId={room._id} />
+        <ChatInput room={room} />
+      </RoomLayout>
+    </ChatProvider>
   );
 };

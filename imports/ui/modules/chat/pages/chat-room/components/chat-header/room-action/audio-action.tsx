@@ -11,7 +11,7 @@ interface AudioActionProps {
 
 const AudioAction: React.FC<AudioActionProps> = ({ room }) => {
   const currentUserId = Meteor.userId() ?? null;
-  const { sendCallRequest } = useSignaling(room._id);
+  const { sendCallRequest } = useSignaling(room.roomId);
   const [isCalling, setIsCalling] = useState(false);
 
   const roomUserIds = room.name.split("-");
@@ -26,7 +26,7 @@ const AudioAction: React.FC<AudioActionProps> = ({ room }) => {
 
     // Reset "calling" state after 3 seconds to re-enable button
     setTimeout(() => setIsCalling(false), 3000);
-  }, [targetUserId, currentUserId, sendCallRequest, room._id, isCalling]);
+  }, [targetUserId, currentUserId, sendCallRequest, room.roomId, isCalling]);
 
   return <>
     {/* Mobile: Icon only */}
