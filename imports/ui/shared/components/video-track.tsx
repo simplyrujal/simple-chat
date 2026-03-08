@@ -6,6 +6,7 @@ interface VideoTrackProps {
     participantName?: string;
     isAudioOnly?: boolean;
     muted?: boolean;
+    hideLabels?: boolean;
 }
 
 const VideoTrack: React.FC<VideoTrackProps> = ({
@@ -14,6 +15,7 @@ const VideoTrack: React.FC<VideoTrackProps> = ({
     participantName = 'Participant',
     isAudioOnly = false,
     muted = false,
+    hideLabels = false,
 }) => {
     const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -38,22 +40,24 @@ const VideoTrack: React.FC<VideoTrackProps> = ({
 
             {/* Avatar overlay when no video */}
             {!hasVideo && (
-                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800">
-                    <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-3xl font-bold text-white shadow-2xl ring-4 ring-white/10">
+                <div className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-gray-900 to-gray-800">
+                    <div className="w-24 h-24 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-3xl font-bold text-white shadow-2xl ring-4 ring-white/10">
                         {participantName.charAt(0).toUpperCase()}
                     </div>
                 </div>
             )}
 
             {/* Name label */}
-            <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
-                <div className="px-3 py-1 bg-black/50 backdrop-blur-md rounded-full text-white text-xs font-semibold shadow-lg border border-white/10">
-                    {participantName} {isLocal ? '(You)' : ''}
+            {!hideLabels && (
+                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
+                    <div className="px-3 py-1 bg-black/50 backdrop-blur-md rounded-full text-white text-xs font-semibold shadow-lg border border-white/10">
+                        {participantName} {isLocal ? '(You)' : ''}
+                    </div>
                 </div>
-            </div>
+            )}
 
             {/* Decorative gradient overlay */}
-            <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+            <div className="absolute inset-0 pointer-events-none bg-linear-to-t from-black/40 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
         </div>
     );
 };
