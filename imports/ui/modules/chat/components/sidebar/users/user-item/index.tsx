@@ -1,5 +1,5 @@
 import { Avatar } from "flowbite-react";
-import React, { memo } from "react";
+import React, { memo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCreateDirectRoom } from "../../../../hooks/use-room";
 import LastMessage from "./last-message";
@@ -8,7 +8,7 @@ import Status from "./status";
 import { User } from "/imports/collections/user";
 import { useSignalingContext } from "/imports/ui/shared/contexts/signaling-context";
 import { useAuth } from "/imports/ui/shared/hooks/auth/use-auth";
-import { AudioIcon, VideoIcon } from "/imports/ui/shared/icons";
+import { AudioIcon, CloseIcon, VideoIcon } from "/imports/ui/shared/icons";
 
 const getInitials = (name: string) => {
   return name
@@ -36,13 +36,47 @@ const UserItem: React.FC<UserItemProps> = ({
   const usr = useAuth();
   const navigate = useNavigate();
   const createDirectRoom = useCreateDirectRoom();
-  const { activeCall, incomingCall } = useSignalingContext();
+  const {
+    activeCall,
+    incomingCall,
+    sendCallResponse,
+    startActiveCall,
+    clearIncomingCall
+  } = useSignalingContext();
 
   const currentUserId = usr?.user?._id;
   const roomId = currentUserId ? [currentUserId, user._id].sort().join("-") : null;
 
-  const isCallActive = (activeCall && activeCall.callId === roomId) || (incomingCall && incomingCall.roomId === roomId);
-  const callType = activeCall?.callId === roomId ? activeCall.callType : incomingCall?.roomId === roomId ? incomingCall.callType : null;
+  const isIncoming = incomingCall && incomingCall.roomId === roomId;
+  const isLive = activeCall && activeCall.callId === roomId;
+  const callType = isLive ? activeCall.callType : isIncoming ? incomingCall.callType : null;
+
+  const handleAccept = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!incomingCall) return;
+
+    sendCallResponse(incomingCall.from, incomingCall.callId, "accepted", incomingCall.roomId || "global");
+
+    startActiveCall({
+      callId: incomingCall.callId,
+      callType: incomingCall.callType,
+      targetUserId: incomingCall.from,
+      callerName: incomingCall.callerName || user.profile.name || user.username,
+      isCaller: false,
+    });
+
+    clearIncomingCall();
+
+    // Also navigate to the room
+    handleUserClick(user._id);
+  }, [incomingCall, sendCallResponse, startActiveCall, clearIncomingCall, user]);
+
+  const handleDecline = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!incomingCall) return;
+    sendCallResponse(incomingCall.from, incomingCall.callId, "rejected", incomingCall.roomId || "global");
+    clearIncomingCall();
+  }, [incomingCall, sendCallResponse, clearIncomingCall]);
 
   const isActive = chatRoomId?.split("-")?.includes(user._id);
 
@@ -80,8 +114,8 @@ const UserItem: React.FC<UserItemProps> = ({
             </div>
           )}
           <Status userId={user._id} />
-          {isCallActive && (
-            <div className="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 rounded-full bg-red-500 border-2 border-slate-900 animate-pulse">
+          {(isLive || isIncoming) && (
+            <div className={`absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 rounded-full border-2 border-slate-900 animate-pulse ${isIncoming ? "bg-green-500" : "bg-red-500"}`}>
               {callType === "video" ? (
                 <VideoIcon className="w-2 h-2 text-white" />
               ) : (
@@ -128,7 +162,7 @@ const UserItem: React.FC<UserItemProps> = ({
           >
             {user.profile.name}
           </span>
-          {isCallActive && (
+          {isLive && (
             <div className="flex items-center gap-1.5 px-1.5 py-0.5 rounded-full bg-red-500/20 text-red-500 animate-pulse border border-red-500/30">
               {callType === "video" ? (
                 <VideoIcon className="w-3.5 h-3.5" />
@@ -139,7 +173,25 @@ const UserItem: React.FC<UserItemProps> = ({
               <span className="text-[10px] font-bold uppercase tracking-wider">Live</span>
             </div>
           )}
-          {user.createdAt && (
+          {isIncoming && (
+            <div className="flex items-center gap-1 ml-auto">
+              <button
+                onClick={handleAccept}
+                className="p-1 rounded-full bg-green-500 hover:bg-green-600 text-white transition-colors shadow-lg"
+                title="Accept Call"
+              >
+                {callType === "video" ? <VideoIcon size={14} /> : <AudioIcon size={14} />}
+              </button>
+              <button
+                onClick={handleDecline}
+                className="p-1 rounded-full bg-red-500 hover:bg-red-600 text-white transition-colors shadow-lg"
+                title="Decline Call"
+              >
+                <CloseIcon size={14} />
+              </button>
+            </div>
+          )}
+          {user.createdAt && !isIncoming && (
             <span
               className={`text-xs whitespace-nowrap ${isActive ? "text-white/70" : "text-gray-500"
                 }`}
