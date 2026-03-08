@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import { Sidebar } from "./components/sidebar";
 import { ChatRoomPage } from "./pages/chat-room";
 import { DashboardPage } from "./pages/dashboard";
@@ -12,6 +12,7 @@ import { SignalingProvider } from "/imports/ui/shared/contexts/signaling-context
 
 export const ChatRoutes: React.FC = () => {
   const { user } = useAuth();
+  const location = useLocation();
 
   userSetStatus(user?._id || "");
 
@@ -20,6 +21,8 @@ export const ChatRoutes: React.FC = () => {
   const handleToggleMobile = () => {
     setIsMobileOpen((prev) => !prev);
   };
+
+  const isChatRoom = location.pathname.includes('/chat/');
 
   return (
     <SignalingProvider>
@@ -30,20 +33,29 @@ export const ChatRoutes: React.FC = () => {
           onCloseMobile={() => setIsMobileOpen(false)}
         />
         <div className="flex-1 flex flex-col min-w-0">
-          <div className="md:hidden border-b border-gray-200 bg-white p-2">
-            <button
-              onClick={handleToggleMobile}
-              className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-              title="Open sidebar"
+          {!isChatRoom && (
+            <div
+              className="md:hidden border-b p-2 flex items-center justify-between"
+              style={{
+                backgroundColor: "rgba(26, 27, 38, 0.8)",
+                borderColor: "rgba(189, 147, 249, 0.15)"
+              }}
             >
-              <MenuIcon className="w-5 h-5" />
-            </button>
-          </div>
+              <button
+                onClick={handleToggleMobile}
+                className="p-2 text-gray-400 hover:text-white hover:bg-gray-700/50 rounded-lg transition-colors"
+                title="Open sidebar"
+              >
+                <MenuIcon className="w-5 h-5" />
+              </button>
+              <span className="text-gray-100 font-bold text-sm mr-2">SimpleChat</span>
+            </div>
+          )}
           <Routes>
             <Route path="dashboard" element={<DashboardPage />} />
             <Route
               path="chat/:chatRoomId"
-              element={<ChatRoomPage />}
+              element={<ChatRoomPage onToggleSidebar={handleToggleMobile} />}
             />
           </Routes>
         </div>

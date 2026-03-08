@@ -9,7 +9,11 @@ import ErrorRoom from "./components/error-room";
 import RoomLayout from "./room-layout";
 import Loading from "/imports/ui/shared/components/loading";
 
-export const ChatRoomPage: React.FC = () => {
+interface IProps {
+  onToggleSidebar?: () => void;
+}
+
+export const ChatRoomPage: React.FC<IProps> = ({ onToggleSidebar }) => {
   const { chatRoomId } = useParams<{ chatRoomId: string }>();
   const {
     data: room,
@@ -28,7 +32,7 @@ export const ChatRoomPage: React.FC = () => {
   return (
     <ChatProvider roomType={room.type}>
       <RoomLayout>
-        <ChatHeader room={room} />
+        <ChatHeader room={room} onToggleSidebar={onToggleSidebar} />
         <ChatMessages roomId={room._id} />
         <ChatInput room={room} />
       </RoomLayout>
