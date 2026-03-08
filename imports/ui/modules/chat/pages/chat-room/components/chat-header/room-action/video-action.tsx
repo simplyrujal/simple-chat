@@ -11,7 +11,7 @@ interface VideoActionProps {
 
 const VideoAction: React.FC<VideoActionProps> = ({ room }) => {
   const currentUserId = Meteor.userId() ?? null;
-  const { sendCallRequest } = useSignaling(room._id);
+  const { sendCallRequest } = useSignaling(room.roomId);
   const [isCalling, setIsCalling] = useState(false);
 
   const roomUserIds = room.name.split("-");
@@ -26,7 +26,7 @@ const VideoAction: React.FC<VideoActionProps> = ({ room }) => {
 
     // Reset "calling" state after 3 seconds
     setTimeout(() => setIsCalling(false), 3000);
-  }, [targetUserId, currentUserId, sendCallRequest, room._id, isCalling]);
+  }, [targetUserId, currentUserId, sendCallRequest, room.roomId, isCalling]);
 
   return (
     <>

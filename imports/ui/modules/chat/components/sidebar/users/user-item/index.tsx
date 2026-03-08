@@ -6,7 +6,9 @@ import LastMessage from "./last-message";
 import LastSeen from "./last-seen";
 import Status from "./status";
 import { User } from "/imports/collections/user";
+import { useSignalingContext } from "/imports/ui/shared/contexts/signaling-context";
 import { useAuth } from "/imports/ui/shared/hooks/auth/use-auth";
+import { AudioIcon, VideoIcon } from "/imports/ui/shared/icons";
 
 const getInitials = (name: string) => {
   return name
@@ -34,9 +36,13 @@ const UserItem: React.FC<UserItemProps> = ({
   const usr = useAuth();
   const navigate = useNavigate();
   const createDirectRoom = useCreateDirectRoom();
+  const { activeCall, incomingCall } = useSignalingContext();
 
   const currentUserId = usr?.user?._id;
   const roomId = currentUserId ? [currentUserId, user._id].sort().join("-") : null;
+
+  const isCallActive = (activeCall && activeCall.callId === roomId) || (incomingCall && incomingCall.roomId === roomId);
+  const callType = activeCall?.callId === roomId ? activeCall.callType : incomingCall?.roomId === roomId ? incomingCall.callType : null;
 
   const isActive = chatRoomId?.split("-")?.includes(user._id);
 
@@ -74,6 +80,16 @@ const UserItem: React.FC<UserItemProps> = ({
             </div>
           )}
           <Status userId={user._id} />
+          {isCallActive && (
+            <div className="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 rounded-full bg-red-500 border-2 border-slate-900 animate-pulse">
+              {callType === "video" ? (
+                <VideoIcon className="w-2 h-2 text-white" />
+              ) : (
+                <AudioIcon className="w-2 h-2 text-white" />
+              )
+              }
+            </div>
+          )}
         </div>
       </button>
     );
@@ -112,6 +128,17 @@ const UserItem: React.FC<UserItemProps> = ({
           >
             {user.profile.name}
           </span>
+          {isCallActive && (
+            <div className="flex items-center gap-1.5 px-1.5 py-0.5 rounded-full bg-red-500/20 text-red-500 animate-pulse border border-red-500/30">
+              {callType === "video" ? (
+                <VideoIcon className="w-3.5 h-3.5" />
+              ) : (
+                <AudioIcon className="w-3.5 h-3.5" />
+              )
+              }
+              <span className="text-[10px] font-bold uppercase tracking-wider">Live</span>
+            </div>
+          )}
           {user.createdAt && (
             <span
               className={`text-xs whitespace-nowrap ${isActive ? "text-white/70" : "text-gray-500"
