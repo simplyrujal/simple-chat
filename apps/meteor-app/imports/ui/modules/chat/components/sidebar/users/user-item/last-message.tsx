@@ -41,14 +41,13 @@ const LastMessage: React.FC<LastMessageProps> = ({
     return "No messages yet";
   };
 
-  return (
-    <span
-      className={`truncate text-xs ${isActive ? "text-white/70" : "text-gray-500"
-        }`}
-    >
-      {getLastMessageText()}
-    </span>
-  );
+   return (
+     <span
+       className={`max-w-xs truncate text-xs ${isActive ? "text-white/70" : "text-gray-500"
+         }` title={getLastMessageText()}>
+       {getLastMessageText()}
+     </span>
+   );
 };
 
 export default LastMessage;

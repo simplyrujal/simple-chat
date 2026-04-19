@@ -98,70 +98,73 @@ const UserItem: React.FC<UserItemProps> = ({
     }
   };
 
-  if (isCollapsed) {
-    return (
-      <button
-        onClick={() => handleUserClick(user._id)}
-        className="w-full flex items-center justify-center py-3 px-2 hover:bg-gray-700/50 hover-scale transition-all duration-300 list-item"
-        title={user.profile.name}
-      >
-        <div className="relative">
-          {user.avatarUrl ? (
-            <Avatar img={user.avatarUrl} alt={user.username} rounded />
-          ) : (
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-dracula-pink text-white flex items-center justify-center font-bold text-sm shadow-glow">
-              {getInitials(user.profile.name || user.username)}
-            </div>
-          )}
-          <Status userId={user._id} />
-          {(isLive || isIncoming) && (
-            <div className={`absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 rounded-full border-2 border-slate-900 animate-pulse-glow ${isIncoming ? "bg-green-500" : "bg-red-500"}`}>
-              {callType === "video" ? (
-                <VideoIcon className="w-2 h-2 text-white" />
-              ) : (
-                <AudioIcon className="w-2 h-2 text-white" />
-              )
-              }
-            </div>
-          )}
-        </div>
-      </button>
-    );
-  }
+   if (isCollapsed) {
+     return (
+       <button
+         onClick={() => handleUserClick(user._id)}
+         className="w-full flex items-center justify-center py-3 px-2 hover:bg-gray-700/50 hover-scale transition-all duration-300 list-item"
+         title={user.profile.name}
+       >
+         <div className="relative">
+           {user.avatarUrl ? (
+             <Avatar img={user.avatarUrl} alt={user.username} rounded className="w-9 h-9" />
+           ) : (
+             <div className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 ${isActive
+                 ? "bg-gradient-to-br from-primary-500 to-dracula-pink text-white shadow-glow ring-2 ring-primary-500/50"
+                 : "bg-gradient-to-br from-primary-500/80 to-dracula-pink/60 text-white hover:shadow-glow"
+               }`}
+             >
+               {getInitials(user.profile.name || user.username)}
+             </div>
+           )}
+           <Status userId={user._id} className="-top-1 -left-1" />
+           {(isLive || isIncoming) && (
+             <div className={`absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 rounded-full border-2 border-slate-900 animate-pulse-glow ${isIncoming ? "bg-green-500" : "bg-red-500"}`}>
+               {callType === "video" ? (
+                 <VideoIcon className="w-3 h-3 text-white" />
+               ) : (
+                 <AudioIcon className="w-3 h-3 text-white" />
+               )
+               }
+             </div>
+           )}
+         </div>
+       </button>
+     );
+   }
 
-  return (
-    <button
-      onClick={() => handleUserClick(user._id)}
-      className={`w-full flex items-center gap-3 py-3 px-4 transition-all duration-300 list-item ${isActive
-        ? "bg-gradient-to-r from-primary-500/40 to-dracula-pink/30 shadow-glow"
-        : "hover:bg-gray-700/40"
-        }`}
-      style={{ borderLeft: isActive ? "3px solid #bd93f9" : "3px solid transparent" }}
-    >
-      <div className="relative shrink-0">
-        {user.avatarUrl ? (
-          <Avatar img={user.avatarUrl} alt={user.username} rounded />
-        ) : (
-          <div
-            className={`w-11 h-11 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 ${isActive
-              ? "bg-gradient-to-br from-primary-500 to-dracula-pink text-white shadow-glow"
-              : "bg-gradient-to-br from-primary-500/80 to-dracula-pink/60 text-white hover:shadow-glow"
-              }`}
-          >
-            {getInitials(user.profile.name || user.username)}
-          </div>
-        )}
-        <Status userId={user._id} />
-      </div>
+   return (
+     <button
+       onClick={() => handleUserClick(user._id)}
+       className={`w-full flex items-center gap-3 py-3 px-4 transition-all duration-300 list-item hover:translate-x-1 ${isActive
+         ? "bg-gradient-to-r from-primary-500/40 to-dracula-pink/30 shadow-glow"
+         : "hover:bg-gray-700/40 hover:shadow-glow"
+         }`}
+       style={{ borderLeft: isActive ? "3px solid #bd93f9" : "3px solid transparent" }}
+     >
+       <div className="relative shrink-0">
+         {user.avatarUrl ? (
+           <Avatar img={user.avatarUrl} alt={user.username} rounded className="w-10 h-10" />
+         ) : (
+           <div
+             className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 ${isActive
+               ? "bg-gradient-to-br from-primary-500 to-dracula-pink text-white shadow-glow ring-2 ring-primary-500/50"
+               : "bg-gradient-to-br from-primary-500/80 to-dracula-pink/60 text-white hover:shadow-glow"
+               }`}
+           >
+             {getInitials(user.profile.name || user.username)}
+           </div>
+         )}
+         <Status userId={user._id} className="-top-1 -left-1" />
+       </div>
 
-      <div className="flex flex-col min-w-0">
-        <div className="flex justify-between items-center gap-2">
-          <span
-            className={`truncate text-sm font-semibold transition-all duration-300 ${isActive ? "text-white" : "text-gray-100"
-              }`}
-          >
-            {user.profile.name}
-          </span>
+         <div className="flex flex-col min-w-0">
+         <div className="flex justify-between items-center gap-2">
+           <span
+             className={`max-w-xs truncate text-sm font-semibold transition-all duration-300 ${isActive ? "text-white" : "text-gray-100"
+               }` title={user.profile.name}>
+             {user.profile.name}
+           </span>
           {isLive && (
             <div className="flex items-center gap-1.5 px-1.5 py-0.5 rounded-full bg-red-500/20 text-red-500 animate-pulse border border-red-500/30 shadow-glow-pink">
               {callType === "video" ? (
