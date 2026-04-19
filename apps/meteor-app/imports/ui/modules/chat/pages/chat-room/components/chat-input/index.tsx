@@ -114,7 +114,7 @@ const ChatInput: React.FC<IProps> = ({ room }) => {
   };
 
   return (
-    <div className="p-3" style={{ backgroundColor: "rgba(40, 42, 54, 0.95)", borderTop: "1px solid rgba(189, 147, 249, 0.15)" }}>
+    <div className="p-3 bg-gradient-to-t from-gray-900 via-dracula-bg to-dracula-bg/50 border-t border-primary-500/20 backdrop-blur-sm" style={{ backgroundColor: "rgba(40, 42, 54, 0.7)", borderTop: "1px solid rgba(189, 147, 249, 0.2)" }}>
       <TypingIndicator roomId={room._id} />
       <FormProvider {...methods}>
         <MediaOutput />

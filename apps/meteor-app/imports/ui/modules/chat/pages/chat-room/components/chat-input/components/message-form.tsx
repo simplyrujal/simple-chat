@@ -22,7 +22,7 @@ const MessageForm: React.FC<IProps> = ({ onSubmit, onTyping, onBlur }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="flex gap-2">
+      <div className="flex gap-2 group">
         <input
           type="text"
           placeholder="Type a message..."
@@ -35,7 +35,7 @@ const MessageForm: React.FC<IProps> = ({ onSubmit, onTyping, onBlur }) => {
             register("message").onBlur(e);
             onBlur?.();
           }}
-          className="input-field w-4/5"
+          className="input-field w-4/5 rounded-xl border border-gray-600/50 bg-gray-800/40 hover:bg-gray-800/60 group-focus-within:bg-gray-800 transition-all duration-300 focus:shadow-glow"
         />
 
         <SubmitButton />

@@ -84,27 +84,38 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center w-full p-4 bg-gradient-to-br from-gray-900 via-dracula-bg to-gray-600">
-      <div className="w-full max-w-md">
-        <div className="bg-gray-800/95 rounded-2xl border border-primary-500/20 p-8 shadow-2xl">
+    <div className="min-h-screen flex items-center justify-center w-full p-4 bg-gradient-to-br from-gray-900 via-dracula-bg to-gray-800 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute -top-20 -right-20 w-96 h-96 bg-primary-500/15 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float" style={{ animationDuration: "4s" }}></div>
+      <div className="absolute bottom-10 left-10 w-80 h-80 bg-dracula-pink/15 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float" style={{ animationDelay: "2s", animationDuration: "5s" }}></div>
+
+      <div className="w-full max-w-md relative z-10 animate-fade-in-up">
+        <div className="glass-strong rounded-3xl border border-primary-500/30 p-8 shadow-premium-lg backdrop-blur-xl hover:border-primary-500/50 transition-all duration-500">
           <div className="text-center mb-8">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center bg-gradient-to-br from-primary-500 to-dracula-pink">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-              </svg>
+            <div className="relative w-20 h-20 mx-auto mb-6">
+              {/* Animated circles */}
+              <div className="absolute inset-0 rounded-full border-2 border-primary-500/30 animate-spin" style={{ animationDuration: "3s" }}></div>
+              <div className="absolute inset-3 rounded-full border border-dracula-pink/20" style={{ animation: "spin 4s linear infinite reverse" }}></div>
+              
+              {/* Icon */}
+              <div className="absolute inset-0 flex items-center justify-center rounded-full bg-gradient-to-br from-primary-500 to-dracula-pink hover-scale">
+                <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                </svg>
+              </div>
             </div>
-            <h1 className="text-2xl font-bold mb-2 text-gray-50">
+            <h1 className="text-3xl font-bold mb-2 gradient-text animate-fade-in-down">
               Create Account
             </h1>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-400 animate-fade-in" style={{ animationDelay: "0.1s" }}>
               Join us and start chatting with others
             </p>
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 animate-stagger">
             {errors.root && (
-              <div className="rounded-lg p-3 bg-danger-500/15 border border-danger-500/30">
-                <p className="text-sm text-danger-500">
+              <div className="rounded-lg p-4 bg-danger-500/15 border border-danger-500/30 backdrop-blur-sm animate-bounce-in" style={{ animationDelay: "0.1s" }}>
+                <p className="text-sm text-danger-500 font-medium">
                   {errors.root.message}
                 </p>
               </div>
@@ -330,19 +341,29 @@ const Register: React.FC = () => {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full py-3.5 px-4 font-semibold rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02] active:scale-[0.98] bg-gradient-to-r from-primary-500 to-dracula-pink text-gray-900 hover:shadow-lg hover:shadow-primary-500/30"
+              className="w-full py-3 px-4 font-bold rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-primary-500 to-dracula-pink text-gray-900 hover:shadow-glow active:scale-95 relative overflow-hidden group mt-6"
             >
-              {submitting ? "Creating Account..." : "Sign Up"}
+              <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+              <span className="relative">
+                {submitting ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="loading-spinner w-4 h-4"></span>
+                    Creating Account...
+                  </span>
+                ) : (
+                  "Sign Up"
+                )}
+              </span>
             </button>
           </form>
 
-          <div className="text-center mt-6 pt-4 border-t border-gray-600/30">
+          <div className="text-center mt-6 pt-6 border-t border-gray-600/30">
             <span className="text-sm text-gray-500">
               Already have an account?{" "}
             </span>
             <Link
               to="/auth/login"
-              className="text-sm font-semibold text-dracula-pink hover:text-dracula-pink/80 transition-colors"
+              className="text-sm font-semibold text-dracula-pink hover:text-primary-500 transition-colors duration-300 relative link-premium"
             >
               Sign In
             </Link>

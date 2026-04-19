@@ -102,20 +102,20 @@ const UserItem: React.FC<UserItemProps> = ({
     return (
       <button
         onClick={() => handleUserClick(user._id)}
-        className="w-full flex items-center justify-center py-3 px-2 hover:bg-gray-700/50 transition-colors"
+        className="w-full flex items-center justify-center py-3 px-2 hover:bg-gray-700/50 hover-scale transition-all duration-300 list-item"
         title={user.profile.name}
       >
         <div className="relative">
           {user.avatarUrl ? (
             <Avatar img={user.avatarUrl} alt={user.username} rounded />
           ) : (
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-dracula-pink text-white flex items-center justify-center font-bold text-sm">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-dracula-pink text-white flex items-center justify-center font-bold text-sm shadow-glow">
               {getInitials(user.profile.name || user.username)}
             </div>
           )}
           <Status userId={user._id} />
           {(isLive || isIncoming) && (
-            <div className={`absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 rounded-full border-2 border-slate-900 animate-pulse ${isIncoming ? "bg-green-500" : "bg-red-500"}`}>
+            <div className={`absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 rounded-full border-2 border-slate-900 animate-pulse-glow ${isIncoming ? "bg-green-500" : "bg-red-500"}`}>
               {callType === "video" ? (
                 <VideoIcon className="w-2 h-2 text-white" />
               ) : (
@@ -132,9 +132,9 @@ const UserItem: React.FC<UserItemProps> = ({
   return (
     <button
       onClick={() => handleUserClick(user._id)}
-      className={`w-full flex items-center gap-3 py-3 px-4 transition-all duration-200 ${isActive
-        ? "bg-gradient-to-r from-primary-500/30 to-dracula-pink/30"
-        : "hover:bg-gray-700/30"
+      className={`w-full flex items-center gap-3 py-3 px-4 transition-all duration-300 list-item ${isActive
+        ? "bg-gradient-to-r from-primary-500/40 to-dracula-pink/30 shadow-glow"
+        : "hover:bg-gray-700/40"
         }`}
       style={{ borderLeft: isActive ? "3px solid #bd93f9" : "3px solid transparent" }}
     >
@@ -143,9 +143,9 @@ const UserItem: React.FC<UserItemProps> = ({
           <Avatar img={user.avatarUrl} alt={user.username} rounded />
         ) : (
           <div
-            className={`w-11 h-11 rounded-full flex items-center justify-center font-bold text-sm ${isActive
-              ? "bg-gradient-to-br from-primary-500 to-dracula-pink text-white"
-              : "bg-primary-500 text-white"
+            className={`w-11 h-11 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 ${isActive
+              ? "bg-gradient-to-br from-primary-500 to-dracula-pink text-white shadow-glow"
+              : "bg-gradient-to-br from-primary-500/80 to-dracula-pink/60 text-white hover:shadow-glow"
               }`}
           >
             {getInitials(user.profile.name || user.username)}
@@ -157,13 +157,13 @@ const UserItem: React.FC<UserItemProps> = ({
       <div className="flex flex-col min-w-0">
         <div className="flex justify-between items-center gap-2">
           <span
-            className={`truncate text-sm font-semibold ${isActive ? "text-white" : "text-gray-100"
+            className={`truncate text-sm font-semibold transition-all duration-300 ${isActive ? "text-white" : "text-gray-100"
               }`}
           >
             {user.profile.name}
           </span>
           {isLive && (
-            <div className="flex items-center gap-1.5 px-1.5 py-0.5 rounded-full bg-red-500/20 text-red-500 animate-pulse border border-red-500/30">
+            <div className="flex items-center gap-1.5 px-1.5 py-0.5 rounded-full bg-red-500/20 text-red-500 animate-pulse border border-red-500/30 shadow-glow-pink">
               {callType === "video" ? (
                 <VideoIcon className="w-3.5 h-3.5" />
               ) : (
@@ -174,17 +174,17 @@ const UserItem: React.FC<UserItemProps> = ({
             </div>
           )}
           {isIncoming && (
-            <div className="flex items-center gap-1 ml-auto">
+            <div className="flex items-center gap-1 ml-auto animate-bounce-in">
               <button
                 onClick={handleAccept}
-                className="p-1 rounded-full bg-green-500 hover:bg-green-600 text-white transition-colors shadow-lg"
+                className="p-1 rounded-full bg-green-500 hover:bg-green-600 text-white transition-all duration-300 shadow-glow active:scale-95 hover-scale"
                 title="Accept Call"
               >
                 {callType === "video" ? <VideoIcon size={14} /> : <AudioIcon size={14} />}
               </button>
               <button
                 onClick={handleDecline}
-                className="p-1 rounded-full bg-red-500 hover:bg-red-600 text-white transition-colors shadow-lg"
+                className="p-1 rounded-full bg-red-500 hover:bg-red-600 text-white transition-all duration-300 shadow-glow-pink active:scale-95 hover-scale"
                 title="Decline Call"
               >
                 <CloseIcon size={14} />
@@ -193,7 +193,7 @@ const UserItem: React.FC<UserItemProps> = ({
           )}
           {user.createdAt && !isIncoming && (
             <span
-              className={`text-xs whitespace-nowrap ${isActive ? "text-white/70" : "text-gray-500"
+              className={`text-xs whitespace-nowrap transition-all duration-300 ${isActive ? "text-white/70" : "text-gray-500"
                 }`}
             >
               {new Date(user.createdAt).toLocaleTimeString([], {

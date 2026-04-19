@@ -57,7 +57,7 @@ const Message: React.FC<MessageProps> = ({ msg, currentUserId }) => {
   return (
     <div
       ref={ref}
-      className={`flex w-full ${isCurrentUser ? "justify-end" : "justify-start"}`}
+      className={`flex w-full ${isCurrentUser ? "justify-end" : "justify-start"} animate-fade-in-up`}
     >
       <div
         className={`flex flex-col max-w-[75%] md:max-w-[65%] lg:max-w-[55%] ${isCurrentUser ? "items-end" : "items-start"
@@ -68,16 +68,16 @@ const Message: React.FC<MessageProps> = ({ msg, currentUserId }) => {
         )}
 
         <div
-          className={`mt-1 px-4 py-3 rounded-2xl shadow-sm transition-all duration-200 ${isCurrentUser
-            ? "bg-linear-to-br from-primary-600 to-primary-700 text-white rounded-br-md"
-            : "bg-white border border-gray-200 text-gray-800 rounded-bl-md"
+          className={`mt-1 px-4 py-3 rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-lg ${isCurrentUser
+            ? "bg-gradient-to-br from-primary-600 to-primary-700 text-white rounded-br-md shadow-glow hover:shadow-glow"
+            : "bg-gray-700/60 border border-gray-600 text-gray-100 rounded-bl-md shadow-md hover:border-primary-500/50"
             }`}
         >
           <MessageContent content={msg.content} />
         </div>
 
         <span
-          className={`mt-1 text-xs ${isCurrentUser ? "text-gray-400" : "text-gray-400"
+          className={`mt-1 text-xs transition-all duration-300 ${isCurrentUser ? "text-gray-500" : "text-gray-500"
             }`}
         >
           {msg.createdAt && formatTime(msg.createdAt)}

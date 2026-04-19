@@ -50,32 +50,32 @@ export const Sidebar: React.FC<ChatSidebarProps> = ({
       />
 
       <aside
-        className={`fixed md:relative left-0 top-0 bottom-0 z-50 flex flex-col border-r transition-all duration-300 ${
+        className={`fixed md:relative left-0 top-0 bottom-0 z-50 flex flex-col border-r transition-all duration-300 backdrop-blur-md ${
           isCollapsed ? "w-sidebar-collapsed" : "w-sidebar-width"
         } ${
           isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         }`}
-        style={{ backgroundColor: "rgba(40, 42, 54, 0.95)", borderColor: "rgba(189, 147, 249, 0.15)" }}
+        style={{ backgroundColor: "rgba(40, 42, 54, 0.7)", borderColor: "rgba(189, 147, 249, 0.2)" }}
       >
         <div className="flex flex-col h-full">
           <header className="flex-none" style={{ borderBottom: "1px solid rgba(189, 147, 249, 0.15)" }}>
-            <div className="flex items-center justify-between p-4" style={{ backgroundColor: "rgba(26, 27, 38, 0.5)" }}>
+            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-800/50 to-gray-700/20 hover:from-gray-800/70 hover:to-gray-700/40 transition-all duration-300">
               <Link
                 to="/dashboard"
-                className={`flex items-center gap-3 ${isCollapsed ? "justify-center w-full" : ""}`}
+                className={`flex items-center gap-3 ${isCollapsed ? "justify-center w-full" : ""} hover-scale`}
               >
-                <div className="p-1.5 rounded-lg flex items-center justify-center shrink-0 bg-gradient-to-br from-primary-500 to-dracula-pink">
+                <div className="p-1.5 rounded-lg flex items-center justify-center shrink-0 bg-gradient-to-br from-primary-500 to-dracula-pink shadow-glow hover-scale">
                   <LogoIcon className="w-6 h-6 text-white" />
                 </div>
                 {!isCollapsed && (
-                  <span className="text-lg font-bold text-gray-50">
+                  <span className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-dracula-pink">
                     SimpleChat
                   </span>
                 )}
               </Link>
               <div className="flex items-center gap-1">
                 <button
-                  className="hidden md:flex p-2 rounded-lg transition-colors items-center justify-center hover:bg-gray-700/50"
+                  className="hidden md:flex p-2 rounded-lg transition-all duration-300 items-center justify-center hover:bg-gray-700/50 hover-scale"
                   style={{ color: "#6272a4" }}
                   onClick={() => setIsCollapsed(!isCollapsed)}
                   title={isCollapsed ? "Expand" : "Collapse"}
@@ -87,7 +87,7 @@ export const Sidebar: React.FC<ChatSidebarProps> = ({
                   )}
                 </button>
                 <button
-                  className="md:hidden p-2 rounded-lg transition-colors hover:bg-gray-700/50"
+                  className="md:hidden p-2 rounded-lg transition-all duration-300 hover:bg-gray-700/50 hover-scale"
                   style={{ color: "#6272a4" }}
                   onClick={onCloseMobile}
                   title="Close"
@@ -99,16 +99,16 @@ export const Sidebar: React.FC<ChatSidebarProps> = ({
 
             {!isCollapsed && (
               <div className="p-4 pt-3">
-                <div className="relative">
+                <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <span className="w-5 h-5" style={{ color: "#6272a4" }}>
+                    <span className="w-5 h-5 text-gray-500 group-focus-within:text-primary-500 transition-colors duration-300" style={{ color: "#6272a4" }}>
                       <SearchIcon />
                     </span>
                   </div>
                   <input
                     type="text"
                     placeholder="Search users..."
-                    className="w-full pl-10 pr-4 py-2.5 rounded-lg text-sm transition-all border-0"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-lg text-sm transition-all duration-300 border-0 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-0"
                     style={{ 
                       backgroundColor: "rgba(26, 27, 38, 0.8)", 
                       color: "#f8f8f2",
@@ -116,6 +116,11 @@ export const Sidebar: React.FC<ChatSidebarProps> = ({
                     }}
                     onChange={(e) => handleSearch(e.target.value)}
                   />
+                  <style>{`
+                    .input:hover {
+                      box-shadow: 0 0 20px rgba(189, 147, 249, 0.2);
+                    }
+                  `}</style>
                 </div>
               </div>
             )}
