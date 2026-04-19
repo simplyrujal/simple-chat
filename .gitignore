@@ -1,4 +1,29 @@
+# Dependencies
 node_modules/
+apps/*/node_modules
+
+# Symlinks (created by postinstall)
+apps/*/node_modules
+
+# Build outputs
 bundle/
 bundle-output/
-dist
+dist/
+apps/*/dist/
+services/*/dist/
+
+# Meteor specific
+.meteor/local
+.meteor/package-metadata.v2.json
+.meteor/package-metadata.v2.lock
+
+# OS
+.DS_Store
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# Bun
+bun.lockb

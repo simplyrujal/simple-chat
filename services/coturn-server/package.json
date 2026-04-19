@@ -1,0 +1,6 @@
+{
+  "name": "@simple-chat/coturn-server",
+  "version": "1.0.0",
+  "description": "CoTURN STUN/TURN server for WebRTC",
+  "private": true
+}
