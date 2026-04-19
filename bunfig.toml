@@ -1,0 +1,6 @@
+[install]
+# Prefer bun's native install for faster speed
+cache = { dir = "node_modules/.bun" }
+
+[define]
+# You can add environment variables here if needed
